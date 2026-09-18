@@ -139,6 +139,26 @@ automatically and reports it as `used_fallback`.
 imports `tf` from that module and never `import tensorflow` directly. The model
 card's older advice to pin ≤2.17 is the alternative route to the same place.
 
+## Verified end to end
+
+A fresh Linux checkout was bootstrapped and run against the real checkpoint
+(CPU-only WSL2, Ubuntu 24.04). `scripts/setup_linux.sh --prefetch` installed
+uv, fetched CPython 3.13.15 (the system Python was 3.12), installed TF 2.20.0
+and tensorflow-text 2.20.1, and downloaded the checkpoint. On upstream's
+`test_inputs/word.jpg` (250x126):
+
+```
+recognized text : 'Neat:'
+strokes/points  : 11 / 145
+bbox src coords : 1.1,10.0 .. 248.9,98.2   (inside the source image)
+model load      : 11.5 s
+inference       : 180.7 s  (CPU, one word)
+```
+
+The bounding box landing inside the source image is the check that matters:
+it means the 224x224 pad transform was inverted correctly and the ink is in
+image coordinates, not crop coordinates.
+
 ## Verifying the port
 
 `codec.py` was differentially fuzzed against upstream's verbatim notebook

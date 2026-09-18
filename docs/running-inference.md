@@ -52,9 +52,12 @@ Reuse one `LocalBackend` across a whole dataset job — construction loads a
 ### GPU — get one for bulk work
 
 CPU works, but not at dataset scale. InkSight decodes autoregressively: one
-word's ink is hundreds of sequential decoder steps. Measured on this WSL box
-(CPU only, no AVX-512): roughly **40 s to load the graph and minutes for a
-single word**. A page is dozens of words, and a corpus is thousands.
+word's ink is hundreds of sequential decoder steps. Measured end-to-end on a
+CPU-only box (WSL2, no AVX-512, 250x126 input): **11.5 s to load the graph,
+then 181 s for a single word** — 11 strokes, 145 points. At that rate a
+40-word page is over two hours and a corpus is not worth starting.
+
+Use the GPU box for anything past a smoke test.
 
 For GPU, change the tensorflow pin in `pyproject.toml` to
 `tensorflow[and-cuda]==2.20.0` and re-sync. `ink-tokenizer doctor` prints the
