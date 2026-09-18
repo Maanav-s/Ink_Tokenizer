@@ -1,0 +1,30 @@
+Ink Tokenizer
+Copyright 2026 Ink Tokenizer contributors
+
+This product includes software derived from InkSight:
+
+    InkSight: Offline-to-Online Handwriting Conversion by Teaching
+    Vision-Language Models to Read and Write
+    Copyright 2024 Google LLC
+    https://github.com/google-research/inksight
+    Licensed under the Apache License, Version 2.0
+
+Derived files, and their upstream origin:
+
+  ink_tokenizer/codec.py
+      `text_to_tokens` and `detokenize` ported from `colab.ipynb`.
+      `tokenize` / `tokens_to_text` are original to this project.
+
+  ink_tokenizer/preprocess.py
+      `scale_and_pad` and the inverse mapping follow `scale_and_pad` and
+      `unpad_unscale_unrotate_uncrop` from `colab.ipynb`.
+
+  services/inksight/tf_compat.py
+      Ported from `utils/tensorflow.py`.
+
+The InkSight-Small-p model weights (Derendering/InkSight-Small-p on the
+Hugging Face Hub) are separately licensed under Apache 2.0 and are not
+redistributed here; they are downloaded at runtime.
+
+Upstream asks that the model not be used for forging handwriting or for
+privacy-intruding applications.

@@ -59,20 +59,57 @@ scope by default. Raise it rather than building it.
 
 ## Repository State
 
-Early scaffold — Python 3.13, managed with `uv`, no dependencies yet.
+Python 3.11-3.13, managed with `uv`. Current work is **stage 1: data** --
+bootstrapping digitized notes into online-ink-style stroke data using InkSight.
 
-- [pyproject.toml](pyproject.toml) — project metadata
-- [main.py](main.py) — placeholder entry point
-
-Common commands:
-
-```bash
-uv sync          # install/resolve dependencies
-uv run main.py   # run the entry point
+```
+ink_tokenizer/          main package -- imports cleanly on ANY platform
+  ink.py                Stroke / Ink data model + JSON
+  codec.py              ink-token <-> Ink codec (ported from InkSight)
+  preprocess.py         crop -> 224x224 padding and its exact inverse
+  base.py               DerenderBackend: geometry + decoding, shared
+  local.py              LocalBackend  -- in-process inference (Linux/macOS)
+  client.py             InkSightClient -- same API over HTTP (anywhere)
+  tf_runtime.py         the ONLY module that imports TensorFlow
+  cli.py                `ink-tokenizer doctor` / `derender`
+services/inksight/      FastAPI wrapper around tf_runtime, for remote callers
+scripts/setup_linux.sh  one-shot bootstrap for a Linux/lab machine
+docs/                   inksight.md (decisions, constraints)
+                        running-inference.md (how to run it)
+tests/                  codec + geometry tests; need no model and no TF
 ```
 
-Update this section as real structure lands (data pipeline, recognition model,
-suggestion model, evaluation harness).
+Commands:
+
+```bash
+uv sync --extra dev                 # main package, works on any platform
+uv run pytest                       # no TF, no GPU, no model download
+./scripts/setup_linux.sh --prefetch # Linux: full inference setup
+uv run ink-tokenizer doctor         # what can this machine actually do?
+```
+
+### The TensorFlow boundary -- keep it
+
+`tensorflow-text` publishes **no Windows wheels**, and InkSight pins TF 2.20.
+So:
+
+- `tf_runtime.py` is the only module that may `import tensorflow`, and it must
+  configure `XLA_FLAGS` before doing so (the checkpoint predates TF 2.18's XLA
+  change). Never `import tensorflow` anywhere else, and never above that shim.
+- `ink_tokenizer/__init__.py` must stay importable without TensorFlow.
+  `LocalBackend` is exposed through a module-level `__getattr__` for this
+  reason -- do not add it to the eager imports.
+- The `inference` extra is marked `sys_platform != 'win32'` so it resolves to
+  nothing on Windows rather than failing.
+- Coordinate math and token handling belong in the main package, where they
+  are testable without a container. The service's only job is image bytes ->
+  raw model text.
+
+Read [docs/inksight.md](docs/inksight.md) before touching either side. It
+covers why the split exists and the constraints InkSight imposes -- most
+importantly that **its output has no timestamps** and that its page pipeline
+assumes OCR word boxes, which fit text but not the math and diagrams this
+project targets.
 
 ## Conventions
 

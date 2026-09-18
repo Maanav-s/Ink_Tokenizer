@@ -1,0 +1,26 @@
+services:
+  inksight:
+    build:
+      # Repo root: the image installs the ink_tokenizer package itself.
+      context: ../..
+      dockerfile: services/inksight/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist the ~692 MB checkpoint across rebuilds.
+      - inksight-models:/models
+    environment:
+      INKSIGHT_MODEL: Derendering/InkSight-Small-p
+      INKSIGHT_MAX_BATCH: "32"
+    # Uncomment for GPU (also switch the tensorflow pin in pyproject.toml to
+    # tensorflow[and-cuda]). Needs the NVIDIA container toolkit.
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  inksight-models:
