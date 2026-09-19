@@ -28,3 +28,13 @@ redistributed here; they are downloaded at runtime.
 
 Upstream asks that the model not be used for forging handwriting or for
 privacy-intruding applications.
+
+The fixed-vocabulary digital-ink representation in ``ink_tokenizer/scribe.py``
+is an independent implementation based on the ScribeTokens method described
+by Douglass Wang, "ScribeTokens: Fixed-Vocabulary Tokenization of Digital Ink"
+(arXiv:2603.02805) and its accompanying repository:
+
+    https://github.com/douglasswng/scribe-tokens
+
+It is kept distinct from the InkSight token wire format and contains no source
+code copied from that repository.

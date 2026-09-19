@@ -24,6 +24,7 @@ from .codec import (
 )
 from .ink import Ink, Stroke
 from .preprocess import PadTransform, crop_and_pad, scale_and_pad
+from .scribe import ScribeBPE, ScribeEncoding, ScribeToken, decode_scribe, encode_scribe
 
 __all__ = [
     "Ink",
@@ -47,6 +48,11 @@ __all__ = [
     "DEFAULT_ENDPOINT",
     "PROMPT_RECOGNIZE_AND_DERENDER",
     "PROMPT_DERENDER",
+    "ScribeToken",
+    "ScribeEncoding",
+    "ScribeBPE",
+    "encode_scribe",
+    "decode_scribe",
 ]
 
 

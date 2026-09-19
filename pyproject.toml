@@ -16,7 +16,7 @@ dependencies = [
 # wheels exist for Linux and macOS-arm64 but NOT for Windows, so on Windows
 # this extra resolves to nothing instead of failing to install.
 inference = [
-    "tensorflow==2.20.0 ; sys_platform != 'win32'",
+    "tensorflow[and-cuda]==2.20.0 ; sys_platform != 'win32'",
     "tensorflow-text==2.20.1 ; sys_platform != 'win32'",
     "huggingface-hub>=0.27.0",
 ]
@@ -29,6 +29,13 @@ service = [
 ]
 dev = [
     "pytest>=8.0.0",
+]
+
+# Conventional full-page comparison baseline; kept separate from core imports.
+experiments = [
+    "opencv-python>=4.10.0",
+    "onnxruntime>=1.20.0",
+    "rapidocr>=3.0.0",
 ]
 
 [project.scripts]

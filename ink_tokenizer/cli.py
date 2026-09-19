@@ -14,6 +14,7 @@ from pathlib import Path
 from PIL import Image
 
 from .base import PROMPT_DERENDER, PROMPT_RECOGNIZE_AND_DERENDER
+from .visualize import ink_to_svg, load_ink_json
 
 
 def _add_backend_args(p: argparse.ArgumentParser) -> None:
@@ -134,6 +135,31 @@ def _cmd_derender(args) -> int:
     return 0
 
 
+def _cmd_visualize(args) -> int:
+    source = Path(args.ink_json)
+    if not source.is_file():
+        print(f"no such file: {source}", file=sys.stderr)
+        return 2
+    try:
+        ink, inferred_image = load_ink_json(source, args.index)
+        background = args.image if args.image is not None else inferred_image
+        if background is not None and not Path(background).is_file():
+            print(
+                f"source image unavailable ({background}); drawing ink only",
+                file=sys.stderr,
+            )
+            background = None
+        svg = ink_to_svg(ink, background=background, show_order=args.show_order)
+    except ValueError as exc:
+        print(f"cannot visualize {source}: {exc}", file=sys.stderr)
+        return 2
+
+    output = Path(args.out) if args.out else source.with_suffix(".svg")
+    output.write_text(svg, encoding="utf-8")
+    print(f"wrote {output} ({len(ink)} strokes, {ink.num_points} points)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="ink-tokenizer")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -149,6 +175,21 @@ def main(argv: list[str] | None = None) -> int:
     der.add_argument("-o", "--out", help="write results as JSON to this path")
     _add_backend_args(der)
     der.set_defaults(func=_cmd_derender)
+
+    vis = sub.add_parser("visualize", help="render recovered ink JSON as SVG")
+    vis.add_argument("ink_json", help="raw Ink JSON or output from `derender -o`")
+    vis.add_argument("-o", "--out", help="SVG output path (default: INPUT.svg)")
+    vis.add_argument(
+        "--image",
+        help="source image to embed behind the ink (defaults to the result's image)",
+    )
+    vis.add_argument(
+        "--index", type=int, default=0, help="result index when the JSON has many inputs"
+    )
+    vis.add_argument(
+        "--show-order", action="store_true", help="label each stroke's start point"
+    )
+    vis.set_defaults(func=_cmd_visualize)
 
     args = parser.parse_args(argv)
     return args.func(args)
