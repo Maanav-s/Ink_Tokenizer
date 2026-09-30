@@ -44,6 +44,19 @@ scope by default. Raise it rather than building it.
 - Robust to messy handwriting, multiple writers, and partial/in-progress
   strokes
 
+### Training Data
+
+Training data is **synthesized**. An LLM generates whiteboard notes and
+diagrams in a structured form. A text-to-ink model renders the text as
+handwriting, and heuristics such as artificial jitter make the diagrams look
+hand-drawn. Together they produce timed stroke pages whose structure labels
+come for free. The first text-to-ink model will be an existing handwriting
+synthesis implementation
+([pytorch-handwriting-synthesis-toolkit](https://github.com/X-rayLaser/pytorch-handwriting-synthesis-toolkit)).
+A self-trained Mamba SSM may replace it later. See
+[docs/synthetic_data.md](docs/synthetic_data.md) for the pipeline and its
+risks. Most importantly, evaluation must still use real handwriting.
+
 ## What This Means in Practice
 
 - **Precision over recall.** Showing nothing is an acceptable outcome. Showing
@@ -63,6 +76,9 @@ Early scaffold — Python 3.13, managed with `uv`, no dependencies yet.
 
 - [pyproject.toml](pyproject.toml) — project metadata
 - [main.py](main.py) — placeholder entry point
+- [docs/synthetic_data.md](docs/synthetic_data.md) — synthetic training data
+  plan
+- [docs/slurm.md](docs/slurm.md) — running jobs on Slurm
 
 Common commands:
 
@@ -71,8 +87,8 @@ uv sync          # install/resolve dependencies
 uv run main.py   # run the entry point
 ```
 
-Update this section as real structure lands (data pipeline, recognition model,
-suggestion model, evaluation harness).
+Update this section as real structure lands (synthetic data pipeline,
+recognition model, suggestion model, evaluation harness).
 
 ## Conventions
 

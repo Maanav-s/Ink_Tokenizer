@@ -3,7 +3,7 @@
 `scripts/submit_slurm.sh` submits any command as a single-node batch job that
 runs from the repository root with your current shell environment. It does not
 know about any particular job, so the same helper covers training runs, bulk
-derendering and benchmarks.
+synthetic data generation and benchmarks.
 
 ## Before the first job
 
