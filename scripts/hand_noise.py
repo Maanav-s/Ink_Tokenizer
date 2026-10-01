@@ -232,6 +232,8 @@ class Hand:
             pts = keep if len(keep) >= 2 else pts
         s = arc_lengths(pts)
         L = s[-1]
+        if L < 1e-6:  # e.g. a dot whose trim left nothing to deform
+            return pts
 
         # Endpoint error: each end lands off target, blended linearly along the
         # stroke, so long lines also tilt a little. Text strokes get theirs (and

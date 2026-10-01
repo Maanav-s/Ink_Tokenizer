@@ -24,6 +24,7 @@ import argparse
 import json
 import math
 import os
+import re
 import xml.etree.ElementTree as ET
 
 from HersheyFonts import HersheyFonts
@@ -55,35 +56,123 @@ SYMBOL_ADVANCE = {"⊕": None, "→": 0.75, "≤": 0.6, "≥": 0.6, "≠": 0.6, 
                   "×": 0.55, "∞": 0.75, "∫": 0.45, "√": 0.55}
 
 
-class TextRenderer:
-    """Lays out strings with a Hershey font; text_height spans descender to cap.
+FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fonts", "svg")
 
-    Greek letters fall back to the Hershey 'greeks' font, and the characters in
-    SYMBOL_ADVANCE are drawn as primitives. Any other character missing from
-    the font is an error.
+
+class HersheySource:
+    """A Hershey font from the HersheyFonts package, normalized so glyph y runs
+    from 0 at the descender line to 1 at the cap line."""
+
+    def __init__(self, name):
+        self.font = HersheyFonts()
+        self.font.load_default_font(name)
+        self.font.normalize_rendering(1.0)
+        o = self.font.render_options
+        self.sx, self.sy, self.y0 = o.scalex, o.scaley, o.yofs
+        # Baseline measured from the glyph data (the bottom of H, or A for fonts
+        # where H is another letter). render_options' base_line doesn't give it.
+        g = self.glyph("H" if name != "greeks" else "A")
+        self.base = min(self.y0 + py * self.sy for st in g.strokes for _, py in st)
+
+    def glyph(self, ch):
+        glyphs = list(self.font.glyphs_for_text(ch))
+        return glyphs[0] if glyphs else None
+
+
+class SvgGlyph:
+    def __init__(self, adv, strokes):
+        self.char_width, self.left_offset, self.strokes = adv, 0.0, strokes
+
+
+class SvgSource:
+    """A single-line SVG font (fonts/svg/<name>.svg, e.g. the EMS fonts from
+    Inkscape's Hershey Text extension).
+
+    It is scaled so its measured cap height (baseline to the top of H and E)
+    and baseline match the reference Hershey font's. Text in any font then
+    has the same capital size for a given text_height, while descenders keep
+    the font's own proportions. The font-face metrics vary too much between
+    these fonts to use instead."""
+
+    def __init__(self, path, ref_base):
+        svg = "{http://www.w3.org/2000/svg}"
+        font = ET.parse(path).getroot().find(f".//{svg}font")
+        default_adv = float(font.get("horiz-adv-x", 500))
+        self.glyphs = {}
+        for g in font.findall(f"{svg}glyph"):
+            ch = g.get("unicode")
+            if ch is None or len(ch) != 1:
+                continue
+            # These fonts use absolute M, L and (in a few accented glyphs) C.
+            # Commands may be glued to their first number ("M1022 40"), so
+            # tokenize with a regex.
+            strokes, cur, cmd = [], None, None
+            tok = re.findall(r"[A-Za-z]|[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?", g.get("d") or "")
+            i = 0
+            while i < len(tok):
+                if tok[i].isalpha():
+                    cmd = tok[i]
+                    if cmd not in "MLC":
+                        raise ValueError(f"{path}: unsupported path command {cmd!r} in glyph {ch!r}")
+                    i += 1
+                    continue
+                if cmd == "C":  # cubic Bezier, flattened to 8 segments
+                    p0 = cur[-1]
+                    p1, p2, p3 = [(float(tok[i + k]), float(tok[i + k + 1])) for k in (0, 2, 4)]
+                    i += 6
+                    for j in range(1, 9):
+                        t = j / 8
+                        cur.append(tuple((1 - t) ** 3 * a + 3 * (1 - t) ** 2 * t * b + 3 * (1 - t) * t * t * c + t ** 3 * d
+                                         for a, b, c, d in zip(p0, p1, p2, p3)))
+                    continue
+                pt = (float(tok[i]), float(tok[i + 1]))
+                i += 2
+                if cmd == "M":
+                    cur = [pt]
+                    strokes.append(cur)
+                    cmd = "L"  # further pairs after a moveto are linetos
+                else:
+                    cur.append(pt)
+            self.glyphs[ch] = SvgGlyph(float(g.get("horiz-adv-x", default_adv)),
+                                       [st for st in strokes if len(st) > 1])
+        cap = max(y for c in "HE" for st in self.glyphs[c].strokes for _, y in st)
+        self.sx = self.sy = (1.0 - ref_base) / cap
+        self.y0 = self.base = ref_base
+
+    def glyph(self, ch):
+        return self.glyphs.get(ch)
+
+
+def font_source(name):
+    path = os.path.join(FONT_DIR, f"{name}.svg")
+    if os.path.exists(path):
+        return SvgSource(path, ref_base=HersheySource("futural").base)
+    return HersheySource(name)
+
+
+class TextRenderer:
+    """Lays out strings with a single-stroke font; text_height spans descender to cap.
+
+    `font` is a Hershey font name (e.g. futural, cursive) or the name of an SVG
+    font in fonts/svg (e.g. EMSReadability). Greek letters fall back to the
+    Hershey 'greeks' font, and the characters in SYMBOL_ADVANCE are drawn as
+    primitives. Any other character missing from the font is an error.
     """
 
     def __init__(self, font):
-        self.fonts = {}
-        for name in (font, "greeks"):
-            f = HersheyFonts()
-            f.load_default_font(name)
-            f.normalize_rendering(1.0)  # glyph y in [0, 1]: descender bottom to cap
-            o = f.render_options
-            self.fonts[name] = (f, o.scalex, o.scaley, o.yofs)
         self.main = font
-        o = self.fonts[font][0].render_options
-        self.base = o.yofs + o.base_line * o.scaley  # baseline height, fraction of text_height
-        plus = self._lookup("+")
-        ys = [o.yofs + py * o.scaley for st in plus[0].strokes for _, py in st]
-        self.op_y = (min(ys) + max(ys)) / 2 - self.base  # operator centre above baseline
+        self.sources = {font: font_source(font), "greeks": HersheySource("greeks")}
+        self.base = self.sources[font].base  # baseline height, fraction of text_height
+        g, sx, sy, y0, base = self._lookup("+")
+        ys = [y0 + py * sy for st in g.strokes for _, py in st]
+        self.op_y = (min(ys) + max(ys)) / 2 - base  # operator centre above baseline
 
     def _lookup(self, ch):
-        """(glyph, sx, sy, y0) for a character, or None."""
-        font, key = (self.main, ch) if ch not in GREEK else ("greeks", GREEK[ch])
-        f, sx, sy, y0 = self.fonts[font]
-        glyphs = list(f.glyphs_for_text(key))
-        return (glyphs[0], sx, sy, y0) if glyphs else None
+        """(glyph, sx, sy, y0, base) for a character, or None."""
+        name, key = (self.main, ch) if ch not in GREEK else ("greeks", GREEK[ch])
+        src = self.sources[name]
+        g = src.glyph(key)
+        return (g, src.sx, src.sy, src.y0, src.base) if g else None
 
     def width(self, text, h):
         return sum(self._advance(ch, h) for ch in text)
@@ -97,13 +186,17 @@ class TextRenderer:
         g = self._lookup(ch)
         return g[0].char_width * g[1] * h if g else 0.55 * h
 
-    def strokes(self, text, x0, y_bottom, h, hand, wid):
+    def strokes(self, text, x0, y_bottom, h, hand, wid, max_width=None):
         """Strokes (lists of (x, y) in page mm) for text whose box bottom is y_bottom.
 
         Glyphs are built in line coordinates (X right from x0, Y up from the
         baseline), varied per glyph and per line by `hand`, then mapped to the page.
+        If the text would be wider than max_width, it is squeezed horizontally
+        (to no less than 75%), as a writer running out of room would.
         """
-        line = hand.text_line(wid, h, self.width(text, h))
+        natural = self.width(text, h)
+        squeeze = 1.0 if not max_width or natural <= max_width else max(0.75, max_width / natural)
+        line = hand.text_line(wid, h, natural * squeeze)
         w = line["w"]
         hs = h * w["size"]
         glyphs, x = [], 0.0
@@ -115,8 +208,8 @@ class TextRenderer:
                 found = self._lookup(ch)
                 if found is None:
                     raise ValueError(f"font {self.main!r} has no glyph for {ch!r}")
-                g, sx, sy, y0 = found
-                local = [[((px - g.left_offset) * sx * hs, (y0 + py * sy - self.base) * hs)
+                g, sx, sy, y0, base = found
+                local = [[((px - g.left_offset) * sx * hs, (y0 + py * sy - base) * hs)
                           for px, py in st] for st in g.strokes]
             # The writer's persistent shape for this character, then this
             # occurrence's own variation, both about the glyph's middle.
@@ -130,7 +223,7 @@ class TextRenderer:
         for st in glyphs:
             pts = []
             for X, Y in st:
-                X += w["slant"] * Y
+                X = X * squeeze + w["slant"] * Y
                 Y += line["curve"] * X * X
                 X, Y = ct * X - st_ * Y, st_ * X + ct * Y
                 pts.append((x0 + line["dx"] + X, y_base + line["dy"] - Y))
@@ -283,9 +376,10 @@ def sketch_item_strokes(item, text, hand, wid):
     if kind == "text":
         x0, _, x1, y1 = item["bbox"]
         h = item["text_height"]
+        width = min(text.width(item["text"], h), x1 - x0)
         if item.get("align", "left") == "center":
-            x0 = (x0 + x1) / 2 - text.width(item["text"], h) / 2
-        return text.strokes(item["text"], x0, y1, h, hand, wid)
+            x0 = (x0 + x1) / 2 - width / 2
+        return text.strokes(item["text"], x0, y1, h, hand, wid, max_width=x1 - x0)
     if kind == "polyline":
         pts = [tuple(p) for p in item["points"]]
         return lines([pts + [pts[0]] if item.get("closed") else pts])
@@ -333,8 +427,8 @@ def element_strokes(eid, content, layout, text, hand):
     if eid in els:  # text or math line
         cel = content[eid]
         s = cel.get("written", cel.get("text"))
-        x0, _, _, y1 = els[eid]["bbox"]
-        return text.strokes(s, x0, y1, els[eid]["text_height"], hand, wid)
+        x0, _, x1, y1 = els[eid]["bbox"]
+        return text.strokes(s, x0, y1, els[eid]["text_height"], hand, wid, max_width=x1 - x0)
 
     item = sketch_item(eid, layout)
     if item is not None:
@@ -486,7 +580,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("page_dir", nargs="?", default=os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "..", "artifacts", "page_0001"))
-    ap.add_argument("--font", default="futural", help="Hershey font name (default: futural)")
+    ap.add_argument("--font", default="futural",
+                    help="Hershey font name, or an SVG font in fonts/svg (default: futural)")
     ap.add_argument("--noise", type=float, default=0.0,
                     help="handwriting variation level: 0 = clean geometry, 1 = default amount")
     ap.add_argument("--seed", type=int, default=0)
