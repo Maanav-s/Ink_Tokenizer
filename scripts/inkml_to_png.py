@@ -2,7 +2,9 @@
 
 No maintained InkML rendering library exists on PyPI, so this is a small
 standalone reader (stdlib XML) plus Pillow. It reads <traceFormat> to find the
-X, Y and T channels and draws every <trace> as a polyline. It does not handle
+X, Y and T channels and draws every <trace> as a polyline, as wide as its
+brush's "width" property (in the same units as X and Y) or --line-width
+pixels for traces without one. It does not handle
 InkML's difference-encoded traces ("'" / '"' prefixes) or transforms; it
 raises rather than drawing them wrong.
 
@@ -33,7 +35,13 @@ def read_inkml(path):
     ix, iy = channels.index("X"), channels.index("Y")
     it = channels.index("T") if "T" in channels else None
 
-    traces = {}
+    brushes = {}
+    for b in root.iter(f"{NS}brush"):
+        for prop in b.findall(f"{NS}brushProperty"):
+            if prop.get("name") == "width":
+                brushes[b.get(XML_ID)] = float(prop.get("value"))
+
+    traces, widths = {}, {}
     for i, tr in enumerate(root.iter(f"{NS}trace")):
         pts = []
         for chunk in (tr.text or "").split(","):
@@ -44,7 +52,9 @@ def read_inkml(path):
                 raise NotImplementedError(f"difference-encoded trace {tr.get(XML_ID)}")
             v = [float(x) for x in vals]
             pts.append((v[ix], v[iy], v[it] if it is not None else None))
-        traces[tr.get(XML_ID) or f"_{i}"] = pts
+        tid = tr.get(XML_ID) or f"_{i}"
+        traces[tid] = pts
+        widths[tid] = brushes.get((tr.get("brushRef") or "").lstrip("#"))
 
     groups = []  # list of trace-id lists, one per top-level group child
     for top in root.findall(f"{NS}traceGroup"):
@@ -52,11 +62,11 @@ def read_inkml(path):
             groups.append([v.get("traceDataRef").lstrip("#") for v in g.iter(f"{NS}traceView")])
 
     notes = {a.get("type"): a.text for a in root.findall(f"{NS}annotation")}
-    return traces, groups, notes
+    return traces, groups, notes, widths
 
 
 def render(path, out, px_per_unit, until, color_groups, line_width, crop=None):
-    traces, groups, notes = read_inkml(path)
+    traces, groups, notes, widths = read_inkml(path)
     if crop:
         x0, y0, x1, y1 = crop
     elif "page_width_mm" in notes:
@@ -83,7 +93,12 @@ def render(path, out, px_per_unit, until, color_groups, line_width, crop=None):
         if len(xy) == 1:
             xy = xy * 2
         if xy:
-            draw.line(xy, fill=color[tid], width=line_width, joint="curve")
+            w = round(widths[tid] * px_per_unit) if widths[tid] else line_width
+            draw.line(xy, fill=color[tid], width=max(1, w), joint="curve")
+            if w > 2:  # round caps, so wide strokes don't end in flat cuts
+                r = w / 2
+                for cx, cy in (xy[0], xy[-1]):
+                    draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill=color[tid])
             drawn += 1
     img.save(out)
     print(f"wrote {out} ({img.width}x{img.height} px, {drawn}/{len(traces)} traces)")
@@ -96,7 +111,7 @@ if __name__ == "__main__":
     ap.add_argument("--px-per-unit", type=float, default=1.5)
     ap.add_argument("--until", type=float, help="only draw ink with T <= this")
     ap.add_argument("--color-groups", action="store_true")
-    ap.add_argument("--line-width", type=int, default=3)
+    ap.add_argument("--line-width", type=int, default=3, help="pixels, for traces without a brush width")
     ap.add_argument("--crop", type=float, nargs=4, metavar=("X0", "Y0", "X1", "Y1"))
     a = ap.parse_args()
     render(a.inkml, a.out or os.path.splitext(a.inkml)[0] + ".png",

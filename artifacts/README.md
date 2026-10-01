@@ -17,10 +17,11 @@ hard-coded in the script), and `scripts/check_page.py [page_dir]` runs the
 checks above.
 
 `page.inkml` is the page rendered as clean ink by `scripts/render_inkml.py`.
-`page_noise1_seed0.inkml` and `page_noise1_seed1.inkml` are the same page
-with handwriting-like variation at level 1, for seeds 0 and 1. Each `.png`
-is its InkML rasterized by `scripts/inkml_to_png.py` for inspection. See
-"Rendered ink" below.
+`renders/<font>_noise<level>_seed<seed>.inkml` are the same page with
+handwriting-like variation, one per Hershey font (`futural`, `scripts`,
+`cursive`, `timesi`), all at noise level 0.75 with seed 0. Each `.png` is its
+InkML rasterized by `scripts/inkml_to_png.py` for inspection. See "Rendered
+ink" below.
 
 Each page directory holds `content.json` (what is written, the ground truth)
 and `layout.json` (where and in what order it is written). Both files key
@@ -127,14 +128,30 @@ Because allographs are seeded by the seed, a different seed means a
 different writer, not just a different draw for the same writer. Level 1 is
 deliberately messy: an occasional character becomes ambiguous (a "0" that
 reads as "d", a "t" that reads as "l"), which is a realistic recognition
-challenge. Use a lower level for tidier writing. Level 0 reproduces the clean geometry and constant 150 mm/s pen speed. The
-same seed and level always give the same file.
+challenge. The samples use 0.75, between that and the earlier, milder
+version. Level 0 reproduces the clean geometry and constant 150 mm/s pen
+speed. The same seed and level always give the same file.
+
+**Fonts** (`--font`): several Hershey names share glyph data. `futural`,
+`rowmans` and `meteorology` are identical, and so are `futuram` and
+`rowmand`.
+- `futural`: print sans, single stroke. The default.
+- `scripts`, `cursive`: connected script, single stroke. Lowercase is small
+  relative to text_height because these fonts have tall ascenders.
+- `timesi`: Times italic. It draws each letter as several parallel strokes
+  for thickness, so it looks fine as an image, but its pen trajectories are
+  unrealistic (about twice the strokes and writing time). Use it for image
+  variety only.
 
 - `traceFormat` has the channels `X`, `Y` (mm, same frame as layout.json) and
   `T` (seconds from the first stroke).
 - Elements follow `writing_order`. Strokes are sampled at 100 Hz, plus a
   final sample at each stroke's end, so timestamps strictly increase. Pen-up
   travel and a pause between elements add the gaps in `T`.
+- Stroke width is an InkML brush. `<definitions>` declares `pen` (2 mm) and
+  `bold` (3.5 mm), and each `<trace>` has a `brushRef`. Title text uses
+  `bold`, and everything else uses `pen`. The PNG viewer draws each trace at
+  its brush width.
 - `<annotation>`s on `<ink>` give `page_id`, the page size, the y-axis
   direction, and `noise_level` and `noise_seed`.
 - The top-level `<traceGroup xml:id="elements">` holds one child
@@ -156,4 +173,6 @@ uv run --extra render python scripts/inkml_to_png.py artifacts/page_0001/page.in
 
 `--until` draws only the ink written up to that time, i.e. an in-progress
 page. `--color-groups` colours each element separately. `--crop` with a
-larger `--px-per-unit` zooms in on a region.
+larger `--px-per-unit` zooms in on a region. Clean `futural` output goes to
+`page.inkml`, and anything else defaults to
+`renders/<font>_noise<L>_seed<N>.inkml`.

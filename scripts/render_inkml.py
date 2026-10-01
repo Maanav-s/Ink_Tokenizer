@@ -11,6 +11,8 @@ docs/synthetic_data.md, without any handwriting model:
 - Elements are written in layout.json's writing_order. Each stroke is
   sampled at a fixed rate while the pen moves at constant speed, and pen-up
   travel adds time between strokes, so the T channel is a plausible timeline.
+- Stroke width is carried by InkML brushes: elements reference "#pen", and
+  title text references the wider "#bold" brush.
 - With --noise > 0, scripts/hand_noise.py adds handwriting-like variation
   (writer slant, baseline drift, per-glyph jitter, elastic warping, bowed
   lines, overshoot, variable pen speed). --noise 0 gives clean geometry.
@@ -36,6 +38,8 @@ TRAVEL_SPEED = 400.0   # mm/s while the pen is lifted
 PEN_UP_PAUSE = 0.08    # s, minimum gap between strokes
 ELEMENT_PAUSE = 0.4    # s, extra gap between writing_order entries
 JUNCTION_RADIUS = 1.5  # mm
+PEN_WIDTH = 2.0        # mm, normal stroke width (a whiteboard marker)
+BOLD_WIDTH = 3.5       # mm, stroke width for bold elements (the title)
 DIAGRAM_SCALE = 50.0   # mm, reference size passed to the noise model for diagram strokes
 CIRCLE_SEGMENTS = 24
 
@@ -283,6 +287,10 @@ def render(page_dir, font, noise, seed, out):
     fmt = ET.SubElement(ctx, q("traceFormat"))
     for name, units in (("X", "mm"), ("Y", "mm"), ("T", "s")):
         ET.SubElement(fmt, q("channel"), {"name": name, "type": "decimal", "units": units})
+    for bid, width in (("pen", PEN_WIDTH), ("bold", BOLD_WIDTH)):
+        brush = ET.SubElement(defs, q("brush"), {XML_ID: bid})
+        for prop in ("width", "height"):
+            ET.SubElement(brush, q("brushProperty"), {"name": prop, "value": f"{width:g}", "units": "mm"})
     page = layout["page"]
     for k, v in (("page_id", layout["page_id"]), ("page_width_mm", page["width"]),
                  ("page_height_mm", page["height"]), ("y_axis", page["y_axis"]),
@@ -301,13 +309,13 @@ def render(page_dir, font, noise, seed, out):
             pts, t = hand.time_stroke(stroke, t, wid, SAMPLE_RATE)
             pen = stroke[-1]
             tid = f"t{len(traces)}"
-            traces.append((tid, pts))
+            traces.append((tid, pts, "bold" if cidx.get(eid, {}).get("role") == "title" else "pen"))
             refs.append(tid)
         groups.append((eid, wid, refs))
         t += hand.pause(ELEMENT_PAUSE)
 
-    for tid, pts in traces:
-        el = ET.SubElement(ink, q("trace"), {XML_ID: tid, "contextRef": "#ctx0"})
+    for tid, pts, brush in traces:
+        el = ET.SubElement(ink, q("trace"), {XML_ID: tid, "contextRef": "#ctx0", "brushRef": f"#{brush}"})
         el.text = ", ".join(f"{x:.2f} {y:.2f} {tt:.3f}" for x, y, tt in pts)
     root = ET.SubElement(ink, q("traceGroup"), {XML_ID: "elements"})
     for eid, writer, refs in groups:
@@ -318,9 +326,14 @@ def render(page_dir, font, noise, seed, out):
             ET.SubElement(g, q("traceView"), {"traceDataRef": f"#{tid}"})
 
     ET.indent(ink)
-    out = out or os.path.join(page_dir, "page.inkml" if noise == 0 else f"page_noise{noise:g}_seed{seed}.inkml")
+    if not out:
+        if noise == 0 and font == "futural":
+            out = os.path.join(page_dir, "page.inkml")
+        else:
+            os.makedirs(os.path.join(page_dir, "renders"), exist_ok=True)
+            out = os.path.join(page_dir, "renders", f"{font}_noise{noise:g}_seed{seed}.inkml")
     ET.ElementTree(ink).write(out, encoding="utf-8", xml_declaration=True)
-    n_pts = sum(len(p) for _, p in traces)
+    n_pts = sum(len(p) for _, p, _ in traces)
     print(f"wrote {out}: {len(groups)} elements, {len(traces)} traces, {n_pts} points, {t:.1f} s of writing")
 
 
@@ -332,6 +345,7 @@ if __name__ == "__main__":
     ap.add_argument("--noise", type=float, default=0.0,
                     help="handwriting variation level: 0 = clean geometry, 1 = default amount")
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--out", help="output path (default: page.inkml, or page_noise<L>_seed<N>.inkml)")
+    ap.add_argument("--out", help="output path (default: page.inkml for clean futural, "
+                         "else renders/<font>_noise<L>_seed<N>.inkml)")
     args = ap.parse_args()
     render(args.page_dir, args.font, args.noise, args.seed, args.out)
