@@ -27,6 +27,19 @@ Each page directory holds `content.json` (what is written, the ground truth)
 and `layout.json` (where and in what order it is written). Both files key
 everything by stable `id`s.
 
+## Pages
+
+| Page | Content | Generator |
+|---|---|---|
+| page_0001 | 1-bit full adder: notes, truth table, Boolean algebra, gate diagram | `scripts/make_sample_page.py` (checks: `scripts/check_page.py`) |
+| page_0002 | CI deploy pipeline flowchart with canary and rollback | `scripts/make_page_0002.py` |
+| page_0003 | dense design-review notes, action-item and timeline tables | `scripts/make_page_0003.py` |
+| page_0004 | RC low-pass derivation: fractions, sub/superscripts, ∫, √, schematic | `scripts/make_page_0004.py` |
+
+Pages 2–4 were written by LLM subagents. Each generator asserts its own
+content and layout checks before writing. `renders/` in each page holds the
+batch renders (8 fonts at noise 0.75, seed 0) from `scripts/render_batch.py`.
+
 ## content.json (`ink_tokenizer.synthetic_page.content/v0`)
 
 Top level: `schema`, `page_id`, `topic`, `provenance`, `elements[]`.
@@ -45,6 +58,18 @@ Element types:
   - `latex`.
   - `defines`: the signal the line defines.
   - Optionally `continues`, the id of the line it carries on from.
+- `table` (page_0003): the `truth_table` structure (header, rows of cells,
+  rules), plus `kind` (e.g. `action_items`, `timeline`) and `columns` (what
+  each column means). Use it for any table that isn't a truth table.
+- `section` (page_0003): `heading`, `list_style` (`numbered` or `dash`) and
+  `items` of `{id, indent, parent}`. A container that is never written
+  itself.
+- `flowchart` (page_0002): `nodes[]` of `{id, shape: terminator|process|decision|io, text}`
+  and `edges[]` of `{id, from, to, label?}`. Drawn by a sketch whose item
+  ids are `<flowchart>.<node or edge>.<part>`.
+- 2-D math (page_0004): `math` elements with `layout: "2d_sketch"` and
+  `items` (the sketch item ids that draw them), drawn by a sketch element
+  keyed by the math id.
 - `circuit` with:
   - `components[]` of `{id, type, label, ports[]}`. `type` is one of
     `input_pin`, `output_pin`, `and2`, `or2` or `xor2`. Gates have ports
@@ -192,6 +217,9 @@ uv run --extra render python scripts/render_inkml.py [page_dir] [--font NAME] \
 uv run --extra render python scripts/inkml_to_png.py artifacts/page_0001/page.inkml \
     [out.png] [--until SECONDS] [--color-groups] [--crop X0 Y0 X1 Y1] [--px-per-unit N]
 ```
+
+`scripts/render_batch.py [page_dir ...] [--fonts ...] [--seeds ...]` renders
+pages across fonts and seeds; see `fonts/README.md` for the font list.
 
 `--until` draws only the ink written up to that time, i.e. an in-progress
 page. `--color-groups` colours each element separately. `--crop` with a

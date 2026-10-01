@@ -95,6 +95,11 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   and stroke, and models pen speed, rather than adding i.i.d. Gaussian
   noise.
 - Ink format: **InkML**, with X/Y in mm and T in seconds.
+- [scripts/render_batch.py](scripts/render_batch.py) — render every page
+  across fonts and seeds. [fonts/](fonts/README.md) holds OFL-licensed
+  single-line SVG fonts.
+- `scripts/make_page_000N.py` — generators for the sample pages listed in
+  [artifacts/README.md](artifacts/README.md).
 
 Common commands:
 

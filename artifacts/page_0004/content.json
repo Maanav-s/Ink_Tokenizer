@@ -1,0 +1,379 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v0",
+  "page_id": "page_0004",
+  "topic": "circuits: RC low-pass filter, step response and cutoff frequency",
+  "provenance": {
+    "generator": "hand-produced by LLM agent (Claude), scripts/make_page_0004.py",
+    "automated": false
+  },
+  "elements": [
+    {
+      "id": "title",
+      "type": "text",
+      "role": "title",
+      "text": "RC low-pass - step + freq response"
+    },
+    {
+      "id": "givens",
+      "type": "text",
+      "role": "bullet",
+      "text": "given: R = 10 kΩ, C = 100 nF, 5 V step in at t = 0, cap starts at 0 V"
+    },
+    {
+      "id": "fig_1",
+      "type": "schematic",
+      "components": [
+        {
+          "id": "V1",
+          "type": "voltage_source",
+          "label": "V_in",
+          "value": "5 V step at t = 0",
+          "ports": [
+            "p",
+            "n"
+          ],
+          "drawn_by": [
+            "fig_1.src",
+            "fig_1.src_plus",
+            "fig_1.src_minus"
+          ]
+        },
+        {
+          "id": "R1",
+          "type": "resistor",
+          "label": "R",
+          "value": "10 kΩ",
+          "ports": [
+            "a",
+            "b"
+          ],
+          "drawn_by": [
+            "fig_1.res"
+          ]
+        },
+        {
+          "id": "C1",
+          "type": "capacitor",
+          "label": "C",
+          "value": "100 nF",
+          "ports": [
+            "a",
+            "b"
+          ],
+          "drawn_by": [
+            "fig_1.cap_plate_1",
+            "fig_1.cap_plate_2"
+          ]
+        },
+        {
+          "id": "GND",
+          "type": "ground",
+          "ports": [
+            "g"
+          ],
+          "drawn_by": [
+            "fig_1.gnd",
+            "fig_1.gnd_1",
+            "fig_1.gnd_2",
+            "fig_1.gnd_3"
+          ]
+        },
+        {
+          "id": "OUT",
+          "type": "terminal",
+          "label": "V_out",
+          "ports": [
+            "t"
+          ],
+          "drawn_by": [
+            "fig_1.term"
+          ]
+        }
+      ],
+      "nets": [
+        {
+          "id": "in",
+          "connects": [
+            "V1.p",
+            "R1.a"
+          ],
+          "drawn_by": [
+            "fig_1.w_in"
+          ]
+        },
+        {
+          "id": "out",
+          "connects": [
+            "R1.b",
+            "C1.a",
+            "OUT.t"
+          ],
+          "drawn_by": [
+            "fig_1.w_mid",
+            "fig_1.w_cap_top",
+            "fig_1.node",
+            "fig_1.w_out"
+          ]
+        },
+        {
+          "id": "gnd",
+          "connects": [
+            "V1.n",
+            "C1.b",
+            "GND.g"
+          ],
+          "drawn_by": [
+            "fig_1.w_cap_bot",
+            "fig_1.w_gnd"
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "id": "lbl_vin",
+          "text": "V_in",
+          "attached_to": "V1",
+          "drawn_by": [
+            "fig_1.lbl_vin.t1",
+            "fig_1.lbl_vin.sub1"
+          ]
+        },
+        {
+          "id": "lbl_r",
+          "text": "R",
+          "attached_to": "R1",
+          "drawn_by": [
+            "fig_1.lbl_r"
+          ]
+        },
+        {
+          "id": "lbl_c",
+          "text": "C",
+          "attached_to": "C1",
+          "drawn_by": [
+            "fig_1.lbl_c"
+          ]
+        },
+        {
+          "id": "lbl_vout",
+          "text": "V_out",
+          "attached_to": "net:out",
+          "drawn_by": [
+            "fig_1.lbl_vout.t1",
+            "fig_1.lbl_vout.sub1"
+          ]
+        },
+        {
+          "id": "lbl_i",
+          "text": "i",
+          "attached_to": "net:in",
+          "meaning": "loop current, arrow shows direction",
+          "drawn_by": [
+            "fig_1.arrow_i",
+            "fig_1.lbl_i"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sec_1",
+      "type": "text",
+      "role": "bullet",
+      "text": "KCL at out node:"
+    },
+    {
+      "id": "eq_1",
+      "type": "math",
+      "latex": "i = \\frac{V_{in} - V_{out}}{R} = C \\frac{dV_{out}}{dt}",
+      "text": "i = (Vin - Vout)/R = C*dVout/dt",
+      "defines": "i",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_1.t1",
+        "eq_1.eq",
+        "eq_1.f1.num.t1",
+        "eq_1.f1.num.t2",
+        "eq_1.f1.num.sub1",
+        "eq_1.f1.num.t3",
+        "eq_1.f1.num.t4",
+        "eq_1.f1.num.sub2",
+        "eq_1.f1.num.t5",
+        "eq_1.f1.bar",
+        "eq_1.f1.den.t1",
+        "eq_1.t2",
+        "eq_1.t3",
+        "eq_1.f2.num.t1",
+        "eq_1.f2.num.sub1",
+        "eq_1.f2.bar",
+        "eq_1.f2.den.t1"
+      ]
+    },
+    {
+      "id": "eq_2",
+      "type": "math",
+      "latex": "V_{out}(t) = \\frac{1}{C} \\int_0^t i \\, dt",
+      "text": "Vout(t) = (1/C)*integral(i, 0, t)",
+      "defines": "Vout",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_2.t1",
+        "eq_2.sub1",
+        "eq_2.t2",
+        "eq_2.eq",
+        "eq_2.f1.num.t1",
+        "eq_2.f1.bar",
+        "eq_2.f1.den.t1",
+        "eq_2.int1.sign",
+        "eq_2.int1.lo",
+        "eq_2.int1.hi",
+        "eq_2.t3"
+      ]
+    },
+    {
+      "id": "eq_3",
+      "type": "math",
+      "latex": "= V_{in} \\left(1 - e^{-t/\\tau}\\right)",
+      "text": "= Vin*(1 - exp(-t/tau))",
+      "defines": "Vout",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_3.eq",
+        "eq_3.t1",
+        "eq_3.sub1",
+        "eq_3.t2",
+        "eq_3.t3",
+        "eq_3.t4",
+        "eq_3.sup1",
+        "eq_3.t5"
+      ],
+      "continues": "eq_2"
+    },
+    {
+      "id": "eq_4",
+      "type": "math",
+      "latex": "\\tau = RC = 10\\,\\mathrm{k\\Omega} \\cdot 100\\,\\mathrm{nF} = 1\\,\\mathrm{ms}",
+      "text": "tau = R*C = 10e3*100e-9 = 1e-3",
+      "defines": "tau",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_4.t1",
+        "eq_4.eq",
+        "eq_4.t2",
+        "eq_4.t3",
+        "eq_4.t4",
+        "eq_4.t5",
+        "eq_4.t6",
+        "eq_4.t7",
+        "eq_4.t8"
+      ]
+    },
+    {
+      "id": "sec_2",
+      "type": "text",
+      "role": "bullet",
+      "text": "sine in, phasors:"
+    },
+    {
+      "id": "eq_5",
+      "type": "math",
+      "latex": "Z_C = \\frac{1}{j \\omega C}",
+      "text": "ZC = 1/(j*w*C)",
+      "defines": "ZC",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_5.t1",
+        "eq_5.sub1",
+        "eq_5.eq",
+        "eq_5.f1.num.t1",
+        "eq_5.f1.bar",
+        "eq_5.f1.den.t1"
+      ]
+    },
+    {
+      "id": "eq_6",
+      "type": "math",
+      "latex": "H(j\\omega) = \\frac{V_{out}}{V_{in}} = \\frac{Z_C}{R + Z_C}",
+      "text": "H(j*w) = Vout/Vin = ZC/(R + ZC)",
+      "defines": "H",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_6.t1",
+        "eq_6.eq",
+        "eq_6.f1.num.t1",
+        "eq_6.f1.num.sub1",
+        "eq_6.f1.bar",
+        "eq_6.f1.den.t1",
+        "eq_6.f1.den.sub1",
+        "eq_6.t2",
+        "eq_6.f2.num.t1",
+        "eq_6.f2.num.sub1",
+        "eq_6.f2.bar",
+        "eq_6.f2.den.t1",
+        "eq_6.f2.den.t2",
+        "eq_6.f2.den.t3",
+        "eq_6.f2.den.sub1"
+      ]
+    },
+    {
+      "id": "eq_7",
+      "type": "math",
+      "latex": "= \\frac{1}{1 + j \\omega RC}",
+      "text": "= 1/(1 + j*w*R*C)",
+      "defines": "H",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_7.eq",
+        "eq_7.f1.num.t1",
+        "eq_7.f1.bar",
+        "eq_7.f1.den.t1",
+        "eq_7.f1.den.t2",
+        "eq_7.f1.den.t3"
+      ],
+      "continues": "eq_6"
+    },
+    {
+      "id": "eq_8",
+      "type": "math",
+      "latex": "|H(j\\omega)| = \\frac{1}{\\sqrt{1 + (\\omega RC)^2}}",
+      "text": "abs(H(j*w)) = 1/sqrt(1 + (w*R*C)**2)",
+      "defines": "|H|",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_8.t1",
+        "eq_8.eq",
+        "eq_8.f1.num.t1",
+        "eq_8.f1.bar",
+        "eq_8.f1.den.rad1.sign",
+        "eq_8.f1.den.rad1.bar",
+        "eq_8.f1.den.rad1.body.t1",
+        "eq_8.f1.den.rad1.body.t2",
+        "eq_8.f1.den.rad1.body.t3",
+        "eq_8.f1.den.rad1.body.sup1"
+      ]
+    },
+    {
+      "id": "eq_9",
+      "type": "math",
+      "latex": "f_c = \\frac{1}{2 \\pi RC} = 159\\,\\mathrm{Hz}",
+      "text": "fc = 1/(2*pi*R*C) = 159",
+      "defines": "fc",
+      "layout": "2d_sketch",
+      "items": [
+        "eq_9.t1",
+        "eq_9.sub1",
+        "eq_9.eq",
+        "eq_9.f1.num.t1",
+        "eq_9.f1.bar",
+        "eq_9.f1.den.t1",
+        "eq_9.t2",
+        "eq_9.t3",
+        "eq_9.box"
+      ],
+      "boxed": true,
+      "numeric_tolerance": {
+        "relative": 0.002,
+        "note": "159.15 Hz written as 159 Hz"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1878 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.layout/v0",
+  "page_id": "page_0004",
+  "unit": "mm",
+  "page": {
+    "width": 1200,
+    "height": 800,
+    "origin": "top-left",
+    "y_axis": "down",
+    "surface": "whiteboard"
+  },
+  "writers": [
+    {
+      "id": "writer_0",
+      "style": null
+    }
+  ],
+  "text_metrics": {
+    "char_advance_per_height": 0.55,
+    "note": "text boxes here are sized with per-character advances measured from the Hershey fonts (max over futural, cursive, scripts, timesi), not 0.55"
+  },
+  "math_metrics": {
+    "superscript_scale": 0.6,
+    "superscript_raise": 0.45,
+    "subscript_scale": 0.6,
+    "subscript_drop": 0.2,
+    "fraction_bar_above_baseline": 0.3,
+    "note": "fractions of the base text_height; text box bottom is the descender line, baseline is 0.25 text_height above it"
+  },
+  "elements": {
+    "title": {
+      "bbox": [
+        40,
+        25,
+        731.5,
+        55
+      ],
+      "text_height": 30,
+      "writer": "writer_0"
+    },
+    "givens": {
+      "bbox": [
+        40,
+        72,
+        1012.8,
+        94
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "sec_1": {
+      "bbox": [
+        40,
+        118,
+        271.4,
+        140
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "sec_2": {
+      "bbox": [
+        40,
+        490,
+        270.8,
+        512
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "eq_1": {
+      "bbox": [
+        121.9,
+        163.6,
+        452.3,
+        218.8
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_1.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "i",
+          "bbox": [
+            121.9,
+            185.5,
+            133.9,
+            211.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_1.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            139.6,
+            185.5,
+            163.8,
+            211.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "(",
+          "bbox": [
+            173.4,
+            167.2,
+            186.3,
+            191.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            189.2,
+            167.2,
+            206.2,
+            191.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "in",
+          "bbox": [
+            206.2,
+            179.2,
+            224.5,
+            193.6
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "-",
+          "bbox": [
+            229.8,
+            167.2,
+            252.0,
+            191.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.t4": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            257.3,
+            167.2,
+            274.3,
+            191.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.sub2": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "out",
+          "bbox": [
+            274.3,
+            179.2,
+            303.0,
+            193.6
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.num.t5": {
+          "kind": "text",
+          "role": "text",
+          "text": ")",
+          "bbox": [
+            305.8,
+            167.2,
+            318.8,
+            191.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              169.5,
+              197.2
+            ],
+            [
+              322.7,
+              197.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_1.f1.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "R",
+          "bbox": [
+            235.8,
+            200.8,
+            256.4,
+            224.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "=",
+          "bbox": [
+            328.4,
+            185.5,
+            352.6,
+            211.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_1.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "C",
+          "bbox": [
+            358.3,
+            185.5,
+            377.8,
+            211.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_1.f2.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "dV",
+          "bbox": [
+            384.8,
+            167.2,
+            419.7,
+            191.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_1.f2.num.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "out",
+          "bbox": [
+            419.7,
+            179.2,
+            448.4,
+            193.6
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        },
+        "eq_1.f2.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              380.9,
+              197.2
+            ],
+            [
+              452.3,
+              197.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_1.f2.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "dt",
+          "bbox": [
+            401.7,
+            200.8,
+            431.6,
+            224.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_2": {
+      "bbox": [
+        40.0,
+        264.6,
+        291.6,
+        313.8
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_2.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            40.0,
+            280.5,
+            58.5,
+            306.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_2.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "out",
+          "bbox": [
+            58.5,
+            293.5,
+            89.7,
+            309.1
+          ],
+          "text_height": 15.6,
+          "writer": "writer_0"
+        },
+        "eq_2.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "(t)",
+          "bbox": [
+            92.8,
+            280.5,
+            133.9,
+            306.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_2.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            139.6,
+            280.5,
+            163.8,
+            306.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_2.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            173.4,
+            264.6,
+            191.3,
+            288.6
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_2.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              169.5,
+              292.2
+            ],
+            [
+              195.2,
+              292.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_2.f1.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "C",
+          "bbox": [
+            173.4,
+            295.8,
+            191.3,
+            319.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_2.int1.sign": {
+          "kind": "text",
+          "role": "integral_sign",
+          "text": "∫",
+          "bbox": [
+            198.3,
+            272.2,
+            217.1,
+            313.8
+          ],
+          "text_height": 41.6,
+          "writer": "writer_0"
+        },
+        "eq_2.int1.lo": {
+          "kind": "text",
+          "role": "integral_lower_limit",
+          "text": "0",
+          "bbox": [
+            217.5,
+            303.1,
+            228.2,
+            317.4
+          ],
+          "text_height": 14.3,
+          "writer": "writer_0"
+        },
+        "eq_2.int1.hi": {
+          "kind": "text",
+          "role": "integral_upper_limit",
+          "text": "t",
+          "bbox": [
+            218.5,
+            271.1,
+            225.7,
+            285.4
+          ],
+          "text_height": 14.3,
+          "writer": "writer_0"
+        },
+        "eq_2.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "i dt",
+          "bbox": [
+            232.4,
+            280.5,
+            291.6,
+            306.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_3": {
+      "bbox": [
+        139.6,
+        351.6,
+        359.7,
+        381.5
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_3.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            139.6,
+            355.5,
+            163.8,
+            381.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_3.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            169.5,
+            355.5,
+            187.9,
+            381.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_3.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "in",
+          "bbox": [
+            187.9,
+            368.5,
+            207.9,
+            384.1
+          ],
+          "text_height": 15.6,
+          "writer": "writer_0"
+        },
+        "eq_3.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "(1",
+          "bbox": [
+            211.0,
+            355.5,
+            244.6,
+            381.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_3.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "-",
+          "bbox": [
+            250.3,
+            355.5,
+            274.5,
+            381.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_3.t4": {
+          "kind": "text",
+          "role": "text",
+          "text": "e",
+          "bbox": [
+            280.2,
+            355.5,
+            296.8,
+            381.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_3.sup1": {
+          "kind": "text",
+          "role": "superscript",
+          "text": "-t/τ",
+          "bbox": [
+            296.8,
+            351.6,
+            342.5,
+            367.2
+          ],
+          "text_height": 15.6,
+          "writer": "writer_0"
+        },
+        "eq_3.t5": {
+          "kind": "text",
+          "role": "text",
+          "text": ")",
+          "bbox": [
+            345.7,
+            355.5,
+            359.7,
+            381.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_4": {
+      "bbox": [
+        115.4,
+        420.5,
+        588.6,
+        440.0
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_4.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "τ",
+          "bbox": [
+            115.4,
+            420.5,
+            133.9,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            139.6,
+            420.5,
+            163.8,
+            446.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_4.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "RC",
+          "bbox": [
+            169.5,
+            420.5,
+            211.3,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "=",
+          "bbox": [
+            217.1,
+            420.5,
+            241.2,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.t4": {
+          "kind": "text",
+          "role": "text",
+          "text": "10 kΩ",
+          "bbox": [
+            247.0,
+            420.5,
+            337.7,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.t5": {
+          "kind": "text",
+          "role": "text",
+          "text": "·",
+          "bbox": [
+            343.4,
+            420.5,
+            351.2,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.t6": {
+          "kind": "text",
+          "role": "text",
+          "text": "100 nF",
+          "bbox": [
+            356.9,
+            420.5,
+            472.1,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.t7": {
+          "kind": "text",
+          "role": "text",
+          "text": "=",
+          "bbox": [
+            477.8,
+            420.5,
+            502.0,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_4.t8": {
+          "kind": "text",
+          "role": "text",
+          "text": "1 ms",
+          "bbox": [
+            507.7,
+            420.5,
+            588.6,
+            446.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_5": {
+      "bbox": [
+        40.0,
+        539.6,
+        164.2,
+        594.8
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_5.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "Z",
+          "bbox": [
+            40.0,
+            555.5,
+            60.5,
+            581.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_5.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "C",
+          "bbox": [
+            60.5,
+            568.5,
+            72.2,
+            584.1
+          ],
+          "text_height": 15.6,
+          "writer": "writer_0"
+        },
+        "eq_5.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            78.0,
+            555.5,
+            102.1,
+            581.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_5.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            127.1,
+            539.6,
+            145.0,
+            563.6
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_5.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              107.9,
+              567.2
+            ],
+            [
+              164.2,
+              567.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_5.f1.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "jωC",
+          "bbox": [
+            111.8,
+            570.8,
+            160.3,
+            594.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_6": {
+      "bbox": [
+        635.1,
+        362.2,
+        936.1,
+        418.6
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_6.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "H(jω)",
+          "bbox": [
+            635.1,
+            380.5,
+            720.6,
+            406.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_6.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            726.3,
+            380.5,
+            750.5,
+            406.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_6.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            760.1,
+            362.2,
+            777.1,
+            386.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_6.f1.num.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "out",
+          "bbox": [
+            777.1,
+            374.2,
+            805.8,
+            388.6
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        },
+        "eq_6.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              756.2,
+              392.2
+            ],
+            [
+              809.7,
+              392.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_6.f1.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            765.3,
+            395.8,
+            782.3,
+            419.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_6.f1.den.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "in",
+          "bbox": [
+            782.3,
+            407.8,
+            800.7,
+            422.2
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        },
+        "eq_6.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "=",
+          "bbox": [
+            815.4,
+            380.5,
+            839.6,
+            406.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_6.f2.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "Z",
+          "bbox": [
+            875.9,
+            362.2,
+            894.8,
+            386.2
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_6.f2.num.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "C",
+          "bbox": [
+            894.8,
+            374.2,
+            905.6,
+            388.6
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        },
+        "eq_6.f2.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              845.3,
+              392.2
+            ],
+            [
+              936.1,
+              392.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_6.f2.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "R",
+          "bbox": [
+            849.2,
+            395.8,
+            869.8,
+            419.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_6.f2.den.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "+",
+          "bbox": [
+            875.1,
+            395.8,
+            897.3,
+            419.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_6.f2.den.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "Z",
+          "bbox": [
+            902.6,
+            395.8,
+            921.5,
+            419.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_6.f2.den.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "C",
+          "bbox": [
+            921.5,
+            407.8,
+            932.2,
+            422.2
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_7": {
+      "bbox": [
+        726.3,
+        459.6,
+        883.9,
+        514.8
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_7.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            726.3,
+            475.5,
+            750.5,
+            501.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_7.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            811.1,
+            459.6,
+            829.0,
+            483.6
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_7.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              756.2,
+              487.2
+            ],
+            [
+              883.9,
+              487.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_7.f1.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            760.1,
+            490.8,
+            778.1,
+            514.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_7.f1.den.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "+",
+          "bbox": [
+            783.3,
+            490.8,
+            805.6,
+            514.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_7.f1.den.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "jωRC",
+          "bbox": [
+            810.9,
+            490.8,
+            880.0,
+            514.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_8": {
+      "bbox": [
+        620.0,
+        559.6,
+        934.7,
+        622.4
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_8.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "|H(jω)|",
+          "bbox": [
+            620.0,
+            575.5,
+            720.6,
+            601.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_8.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            726.3,
+            575.5,
+            750.5,
+            601.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_8.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            836.5,
+            559.6,
+            854.5,
+            583.6
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_8.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              756.2,
+              587.2
+            ],
+            [
+              934.7,
+              587.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_8.f1.den.rad1.sign": {
+          "kind": "text",
+          "role": "radical_sign",
+          "text": "√",
+          "bbox": [
+            760.1,
+            592.9,
+            780.1,
+            629.3
+          ],
+          "text_height": 36.3,
+          "writer": "writer_0"
+        },
+        "eq_8.f1.den.rad1.bar": {
+          "kind": "polyline",
+          "role": "radical_bar",
+          "points": [
+            [
+              780.1,
+              592.0
+            ],
+            [
+              930.8,
+              592.0
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_8.f1.den.rad1.body.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            782.5,
+            598.5,
+            800.5,
+            622.4
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_8.f1.den.rad1.body.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "+",
+          "bbox": [
+            805.7,
+            598.5,
+            828.0,
+            622.4
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_8.f1.den.rad1.body.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "(ωRC)",
+          "bbox": [
+            833.2,
+            598.5,
+            917.2,
+            622.4
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_8.f1.den.rad1.body.sup1": {
+          "kind": "text",
+          "role": "superscript",
+          "text": "2",
+          "bbox": [
+            917.2,
+            594.9,
+            928.0,
+            609.3
+          ],
+          "text_height": 14.4,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "eq_9": {
+      "bbox": [
+        608.0,
+        669.6,
+        926.4,
+        738.8
+      ],
+      "writer": "writer_0",
+      "items": {
+        "eq_9.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "f",
+          "bbox": [
+            620.0,
+            695.5,
+            634.0,
+            721.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_9.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "c",
+          "bbox": [
+            634.0,
+            708.5,
+            644.0,
+            724.1
+          ],
+          "text_height": 15.6,
+          "writer": "writer_0"
+        },
+        "eq_9.eq": {
+          "kind": "text",
+          "role": "relation",
+          "text": "=",
+          "bbox": [
+            649.7,
+            695.5,
+            673.9,
+            721.5
+          ],
+          "text_height": 26,
+          "writer": "writer_0"
+        },
+        "eq_9.f1.num.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "1",
+          "bbox": [
+            712.2,
+            679.6,
+            730.2,
+            703.6
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_9.f1.bar": {
+          "kind": "polyline",
+          "role": "fraction_bar",
+          "points": [
+            [
+              679.6,
+              707.2
+            ],
+            [
+              762.8,
+              707.2
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "eq_9.f1.den.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "2πRC",
+          "bbox": [
+            683.5,
+            710.8,
+            758.9,
+            734.8
+          ],
+          "text_height": 23.9,
+          "writer": "writer_0"
+        },
+        "eq_9.t2": {
+          "kind": "text",
+          "role": "text",
+          "text": "=",
+          "bbox": [
+            768.5,
+            695.5,
+            792.7,
+            721.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_9.t3": {
+          "kind": "text",
+          "role": "text",
+          "text": "159 Hz",
+          "bbox": [
+            798.4,
+            695.5,
+            914.4,
+            721.5
+          ],
+          "text_height": 26.0,
+          "writer": "writer_0"
+        },
+        "eq_9.box": {
+          "kind": "rect",
+          "role": "result_box",
+          "bbox": [
+            608.0,
+            669.6,
+            926.4,
+            738.8
+          ],
+          "corner_radius": 4,
+          "writer": "writer_0"
+        }
+      }
+    },
+    "fig_1": {
+      "bbox": [
+        618.5,
+        103,
+        1031.0,
+        317
+      ],
+      "writer": "writer_0",
+      "items": {
+        "fig_1.src": {
+          "kind": "ellipse",
+          "bbox": [
+            668,
+            193,
+            712,
+            237
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.src_plus": {
+          "kind": "text",
+          "text": "+",
+          "text_height": 14,
+          "bbox": [
+            684,
+            195,
+            697.0,
+            209
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.src_minus": {
+          "kind": "text",
+          "text": "-",
+          "text_height": 14,
+          "bbox": [
+            684,
+            217,
+            697.0,
+            231
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_vin.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            623.5,
+            206.5,
+            639.1,
+            228.5
+          ],
+          "text_height": 22.0,
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_vin.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "in",
+          "bbox": [
+            639.1,
+            217.5,
+            656.0,
+            230.7
+          ],
+          "text_height": 13.2,
+          "writer": "writer_0"
+        },
+        "fig_1.w_in": {
+          "kind": "polyline",
+          "points": [
+            [
+              690,
+              193
+            ],
+            [
+              690,
+              150
+            ],
+            [
+              765,
+              150
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.res": {
+          "kind": "polyline",
+          "points": [
+            [
+              765,
+              150
+            ],
+            [
+              771.0,
+              141
+            ],
+            [
+              784.6,
+              159
+            ],
+            [
+              798.2,
+              141
+            ],
+            [
+              811.8,
+              159
+            ],
+            [
+              825.4,
+              141
+            ],
+            [
+              839.0,
+              159
+            ],
+            [
+              845,
+              150
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_r": {
+          "kind": "text",
+          "text": "R",
+          "text_height": 22,
+          "bbox": [
+            796,
+            108,
+            814.9,
+            130
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.w_mid": {
+          "kind": "polyline",
+          "points": [
+            [
+              845,
+              150
+            ],
+            [
+              905,
+              150
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.w_cap_top": {
+          "kind": "polyline",
+          "points": [
+            [
+              905,
+              150
+            ],
+            [
+              905,
+              210
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.cap_plate_1": {
+          "kind": "polyline",
+          "points": [
+            [
+              885,
+              210
+            ],
+            [
+              925,
+              210
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.cap_plate_2": {
+          "kind": "polyline",
+          "points": [
+            [
+              885,
+              222
+            ],
+            [
+              925,
+              222
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_c": {
+          "kind": "text",
+          "text": "C",
+          "text_height": 22,
+          "bbox": [
+            933,
+            199,
+            949.5,
+            221
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.w_cap_bot": {
+          "kind": "polyline",
+          "points": [
+            [
+              905,
+              222
+            ],
+            [
+              905,
+              290
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.w_gnd": {
+          "kind": "polyline",
+          "points": [
+            [
+              690,
+              237
+            ],
+            [
+              690,
+              290
+            ],
+            [
+              905,
+              290
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.gnd": {
+          "kind": "polyline",
+          "points": [
+            [
+              800,
+              290
+            ],
+            [
+              800,
+              300
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.gnd_1": {
+          "kind": "polyline",
+          "points": [
+            [
+              786,
+              300
+            ],
+            [
+              814,
+              300
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.gnd_2": {
+          "kind": "polyline",
+          "points": [
+            [
+              791,
+              306
+            ],
+            [
+              809,
+              306
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.gnd_3": {
+          "kind": "polyline",
+          "points": [
+            [
+              796,
+              312
+            ],
+            [
+              804,
+              312
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.node": {
+          "kind": "ellipse",
+          "bbox": [
+            902.5,
+            147.5,
+            907.5,
+            152.5
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.w_out": {
+          "kind": "polyline",
+          "points": [
+            [
+              905,
+              150
+            ],
+            [
+              965,
+              150
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.term": {
+          "kind": "ellipse",
+          "bbox": [
+            965,
+            145,
+            975,
+            155
+          ],
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_vout.t1": {
+          "kind": "text",
+          "role": "text",
+          "text": "V",
+          "bbox": [
+            984,
+            141.5,
+            999.6,
+            163.5
+          ],
+          "text_height": 22.0,
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_vout.sub1": {
+          "kind": "text",
+          "role": "subscript",
+          "text": "out",
+          "bbox": [
+            999.6,
+            152.5,
+            1026.0,
+            165.7
+          ],
+          "text_height": 13.2,
+          "writer": "writer_0"
+        },
+        "fig_1.arrow_i": {
+          "kind": "arrow",
+          "points": [
+            [
+              712,
+              136
+            ],
+            [
+              742,
+              136
+            ]
+          ],
+          "head": 7,
+          "writer": "writer_0"
+        },
+        "fig_1.lbl_i": {
+          "kind": "text",
+          "text": "i",
+          "text_height": 20,
+          "bbox": [
+            722,
+            108,
+            731.2,
+            128
+          ],
+          "writer": "writer_0"
+        }
+      }
+    }
+  },
+  "writing_order": [
+    "title",
+    "givens",
+    "fig_1.src",
+    "fig_1.src_plus",
+    "fig_1.src_minus",
+    "fig_1.lbl_vin.t1",
+    "fig_1.lbl_vin.sub1",
+    "fig_1.w_in",
+    "fig_1.res",
+    "fig_1.lbl_r",
+    "fig_1.w_mid",
+    "fig_1.w_cap_top",
+    "fig_1.cap_plate_1",
+    "fig_1.cap_plate_2",
+    "fig_1.lbl_c",
+    "fig_1.w_cap_bot",
+    "fig_1.w_gnd",
+    "fig_1.gnd",
+    "fig_1.gnd_1",
+    "fig_1.gnd_2",
+    "fig_1.gnd_3",
+    "fig_1.node",
+    "fig_1.w_out",
+    "fig_1.term",
+    "fig_1.lbl_vout.t1",
+    "fig_1.lbl_vout.sub1",
+    "fig_1.arrow_i",
+    "fig_1.lbl_i",
+    "sec_1",
+    "eq_1.t1",
+    "eq_1.eq",
+    "eq_1.f1.num.t1",
+    "eq_1.f1.num.t2",
+    "eq_1.f1.num.sub1",
+    "eq_1.f1.num.t3",
+    "eq_1.f1.num.t4",
+    "eq_1.f1.num.sub2",
+    "eq_1.f1.num.t5",
+    "eq_1.f1.bar",
+    "eq_1.f1.den.t1",
+    "eq_1.t2",
+    "eq_1.t3",
+    "eq_1.f2.num.t1",
+    "eq_1.f2.num.sub1",
+    "eq_1.f2.bar",
+    "eq_1.f2.den.t1",
+    "eq_2.t1",
+    "eq_2.sub1",
+    "eq_2.t2",
+    "eq_2.eq",
+    "eq_2.f1.num.t1",
+    "eq_2.f1.bar",
+    "eq_2.f1.den.t1",
+    "eq_2.int1.sign",
+    "eq_2.int1.lo",
+    "eq_2.int1.hi",
+    "eq_2.t3",
+    "eq_3.eq",
+    "eq_3.t1",
+    "eq_3.sub1",
+    "eq_3.t2",
+    "eq_3.t3",
+    "eq_3.t4",
+    "eq_3.sup1",
+    "eq_3.t5",
+    "eq_4.t1",
+    "eq_4.eq",
+    "eq_4.t2",
+    "eq_4.t3",
+    "eq_4.t4",
+    "eq_4.t5",
+    "eq_4.t6",
+    "eq_4.t7",
+    "eq_4.t8",
+    "sec_2",
+    "eq_5.t1",
+    "eq_5.sub1",
+    "eq_5.eq",
+    "eq_5.f1.num.t1",
+    "eq_5.f1.bar",
+    "eq_5.f1.den.t1",
+    "eq_6.t1",
+    "eq_6.eq",
+    "eq_6.f1.num.t1",
+    "eq_6.f1.num.sub1",
+    "eq_6.f1.bar",
+    "eq_6.f1.den.t1",
+    "eq_6.f1.den.sub1",
+    "eq_6.t2",
+    "eq_6.f2.num.t1",
+    "eq_6.f2.num.sub1",
+    "eq_6.f2.bar",
+    "eq_6.f2.den.t1",
+    "eq_6.f2.den.t2",
+    "eq_6.f2.den.t3",
+    "eq_6.f2.den.sub1",
+    "eq_7.eq",
+    "eq_7.f1.num.t1",
+    "eq_7.f1.bar",
+    "eq_7.f1.den.t1",
+    "eq_7.f1.den.t2",
+    "eq_7.f1.den.t3",
+    "eq_8.t1",
+    "eq_8.eq",
+    "eq_8.f1.num.t1",
+    "eq_8.f1.bar",
+    "eq_8.f1.den.rad1.sign",
+    "eq_8.f1.den.rad1.bar",
+    "eq_8.f1.den.rad1.body.t1",
+    "eq_8.f1.den.rad1.body.t2",
+    "eq_8.f1.den.rad1.body.t3",
+    "eq_8.f1.den.rad1.body.sup1",
+    "eq_9.t1",
+    "eq_9.sub1",
+    "eq_9.eq",
+    "eq_9.f1.num.t1",
+    "eq_9.f1.bar",
+    "eq_9.f1.den.t1",
+    "eq_9.t2",
+    "eq_9.t3",
+    "eq_9.box"
+  ]
+}
