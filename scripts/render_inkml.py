@@ -46,27 +46,56 @@ CIRCLE_SEGMENTS = 24
 
 # ------------------------------------------------------------------ text
 
+GREEK = dict(zip("αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
+                 "abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWX"))  # Hershey 'greeks' keys
+
+# Symbols no Hershey text font has, drawn as primitives: char -> advance in units of
+# text height. Their strokes come from symbol_strokes().
+SYMBOL_ADVANCE = {"⊕": None, "→": 0.75, "≤": 0.6, "≥": 0.6, "≠": 0.6, "±": 0.6, "·": 0.3,
+                  "×": 0.55, "∞": 0.75, "∫": 0.45, "√": 0.55}
+
+
 class TextRenderer:
-    """Lays out strings with a Hershey font; text_height spans descender to cap."""
+    """Lays out strings with a Hershey font; text_height spans descender to cap.
+
+    Greek letters fall back to the Hershey 'greeks' font, and the characters in
+    SYMBOL_ADVANCE are drawn as primitives. Any other character missing from
+    the font is an error.
+    """
 
     def __init__(self, font):
-        self.font = HersheyFonts()
-        self.font.load_default_font(font)
-        self.font.normalize_rendering(1.0)  # glyph y in [0, 1]: descender bottom to cap
-        opts = self.font.render_options
-        self.sx, self.sy, self.y0 = opts.scalex, opts.scaley, opts.yofs
-        self.base = opts.yofs + opts.base_line * opts.scaley  # baseline height, fraction of text_height
+        self.fonts = {}
+        for name in (font, "greeks"):
+            f = HersheyFonts()
+            f.load_default_font(name)
+            f.normalize_rendering(1.0)  # glyph y in [0, 1]: descender bottom to cap
+            o = f.render_options
+            self.fonts[name] = (f, o.scalex, o.scaley, o.yofs)
+        self.main = font
+        o = self.fonts[font][0].render_options
+        self.base = o.yofs + o.base_line * o.scaley  # baseline height, fraction of text_height
+        plus = self._lookup("+")
+        ys = [o.yofs + py * o.scaley for st in plus[0].strokes for _, py in st]
+        self.op_y = (min(ys) + max(ys)) / 2 - self.base  # operator centre above baseline
 
-    def _glyph(self, ch):
-        glyphs = list(self.font.glyphs_for_text(ch))
-        return glyphs[0] if glyphs else None
+    def _lookup(self, ch):
+        """(glyph, sx, sy, y0) for a character, or None."""
+        font, key = (self.main, ch) if ch not in GREEK else ("greeks", GREEK[ch])
+        f, sx, sy, y0 = self.fonts[font]
+        glyphs = list(f.glyphs_for_text(key))
+        return (glyphs[0], sx, sy, y0) if glyphs else None
 
     def width(self, text, h):
         return sum(self._advance(ch, h) for ch in text)
 
     def _advance(self, ch, h):
-        g = self._glyph("O" if ch == "⊕" else ch)
-        return g.char_width * self.sx * h if g else 0.55 * h
+        if ch in SYMBOL_ADVANCE:
+            adv = SYMBOL_ADVANCE[ch]
+            if adv is not None:
+                return adv * h
+            ch = "O"
+        g = self._lookup(ch)
+        return g[0].char_width * g[1] * h if g else 0.55 * h
 
     def strokes(self, text, x0, y_bottom, h, hand, wid):
         """Strokes (lists of (x, y) in page mm) for text whose box bottom is y_bottom.
@@ -80,13 +109,14 @@ class TextRenderer:
         glyphs, x = [], 0.0
         for ch in text:
             adv = self._advance(ch, hs)
-            if ch == "⊕":
-                local = oplus(adv / 2, (0.68 - self.base) * hs, 0.27 * hs, hand)
+            if ch in SYMBOL_ADVANCE:
+                local = symbol_strokes(ch, adv, hs, self.op_y * hs, (0.68 - self.base) * hs, hand)
             else:
-                g = self._glyph(ch)
-                if g is None:
-                    raise ValueError(f"font has no glyph for {ch!r}")
-                local = [[((px - g.left_offset) * self.sx * hs, (self.y0 + py * self.sy - self.base) * hs)
+                found = self._lookup(ch)
+                if found is None:
+                    raise ValueError(f"font {self.main!r} has no glyph for {ch!r}")
+                g, sx, sy, y0 = found
+                local = [[((px - g.left_offset) * sx * hs, (y0 + py * sy - self.base) * hs)
                           for px, py in st] for st in g.strokes]
             # The writer's persistent shape for this character, then this
             # occurrence's own variation, both about the glyph's middle.
@@ -114,6 +144,52 @@ def oplus(cx, cy, r, hand):
     # keep the drawing direction) so it still starts at the top here.
     ring = [(x, 2 * cy - y) for x, y in reversed(circle(cx, cy, r, hand))]
     return [ring, [(cx - r, cy), (cx + r, cy)], [(cx, cy + r), (cx, cy - r)]]
+
+
+def symbol_strokes(ch, w, h, c, cap_mid, hand):
+    """Strokes for a primitive-drawn symbol, in y-up glyph coordinates.
+
+    w is the advance and h the text height (mm). c is the height of an
+    operator's centre above the baseline, and cap_mid the middle of a capital.
+    """
+    if ch == "⊕":
+        return oplus(w / 2, cap_mid, 0.27 * h, hand)
+    m, d = w / 2, 0.11 * h
+    if ch == "→":
+        tip = 0.92 * w
+        return [[(0.08 * w, c), (tip, c)], [(tip - 0.16 * h, c + 0.1 * h), (tip, c), (tip - 0.16 * h, c - 0.1 * h)]]
+    if ch in "≤≥":
+        a, b = (0.85 * w, 0.15 * w) if ch == "≤" else (0.15 * w, 0.85 * w)
+        return [[(a, c + 0.24 * h), (b, c + 0.06 * h), (a, c - 0.12 * h)], [(b, c - 0.24 * h), (a, c - 0.24 * h)]]
+    if ch == "≠":
+        return [[(0.12 * w, c + 0.08 * h), (0.88 * w, c + 0.08 * h)],
+                [(0.12 * w, c - 0.08 * h), (0.88 * w, c - 0.08 * h)],
+                [(0.66 * w, c + 0.24 * h), (0.34 * w, c - 0.24 * h)]]
+    if ch == "±":
+        cy = c + 0.08 * h
+        return [[(m - 0.17 * h, cy), (m + 0.17 * h, cy)], [(m, cy + 0.17 * h), (m, cy - 0.17 * h)],
+                [(m - 0.17 * h, c - 0.2 * h), (m + 0.17 * h, c - 0.2 * h)]]
+    if ch == "·":
+        r = 0.03 * h
+        return [[(m + r * math.cos(a * math.pi / 4), c + r * math.sin(a * math.pi / 4)) for a in range(9)]]
+    if ch == "×":
+        return [[(m - d, c + d), (m + d, c - d)], [(m + d, c + d), (m - d, c - d)]]
+    if ch == "∞":
+        a = 0.42 * w
+        pts = []
+        for i in range(33):
+            t = 2 * math.pi * i / 32
+            k = 1 + math.sin(t) ** 2
+            pts.append((m + a * math.cos(t) / k, c + 0.9 * a * math.sin(t) * math.cos(t) / k))
+        return [pts]
+    if ch == "∫":
+        top, bot = 0.75 * h, -0.32 * h
+        return [bezier((0.92 * w, top - 0.06 * h), (0.75 * w, top + 0.05 * h), (0.6 * w, top - 0.12 * h))
+                + [(0.42 * w, bot + 0.12 * h)]
+                + bezier((0.42 * w, bot + 0.12 * h), (0.32 * w, bot - 0.05 * h), (0.1 * w, bot + 0.06 * h))[1:]]
+    if ch == "√":
+        return [[(0.0, 0.25 * h), (0.15 * w, 0.32 * h), (0.42 * w, -0.05 * h), (0.75 * w, 0.72 * h), (w, 0.72 * h)]]
+    raise ValueError(ch)
 
 
 # ------------------------------------------------------------ primitives
@@ -185,6 +261,70 @@ def on_polyline(p, polyline, tol=1e-6):
     return False
 
 
+# --------------------------------------------------------------- sketch
+
+def rounded_rect(bbox, r):
+    """Closed stroke starting at the top-left, clockwise on the page."""
+    x0, y0, x1, y1 = bbox
+    r = min(r, (x1 - x0) / 2, (y1 - y0) / 2)
+    if r <= 0:
+        return [(x0, y0), (x1, y0), (x1, y1), (x0, y1), (x0, y0)]
+    pts = []
+    for cx, cy, a0 in ((x1 - r, y0 + r, -90), (x1 - r, y1 - r, 0), (x0 + r, y1 - r, 90), (x0 + r, y0 + r, 180)):
+        pts += [(cx + r * math.cos(math.radians(a0 + 90 * i / 6)), cy + r * math.sin(math.radians(a0 + 90 * i / 6)))
+                for i in range(7)]
+    return pts + [pts[0]]
+
+
+def sketch_item_strokes(item, text, hand, wid):
+    """Strokes for one generic sketch item (see artifacts/README.md, "sketch")."""
+    kind = item["kind"]
+    lines = lambda pls: [hand.deform(hand.line(pl), DIAGRAM_SCALE, wid, "line") for pl in pls]
+    if kind == "text":
+        x0, _, x1, y1 = item["bbox"]
+        h = item["text_height"]
+        if item.get("align", "left") == "center":
+            x0 = (x0 + x1) / 2 - text.width(item["text"], h) / 2
+        return text.strokes(item["text"], x0, y1, h, hand, wid)
+    if kind == "polyline":
+        pts = [tuple(p) for p in item["points"]]
+        return lines([pts + [pts[0]] if item.get("closed") else pts])
+    if kind == "rect":
+        return [hand.deform(rounded_rect(item["bbox"], item.get("corner_radius", 0)), DIAGRAM_SCALE, wid, "line")]
+    if kind == "diamond":
+        x0, y0, x1, y1 = item["bbox"]
+        xm, ym = (x0 + x1) / 2, (y0 + y1) / 2
+        return lines([[(xm, y0), (x1, ym), (xm, y1), (x0, ym), (xm, y0)]])
+    if kind == "ellipse":
+        x0, y0, x1, y1 = item["bbox"]
+        rx, ry = (x1 - x0) / 2, (y1 - y0) / 2
+        pts = circle((x0 + x1) / 2, (y0 + y1) / 2, 1.0, hand, n=40)
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        pts = [(cx + (x - cx) * rx, cy + (y - cy) * ry) for x, y in pts]
+        return [hand.deform(pts, DIAGRAM_SCALE, wid, "line")]
+    if kind == "arrow":
+        pts = [tuple(p) for p in item["points"]]
+        shaft = lines([pts])[0]
+        # The head follows the drawn shaft's end, so it stays attached under noise.
+        tip, back = shaft[-1], shaft[max(0, len(shaft) - 4)]
+        ux, uy = tip[0] - back[0], tip[1] - back[1]
+        n = math.hypot(ux, uy) or 1.0
+        ux, uy = ux / n, uy / n
+        hs = item.get("head", 9.0)
+        a = math.radians(hand.g(25, 4))
+        left = (tip[0] - hs * (ux * math.cos(a) - uy * math.sin(a)), tip[1] - hs * (uy * math.cos(a) + ux * math.sin(a)))
+        right = (tip[0] - hs * (ux * math.cos(a) + uy * math.sin(a)), tip[1] - hs * (uy * math.cos(a) - ux * math.sin(a)))
+        return [shaft, hand.deform([left, tip, right], DIAGRAM_SCALE, wid, "line")]
+    raise ValueError(f"unknown sketch item kind {kind!r}")
+
+
+def sketch_item(eid, layout):
+    for e in layout["elements"].values():
+        if eid in e.get("items", {}):
+            return e["items"][eid]
+    return None
+
+
 def element_strokes(eid, content, layout, text, hand):
     """Strokes for one writing_order entry, in the order they are drawn."""
     els = layout["elements"]
@@ -195,6 +335,10 @@ def element_strokes(eid, content, layout, text, hand):
         s = cel.get("written", cel.get("text"))
         x0, _, _, y1 = els[eid]["bbox"]
         return text.strokes(s, x0, y1, els[eid]["text_height"], hand, wid)
+
+    item = sketch_item(eid, layout)
+    if item is not None:
+        return sketch_item_strokes(item, text, hand, wid)
 
     container, _, _ = eid.partition(".")
     if container in els and eid in els[container].get("cells", {}):
@@ -266,7 +410,7 @@ def writer_of(eid, layout):
     if eid in els:
         return els[eid]["writer"]
     for e in els.values():
-        for key in ("cells", "rules", "components", "wires", "labels"):
+        for key in ("cells", "rules", "components", "wires", "labels", "items"):
             if eid in e.get(key, {}):
                 return e[key][eid]["writer"]
     raise KeyError(eid)
@@ -309,7 +453,8 @@ def render(page_dir, font, noise, seed, out):
             pts, t = hand.time_stroke(stroke, t, wid, SAMPLE_RATE)
             pen = stroke[-1]
             tid = f"t{len(traces)}"
-            traces.append((tid, pts, "bold" if cidx.get(eid, {}).get("role") == "title" else "pen"))
+            bold = cidx.get(eid, {}).get("role") == "title" or (sketch_item(eid, layout) or {}).get("bold")
+            traces.append((tid, pts, "bold" if bold else "pen"))
             refs.append(tid)
         groups.append((eid, wid, refs))
         t += hand.pause(ELEMENT_PAUSE)

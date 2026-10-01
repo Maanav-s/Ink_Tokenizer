@@ -74,6 +74,24 @@ Element types:
     holds orthogonal polylines from the source port to the sink port.
     `junctions[]` gives the fan-out dots as `{net, point}`, and
     `labels{id: {bbox, text_height}}` places the labels.
+  - Sketch: `bbox` and `items{id: {...}}`. These are generic drawing
+    primitives for anything without a dedicated element type (flowcharts,
+    typeset math, arrows, boxes). Each item has `kind`, `writer` and an
+    optional `bold` (drawn with the wide brush), and is one `writing_order`
+    entry:
+    - `text`: `text`, `bbox` (its bottom edge is the descender line, as for
+      text elements), `text_height`, and optional `align` (`left` or
+      `center`).
+    - `polyline`: `points`, and optional `closed`.
+    - `rect`: `bbox`, and optional `corner_radius`.
+    - `ellipse`: `bbox`.
+    - `diamond`: `bbox`.
+    - `arrow`: `points` (the shaft, ending at the tip), and optional `head`
+      (length in mm, default 9).
+
+    The text in a sketch is part of the layout, so content.json should hold
+    the same information semantically: flowchart nodes and edges, equations
+    as LaTeX, and so on.
 - `writing_order`: the order in which things are written. Each entry is a
   leaf id: a text line, a math line, a table cell or rule, a component, a wire
   or a label. Container ids (`tt_1`, `dia_1`) never appear. On this page, the
@@ -85,6 +103,10 @@ Element types:
 - Gate shapes come from `type`, and the gate's `bbox` is the space the
   symbol must fit in.
 - Wire crossings that have no junction dot are not connections.
+- Text can use ASCII, Greek letters (they fall back to the Hershey
+  `greeks` font) and these primitive-drawn symbols: `⊕ → ≤ ≥ ≠ ± · × ∞ ∫ √`.
+  `√` draws only the radical sign, so draw the bar over the radicand as a
+  sketch polyline. Any other character makes the renderer raise an error.
 - `math.written` uses `⊕`. The handwriting synthesis model may not support
   that glyph (see "Character coverage" in the pipeline doc). If so, draw it
   as a primitive.
