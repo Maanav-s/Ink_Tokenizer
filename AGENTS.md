@@ -80,26 +80,37 @@ the optional `render` extra (Hershey-Fonts, Pillow).
 - [docs/synthetic_data.md](docs/synthetic_data.md) — synthetic training data
   plan
 - [docs/slurm.md](docs/slurm.md) — running jobs on Slurm
-- [artifacts/](artifacts/README.md) — sample synthetic page (content and
-  layout, no ink yet); `artifacts/` is gitignored, so new pages need
-  `git add -f`
-- [scripts/make_sample_page.py](scripts/make_sample_page.py) and
-  [scripts/check_page.py](scripts/check_page.py) — regenerate and validate
-  the sample page
-- [scripts/render_inkml.py](scripts/render_inkml.py) — naive layout-to-InkML
-  renderer (Hershey font plus primitives); [scripts/inkml_to_png.py](scripts/inkml_to_png.py)
-  rasterizes InkML for inspection. Both need `uv sync --extra render`.
-- [scripts/hand_noise.py](scripts/hand_noise.py) — handwriting-like
-  variation for the renderer (`--noise`, `--seed`). It is structured across
-  writer, line, per-writer character shape (allograph), character instance
-  and stroke, and models pen speed, rather than adding i.i.d. Gaussian
-  noise.
+- [artifacts/](artifacts/README.md) — sample synthetic pages: content,
+  layouts, clean and handwriting-like InkML renders. `artifacts/` is
+  gitignored, so new pages need `git add -f`.
+- Synthetic page pipeline (in `scripts/`; needs `uv sync --extra render`):
+  - [docs/content_prompt.md](docs/content_prompt.md) — prompt and schema for
+    LLM-written `content.json` (content only, no coordinates).
+  - [validate_page.py](scripts/validate_page.py) — content checks (truth
+    tables, Boolean expressions, circuit simulation, numeric equations),
+    layout checks, and ink-overlap checks on rendered ink.
+  - [layout_engine.py](scripts/layout_engine.py) — content -> layout.json
+    from a layout seed: placement, styles, writing order, mistakes, a second
+    writer. It uses [diagram_layout.py](scripts/diagram_layout.py)
+    (flowcharts, circuits, schematics with orthogonal routing),
+    [math_typeset.py](scripts/math_typeset.py) (LaTeX subset) and
+    [targets.py](scripts/targets.py) (structural completion targets).
+  - [render_inkml.py](scripts/render_inkml.py) — layout -> InkML, labelled
+    per item and per character or shape part. It uses
+    [fonts.py](scripts/fonts.py) (single-stroke fonts, pool metrics),
+    [shapes.py](scripts/shapes.py),
+    [hand_noise.py](scripts/hand_noise.py) (handwriting-like variation at
+    the writer, line, character and stroke levels, rather than i.i.d.
+    Gaussian noise) and [digitizer.py](scripts/digitizer.py) (capture
+    artefacts).
+  - [render_batch.py](scripts/render_batch.py) — layouts x fonts x seeds,
+    rejecting renders whose text ink collides.
+  - [inkml_to_png.py](scripts/inkml_to_png.py) — rasterize InkML for
+    inspection.
+  - [fonts/](fonts/README.md) holds OFL-licensed single-line SVG fonts.
+  - `scripts/legacy_v0/` — generators for the old hand-placed v0 pages,
+    kept for reference; the current renderer does not read v0 layouts.
 - Ink format: **InkML**, with X/Y in mm and T in seconds.
-- [scripts/render_batch.py](scripts/render_batch.py) — render every page
-  across fonts and seeds. [fonts/](fonts/README.md) holds OFL-licensed
-  single-line SVG fonts.
-- `scripts/make_page_000N.py` — generators for the sample pages listed in
-  [artifacts/README.md](artifacts/README.md).
 
 Common commands:
 

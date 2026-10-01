@@ -122,11 +122,17 @@ class Hand:
 
     # ---------------------------------------------------------------- text
 
-    def text_line(self, wid, h, length):
-        """Per-line placement: offset, baseline tilt and curvature."""
+    def text_line(self, wid, h, length, max_drift=0.3):
+        """Per-line placement: offset, baseline tilt and curvature.
+
+        The tilt is capped so the end of a long line drifts at most
+        max_drift * h off its baseline; uncapped, a 2 degree tilt moved the
+        end of a 600 mm line by 20 mm, into the next line. Text in a table
+        cell is written more carefully (a smaller cap)."""
+        cap = math.atan(max_drift * h / max(length, h))
         return {
             "dx": self.g(0, 0.06 * h), "dy": self.g(0, 0.06 * h),
-            "tilt": self.g(0, math.radians(2.0)),
+            "tilt": max(-cap, min(cap, self.g(0, math.radians(2.0)))),
             "curve": self.g(0, 0.05 * h) / max(length, h) ** 2,
             "w": self.writer(wid),
         }
@@ -271,7 +277,8 @@ class Hand:
             L = math.dist(a, b)
             if L < 1e-9:
                 continue
-            bow = max(-3.0, min(3.0, self.g(0, 0.008 * L)))
+            # Bow grows with length up to ~150 mm; longer lines are drawn more deliberately.
+            bow = max(-3.0, min(3.0, self.g(0, 0.008 * min(L, 150.0))))
             nx, ny = -(b[1] - a[1]) / L, (b[0] - a[0]) / L
             n = max(1, math.ceil(L / 2))
             for k in range(1, n + 1):

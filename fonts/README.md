@@ -11,9 +11,13 @@ Windell H. Oskay (Evil Mad Scientist). Each file's `<metadata>` names the
 original font and designer. They are licensed under the SIL Open Font License
 1.1; the license text is in `svg/OFL.txt`.
 
-The renderer scales each SVG font so its cap height and baseline match the
-Hershey `futural` font's. Text then has the same capital size for a given
-`text_height` in any font.
+`scripts/fonts.py` normalizes every font, Hershey and SVG alike, to one
+frame: the baseline is at 0.25 of the text height above the descender line,
+and capitals (H, E) reach the full text height. Text then has the same
+capital size for a given `text_height` in any font, while descenders keep
+each font's proportions (cursive and EMSAllure reach about 0.2 h below the
+descender line). The batch pool is `fonts.FONT_POOL`: futural, cursive,
+EMSReadability, EMSReadabilityItalic, EMSTech and EMSAllure.
 
 | Font | Style | Used in batch renders |
 |---|---|---|
