@@ -1,0 +1,504 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v0",
+  "page_id": "page_0001",
+  "topic": "digital logic: 1-bit full adder",
+  "provenance": {
+    "generator": "hand-produced by LLM agent (Claude)",
+    "automated": false
+  },
+  "elements": [
+    {
+      "id": "title",
+      "type": "text",
+      "role": "title",
+      "text": "Full adder - design session"
+    },
+    {
+      "id": "note_1",
+      "type": "text",
+      "role": "bullet",
+      "text": "- need 1-bit FA cell for 4-bit ripple carry"
+    },
+    {
+      "id": "note_2",
+      "type": "text",
+      "role": "bullet",
+      "text": "- in: A, B, Cin   out: S, Cout"
+    },
+    {
+      "id": "note_3",
+      "type": "text",
+      "role": "bullet",
+      "text": "- build w/ 2 XOR, 2 AND, 1 OR"
+    },
+    {
+      "id": "tt_1",
+      "type": "truth_table",
+      "header": [
+        {
+          "id": "tt_1.h0",
+          "text": "A"
+        },
+        {
+          "id": "tt_1.h1",
+          "text": "B"
+        },
+        {
+          "id": "tt_1.h2",
+          "text": "Cin"
+        },
+        {
+          "id": "tt_1.h3",
+          "text": "S"
+        },
+        {
+          "id": "tt_1.h4",
+          "text": "Cout"
+        }
+      ],
+      "input_columns": [
+        0,
+        1,
+        2
+      ],
+      "output_columns": [
+        3,
+        4
+      ],
+      "row_order": "binary_counting_msb_first",
+      "rows": [
+        {
+          "id": "tt_1.r0",
+          "cells": [
+            {
+              "id": "tt_1.r0c0",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r0c1",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r0c2",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r0c3",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r0c4",
+              "text": "0"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r1",
+          "cells": [
+            {
+              "id": "tt_1.r1c0",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r1c1",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r1c2",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r1c3",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r1c4",
+              "text": "0"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r2",
+          "cells": [
+            {
+              "id": "tt_1.r2c0",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r2c1",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r2c2",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r2c3",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r2c4",
+              "text": "0"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r3",
+          "cells": [
+            {
+              "id": "tt_1.r3c0",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r3c1",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r3c2",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r3c3",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r3c4",
+              "text": "1"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r4",
+          "cells": [
+            {
+              "id": "tt_1.r4c0",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r4c1",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r4c2",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r4c3",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r4c4",
+              "text": "0"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r5",
+          "cells": [
+            {
+              "id": "tt_1.r5c0",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r5c1",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r5c2",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r5c3",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r5c4",
+              "text": "1"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r6",
+          "cells": [
+            {
+              "id": "tt_1.r6c0",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r6c1",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r6c2",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r6c3",
+              "text": "0"
+            },
+            {
+              "id": "tt_1.r6c4",
+              "text": "1"
+            }
+          ]
+        },
+        {
+          "id": "tt_1.r7",
+          "cells": [
+            {
+              "id": "tt_1.r7c0",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r7c1",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r7c2",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r7c3",
+              "text": "1"
+            },
+            {
+              "id": "tt_1.r7c4",
+              "text": "1"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "id": "tt_1.rule_header",
+          "kind": "horizontal",
+          "after_row": "header"
+        },
+        {
+          "id": "tt_1.rule_io",
+          "kind": "vertical",
+          "after_column": 2
+        }
+      ]
+    },
+    {
+      "id": "math_1",
+      "type": "math",
+      "text": "S = A xor B xor Cin",
+      "written": "S = A ⊕ B ⊕ Cin",
+      "latex": "S = A \\oplus B \\oplus C_{in}",
+      "defines": "S"
+    },
+    {
+      "id": "math_2",
+      "type": "math",
+      "text": "Cout = AB + A Cin + B Cin",
+      "written": "Cout = AB + ACin + BCin",
+      "latex": "C_{out} = AB + AC_{in} + BC_{in}",
+      "defines": "Cout"
+    },
+    {
+      "id": "math_3",
+      "type": "math",
+      "text": "= AB + Cin (A xor B)",
+      "written": "= AB + Cin(A ⊕ B)",
+      "latex": "= AB + C_{in}(A \\oplus B)",
+      "defines": "Cout",
+      "continues": "math_2"
+    },
+    {
+      "id": "dia_1",
+      "type": "circuit",
+      "components": [
+        {
+          "id": "pin_A",
+          "type": "input_pin",
+          "label": "A",
+          "ports": [
+            "y"
+          ]
+        },
+        {
+          "id": "pin_B",
+          "type": "input_pin",
+          "label": "B",
+          "ports": [
+            "y"
+          ]
+        },
+        {
+          "id": "pin_Cin",
+          "type": "input_pin",
+          "label": "Cin",
+          "ports": [
+            "y"
+          ]
+        },
+        {
+          "id": "xor_1",
+          "type": "xor2",
+          "label": null,
+          "ports": [
+            "a",
+            "b",
+            "y"
+          ]
+        },
+        {
+          "id": "and_1",
+          "type": "and2",
+          "label": null,
+          "ports": [
+            "a",
+            "b",
+            "y"
+          ]
+        },
+        {
+          "id": "xor_2",
+          "type": "xor2",
+          "label": null,
+          "ports": [
+            "a",
+            "b",
+            "y"
+          ]
+        },
+        {
+          "id": "and_2",
+          "type": "and2",
+          "label": null,
+          "ports": [
+            "a",
+            "b",
+            "y"
+          ]
+        },
+        {
+          "id": "or_1",
+          "type": "or2",
+          "label": null,
+          "ports": [
+            "a",
+            "b",
+            "y"
+          ]
+        },
+        {
+          "id": "pin_S",
+          "type": "output_pin",
+          "label": "S",
+          "ports": [
+            "a"
+          ]
+        },
+        {
+          "id": "pin_Cout",
+          "type": "output_pin",
+          "label": "Cout",
+          "ports": [
+            "a"
+          ]
+        }
+      ],
+      "wires": [
+        {
+          "id": "w_1",
+          "net": "A",
+          "from": "pin_A.y",
+          "to": "xor_1.a"
+        },
+        {
+          "id": "w_2",
+          "net": "A",
+          "from": "pin_A.y",
+          "to": "and_1.a"
+        },
+        {
+          "id": "w_3",
+          "net": "B",
+          "from": "pin_B.y",
+          "to": "xor_1.b"
+        },
+        {
+          "id": "w_4",
+          "net": "B",
+          "from": "pin_B.y",
+          "to": "and_1.b"
+        },
+        {
+          "id": "w_5",
+          "net": "P",
+          "from": "xor_1.y",
+          "to": "xor_2.a"
+        },
+        {
+          "id": "w_6",
+          "net": "P",
+          "from": "xor_1.y",
+          "to": "and_2.a"
+        },
+        {
+          "id": "w_7",
+          "net": "Cin",
+          "from": "pin_Cin.y",
+          "to": "xor_2.b"
+        },
+        {
+          "id": "w_8",
+          "net": "Cin",
+          "from": "pin_Cin.y",
+          "to": "and_2.b"
+        },
+        {
+          "id": "w_9",
+          "net": "G",
+          "from": "and_1.y",
+          "to": "or_1.b"
+        },
+        {
+          "id": "w_10",
+          "net": "Q",
+          "from": "and_2.y",
+          "to": "or_1.a"
+        },
+        {
+          "id": "w_11",
+          "net": "S",
+          "from": "xor_2.y",
+          "to": "pin_S.a"
+        },
+        {
+          "id": "w_12",
+          "net": "Cout",
+          "from": "or_1.y",
+          "to": "pin_Cout.a"
+        }
+      ],
+      "labels": [
+        {
+          "id": "lbl_caption",
+          "type": "label",
+          "text": "1-bit FA",
+          "attached_to": null
+        },
+        {
+          "id": "lbl_P",
+          "type": "label",
+          "text": "P",
+          "attached_to": "net:P"
+        },
+        {
+          "id": "lbl_G",
+          "type": "label",
+          "text": "G",
+          "attached_to": "net:G"
+        }
+      ],
+      "implements": {
+        "S": "math_1",
+        "Cout": "math_3"
+      }
+    }
+  ]
+}

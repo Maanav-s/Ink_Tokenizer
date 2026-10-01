@@ -79,6 +79,12 @@ Early scaffold — Python 3.13, managed with `uv`, no dependencies yet.
 - [docs/synthetic_data.md](docs/synthetic_data.md) — synthetic training data
   plan
 - [docs/slurm.md](docs/slurm.md) — running jobs on Slurm
+- [artifacts/](artifacts/README.md) — sample synthetic page (content and
+  layout, no ink yet); `artifacts/` is gitignored, so new pages need
+  `git add -f`
+- [scripts/make_sample_page.py](scripts/make_sample_page.py) and
+  [scripts/check_page.py](scripts/check_page.py) — regenerate and validate
+  the sample page
 
 Common commands:
 
