@@ -12,6 +12,11 @@ pipeline in [docs/synthetic_data.md](../docs/synthetic_data.md):
 | `renders/L<layout>_<fonts>_noise<L>_seed<N>.inkml` | `scripts/render_batch.py` | handwriting-like renders, with `.png` previews and `.targets.json` sidecars |
 | `renders/manifest.json` | `render_batch.py` | the renders kept, and those rejected by the ink check |
 
+Only `content.json` and the layouts are committed. Rendered ink
+(`page.*`, `renders/`) is generated locally and kept out of git to save
+storage; recreate it with `render_inkml.py` and `render_batch.py` (see
+Commands).
+
 ## Pages
 
 | Page | Content |
