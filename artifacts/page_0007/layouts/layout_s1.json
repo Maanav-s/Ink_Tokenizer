@@ -1,0 +1,1926 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0007",
+ "layout_seed": 1,
+ "unit": "mm",
+ "page": {
+  "width": 1500.0,
+  "height": 1000.0,
+  "origin": "top-left",
+  "y_axis": "down"
+ },
+ "style": {
+  "h": 15.952,
+  "title": 22.714,
+  "heading": 17.052,
+  "subbullet": 14.864,
+  "note": 13.706,
+  "table": 15.537,
+  "diagram": 12.928,
+  "math": 16.215,
+  "line_gap": 1.635,
+  "block_gap": 1.425,
+  "col_gap": 2.018,
+  "margin_x": 44.422,
+  "margin_y": 34.752,
+  "indent": 1.31,
+  "dash": "*",
+  "numbered": "{}.",
+  "title_underline": true,
+  "title_center": true,
+  "heading_underline": true,
+  "table_style": "grid",
+  "table_rules": "after_header",
+  "table_left_align": false,
+  "row_h": 1.849,
+  "cell_pad": 0.763,
+  "side_by_side": 0.31,
+  "fill": 0.777,
+  "multi_writer": false,
+  "correction_rate": 0.03,
+  "scale": 1.0,
+  "page_w": 1500.0,
+  "page_h": 1000.0,
+  "blocks": {
+   "h_div": {},
+   "m_vadc2": {},
+   "m_vadc3": {},
+   "m_idiv": {},
+   "m_noise": {},
+   "h_led": {},
+   "m_rled2": {},
+   "m_iled": {},
+   "m_pr": {},
+   "h_budget": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "grid"
+   },
+   "m_iavg": {},
+   "m_iavg2": {},
+   "m_life": {},
+   "m_life2": {}
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "title": {
+   "kind": "text",
+   "text": "Sensor node: power budget + LED sizing",
+   "bbox": [
+    472.07,
+    34.75,
+    1024.39,
+    57.47
+   ],
+   "text_height": 22.71,
+   "role": "title",
+   "bold": true,
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "title.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     470.0,
+     60.87
+    ],
+    [
+     1030.0,
+     60.99
+    ]
+   ],
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "given.heading": {
+   "kind": "text",
+   "text": "Given",
+   "bbox": [
+    44.64,
+    83.71,
+    99.23,
+    100.76
+   ],
+   "text_height": 17.05,
+   "role": "heading",
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     44.42,
+     103.32
+    ],
+    [
+     100.34,
+     103.86
+    ]
+   ],
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    44.64,
+    120.28,
+    57.33,
+    136.23
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "given",
+   "level": 0,
+   "index": 0,
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.1": {
+   "kind": "text",
+   "text": "V_BAT = 3.6 V (LiSOCl2, AA, 2400 mAh)",
+   "bbox": [
+    62.92,
+    120.28,
+    477.86,
+    136.23
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    44.64,
+    146.36,
+    57.33,
+    162.32
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "given",
+   "level": 0,
+   "index": 1,
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.2": {
+   "kind": "text",
+   "text": "LED red: V_F ≈ 2.0 V @ 2 mA",
+   "bbox": [
+    62.92,
+    146.36,
+    369.11,
+    162.32
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.3.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    44.64,
+    172.45,
+    57.33,
+    188.4
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "given",
+   "level": 0,
+   "index": 2,
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.3": {
+   "kind": "text",
+   "text": "ADC ref 1.8 V → need V_ADC < 1.8 V",
+   "bbox": [
+    62.92,
+    172.45,
+    446.68,
+    188.4
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.4.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    44.64,
+    198.54,
+    57.33,
+    214.49
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "given",
+   "level": 0,
+   "index": 3,
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "given.4": {
+   "kind": "text",
+   "text": "target life ≥ 5 yr",
+   "bbox": [
+    62.92,
+    198.54,
+    226.34,
+    214.49
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "given",
+   "writer": "writer_0"
+  },
+  "h_div": {
+   "kind": "text",
+   "text": "Batt sense divider",
+   "bbox": [
+    510.9,
+    83.71,
+    691.36,
+    100.76
+   ],
+   "text_height": 17.05,
+   "role": "heading",
+   "element": "h_div",
+   "writer": "writer_0"
+  },
+  "h_div.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     510.05,
+     103.32
+    ],
+    [
+     694.53,
+     103.51
+    ]
+   ],
+   "element": "h_div",
+   "writer": "writer_0"
+  },
+  "m_vadc": {
+   "kind": "math",
+   "latex": "V_{ADC} = V_{BAT} \\cdot \\frac{R_2}{R_1 + R_2}",
+   "bbox": [
+    510.05,
+    111.49,
+    694.02,
+    143.92
+   ],
+   "baseline": 132.97,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_vadc",
+   "writer": "writer_0"
+  },
+  "m_vadc2": {
+   "kind": "math",
+   "latex": "= 3.6 \\cdot \\frac{1\\,M\\Omega}{2\\,M\\Omega + 1\\,M\\Omega}",
+   "bbox": [
+    559.2,
+    162.1,
+    725.08,
+    188.19
+   ],
+   "baseline": 180.41,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_vadc2",
+   "writer": "writer_0"
+  },
+  "m_vadc3": {
+   "kind": "math",
+   "latex": "= 1.2\\,\\mathrm{V} < 1.8\\,\\mathrm{V}",
+   "bbox": [
+    559.2,
+    206.37,
+    689.99,
+    222.58
+   ],
+   "baseline": 218.53,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_vadc3",
+   "writer": "writer_0"
+  },
+  "m_idiv": {
+   "kind": "math",
+   "latex": "I_{div} = \\frac{V_{BAT}}{R_1 + R_2} = \\frac{3.6}{3\\,M\\Omega} = 1.2\\,\\mu A",
+   "bbox": [
+    510.05,
+    245.31,
+    778.75,
+    276.94
+   ],
+   "baseline": 266.0,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_idiv",
+   "writer": "writer_0"
+  },
+  "m_noise": {
+   "kind": "math",
+   "latex": "v_n = \\sqrt{4 k T R_{th} B} \\approx 3.3\\,\\mu V",
+   "bbox": [
+    510.05,
+    299.67,
+    714.08,
+    321.23
+   ],
+   "baseline": 315.88,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_noise",
+   "writer": "writer_0"
+  },
+  "n_noise": {
+   "kind": "text",
+   "text": "R_th = R1||R2 ≈ 667 kΩ, B = 1 kHz → noise ok vs 1 LSB",
+   "bbox": [
+    510.05,
+    343.96,
+    983.35,
+    357.66
+   ],
+   "text_height": 13.71,
+   "role": "note",
+   "element": "n_noise",
+   "writer": "writer_0"
+  },
+  "h_led": {
+   "kind": "text",
+   "text": "LED current limit",
+   "bbox": [
+    512.82,
+    380.39,
+    691.92,
+    397.44
+   ],
+   "text_height": 17.05,
+   "role": "heading",
+   "element": "h_led",
+   "writer": "writer_0"
+  },
+  "h_led.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     510.05,
+     400.0
+    ],
+    [
+     692.63,
+     400.37
+    ]
+   ],
+   "element": "h_led",
+   "writer": "writer_0"
+  },
+  "m_rled": {
+   "kind": "math",
+   "latex": "R_{LED} = \\frac{V_{BAT} - V_F}{I_{LED}}",
+   "bbox": [
+    510.05,
+    408.35,
+    654.36,
+    441.16
+   ],
+   "baseline": 429.04,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_rled",
+   "writer": "writer_0"
+  },
+  "m_rled2": {
+   "kind": "math",
+   "latex": "= \\frac{3.6 - 2.0}{2\\,mA} = 800\\,\\Omega",
+   "bbox": [
+    556.69,
+    459.34,
+    721.2,
+    485.43
+   ],
+   "baseline": 477.65,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_rled2",
+   "writer": "writer_0"
+  },
+  "n_e12": {
+   "kind": "text",
+   "text": "→ pick 820 Ω (E12), I a bit lower = fine",
+   "bbox": [
+    510.05,
+    508.15,
+    843.86,
+    521.86
+   ],
+   "text_height": 13.71,
+   "role": "note",
+   "element": "n_e12",
+   "writer": "writer_0"
+  },
+  "m_iled": {
+   "kind": "math",
+   "latex": "I_{LED} = \\frac{1.6\\,V}{820\\,\\Omega} \\approx 1.95\\,mA",
+   "bbox": [
+    510.05,
+    544.58,
+    715.26,
+    570.67
+   ],
+   "baseline": 562.9,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_iled",
+   "writer": "writer_0"
+  },
+  "m_pr": {
+   "kind": "math",
+   "latex": "P_R = I_{LED}^2 R_{LED} \\approx 3.1\\,mW",
+   "bbox": [
+    510.05,
+    593.4,
+    725.31,
+    613.18
+   ],
+   "baseline": 607.75,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_pr",
+   "writer": "writer_0"
+  },
+  "sch.B1": {
+   "kind": "component",
+   "component": "battery",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1068.01,
+    183.26
+   ],
+   "b": [
+    1068.01,
+    233.26
+   ],
+   "writer": "writer_0"
+  },
+  "sch.B1.label": {
+   "kind": "math",
+   "latex": "V_{BAT}",
+   "bbox": [
+    1022.82,
+    193.52,
+    1056.09,
+    206.45
+   ],
+   "baseline": 203.21,
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.B1.value": {
+   "kind": "text",
+   "text": "3.6 V",
+   "bbox": [
+    1015.53,
+    211.62,
+    1056.09,
+    224.54
+   ],
+   "text_height": 12.93,
+   "align": "right",
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.R1.label": {
+   "kind": "math",
+   "latex": "R_1",
+   "bbox": [
+    1123.8,
+    108.52,
+    1141.84,
+    121.45
+   ],
+   "baseline": 118.21,
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.R1.value": {
+   "kind": "text",
+   "text": "2 MΩ",
+   "bbox": [
+    1097.49,
+    126.62,
+    1141.84,
+    139.54
+   ],
+   "text_height": 12.93,
+   "align": "right",
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.R1": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1153.01,
+    98.26
+   ],
+   "b": [
+    1153.01,
+    148.26
+   ],
+   "style": "box",
+   "writer": "writer_0"
+  },
+  "sch.vbat.1": {
+   "kind": "wire",
+   "points": [
+    [
+     1068.01,
+     183.26
+    ],
+    [
+     1068.01,
+     88.26
+    ],
+    [
+     1153.01,
+     88.26
+    ],
+    [
+     1153.01,
+     98.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "vbat",
+   "writer": "writer_0"
+  },
+  "sch.R2": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1153.01,
+    283.26
+   ],
+   "b": [
+    1153.01,
+    333.26
+   ],
+   "style": "box",
+   "writer": "writer_0"
+  },
+  "sch.R2.label": {
+   "kind": "math",
+   "latex": "R_2",
+   "bbox": [
+    1123.64,
+    293.52,
+    1141.84,
+    306.45
+   ],
+   "baseline": 303.21,
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.R2.value": {
+   "kind": "text",
+   "text": "1 MΩ",
+   "bbox": [
+    1097.73,
+    311.62,
+    1141.84,
+    324.54
+   ],
+   "text_height": 12.93,
+   "align": "right",
+   "element": "sch",
+   "role": "component_label",
+   "corrections": [
+    {
+     "index": 0,
+     "wrong": "3",
+     "style": "overwrite"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "sch.vmid.1": {
+   "kind": "wire",
+   "points": [
+    [
+     1153.01,
+     148.26
+    ],
+    [
+     1153.01,
+     283.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "vmid",
+   "writer": "writer_0"
+  },
+  "sch.gnd.1": {
+   "kind": "wire",
+   "points": [
+    [
+     1068.01,
+     233.26
+    ],
+    [
+     1068.01,
+     343.26
+    ],
+    [
+     1153.01,
+     343.26
+    ],
+    [
+     1153.01,
+     333.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "gnd",
+   "writer": "writer_0"
+  },
+  "sch.G1": {
+   "kind": "component",
+   "component": "ground",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1153.01,
+    403.26
+   ],
+   "writer": "writer_0"
+  },
+  "sch.gnd.2": {
+   "kind": "wire",
+   "points": [
+    [
+     1153.01,
+     343.26
+    ],
+    [
+     1153.01,
+     403.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "gnd",
+   "dots": [
+    [
+     1153.01,
+     343.26
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "sch.ADC": {
+   "kind": "component",
+   "component": "terminal",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1238.01,
+    208.26
+   ],
+   "writer": "writer_0"
+  },
+  "sch.ADC.label": {
+   "kind": "text",
+   "text": "ADC",
+   "bbox": [
+    1245.68,
+    202.57,
+    1284.67,
+    215.5
+   ],
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.vmid.2": {
+   "kind": "wire",
+   "points": [
+    [
+     1153.01,
+     208.26
+    ],
+    [
+     1238.01,
+     208.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "vmid",
+   "dots": [
+    [
+     1153.01,
+     208.26
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "sch.RL": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1318.01,
+    98.26
+   ],
+   "b": [
+    1318.01,
+    148.26
+   ],
+   "style": "box",
+   "writer": "writer_0"
+  },
+  "sch.RL.label": {
+   "kind": "math",
+   "latex": "R_{LED}",
+   "bbox": [
+    1329.18,
+    108.52,
+    1362.75,
+    122.54
+   ],
+   "baseline": 118.21,
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.RL.value": {
+   "kind": "text",
+   "text": "820 Ω",
+   "bbox": [
+    1329.18,
+    126.62,
+    1373.96,
+    139.54
+   ],
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.vbat.2": {
+   "kind": "wire",
+   "points": [
+    [
+     1153.01,
+     88.26
+    ],
+    [
+     1318.01,
+     88.26
+    ],
+    [
+     1318.01,
+     98.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "vbat",
+   "dots": [
+    [
+     1153.01,
+     88.26
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "sch.D1": {
+   "kind": "component",
+   "component": "diode",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1318.01,
+    183.26
+   ],
+   "b": [
+    1318.01,
+    233.26
+   ],
+   "writer": "writer_0"
+  },
+  "sch.D1.label": {
+   "kind": "text",
+   "text": "LED",
+   "bbox": [
+    1332.18,
+    202.57,
+    1366.45,
+    215.5
+   ],
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.led_a": {
+   "kind": "wire",
+   "points": [
+    [
+     1318.01,
+     148.26
+    ],
+    [
+     1318.01,
+     183.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "led_a",
+   "writer": "writer_0"
+  },
+  "sch.GPIO": {
+   "kind": "component",
+   "component": "terminal",
+   "element": "sch",
+   "role": "component",
+   "a": [
+    1318.01,
+    308.26
+   ],
+   "writer": "writer_0"
+  },
+  "sch.GPIO.label": {
+   "kind": "text",
+   "text": "GPIO (sink)",
+   "bbox": [
+    1325.68,
+    302.57,
+    1419.8,
+    315.5
+   ],
+   "text_height": 12.93,
+   "element": "sch",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch.led_k": {
+   "kind": "wire",
+   "points": [
+    [
+     1318.01,
+     233.26
+    ],
+    [
+     1318.01,
+     308.26
+    ]
+   ],
+   "element": "sch",
+   "role": "wire",
+   "net": "led_k",
+   "writer": "writer_0"
+  },
+  "h_budget": {
+   "kind": "text",
+   "text": "Current draw per mode",
+   "bbox": [
+    1017.53,
+    440.38,
+    1255.09,
+    457.43
+   ],
+   "text_height": 17.05,
+   "role": "heading",
+   "element": "h_budget",
+   "writer": "writer_0"
+  },
+  "h_budget.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     1015.53,
+     459.99
+    ],
+    [
+     1255.77,
+     459.56
+    ]
+   ],
+   "element": "h_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.h0": {
+   "kind": "text",
+   "text": "mode",
+   "bbox": [
+    1027.39,
+    476.25,
+    1075.11,
+    491.79
+   ],
+   "text_height": 15.54,
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.h1": {
+   "kind": "text",
+   "text": "I",
+   "bbox": [
+    1170.91,
+    476.25,
+    1180.34,
+    491.79
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.h2": {
+   "kind": "text",
+   "text": "duty",
+   "bbox": [
+    1241.1,
+    476.25,
+    1279.54,
+    491.79
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.h3": {
+   "kind": "text",
+   "text": "avg",
+   "bbox": [
+    1310.32,
+    476.25,
+    1340.68,
+    491.79
+   ],
+   "text_height": 15.54,
+   "role": "header_cell",
+   "row": "header",
+   "col": 3,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.border": {
+   "kind": "rect",
+   "bbox": [
+    1015.53,
+    467.97,
+    1398.2,
+    666.19
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     1015.53,
+     501.0
+    ],
+    [
+     1398.2,
+     501.0
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_h2": {
+   "kind": "polyline",
+   "points": [
+    [
+     1015.53,
+     534.04
+    ],
+    [
+     1398.2,
+     534.04
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_h3": {
+   "kind": "polyline",
+   "points": [
+    [
+     1015.53,
+     567.08
+    ],
+    [
+     1398.2,
+     567.08
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_h4": {
+   "kind": "polyline",
+   "points": [
+    [
+     1015.53,
+     600.12
+    ],
+    [
+     1398.2,
+     600.12
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_h5": {
+   "kind": "polyline",
+   "points": [
+    [
+     1015.53,
+     633.16
+    ],
+    [
+     1398.2,
+     633.16
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     1129.07,
+     467.97
+    ],
+    [
+     1129.07,
+     666.19
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     1222.18,
+     467.97
+    ],
+    [
+     1222.18,
+     666.19
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.rule_c2": {
+   "kind": "polyline",
+   "points": [
+    [
+     1298.46,
+     467.97
+    ],
+    [
+     1298.46,
+     666.19
+    ]
+   ],
+   "role": "rule",
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r0c0": {
+   "kind": "text",
+   "text": "sleep",
+   "bbox": [
+    1027.39,
+    509.29,
+    1072.08,
+    524.82
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r0c1": {
+   "kind": "text",
+   "text": "2.5 μA",
+   "bbox": [
+    1143.28,
+    509.29,
+    1207.98,
+    524.82
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r0c2": {
+   "kind": "text",
+   "text": "99.0%",
+   "bbox": [
+    1234.04,
+    509.29,
+    1286.6,
+    524.82
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r0c3": {
+   "kind": "text",
+   "text": "2.48 μA",
+   "bbox": [
+    1310.32,
+    509.29,
+    1386.34,
+    524.82
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 0,
+   "col": 3,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r1c0": {
+   "kind": "text",
+   "text": "sense",
+   "bbox": [
+    1027.39,
+    542.33,
+    1076.78,
+    557.86
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r1c1": {
+   "kind": "text",
+   "text": "1.5 mA",
+   "bbox": [
+    1140.93,
+    542.33,
+    1210.32,
+    557.86
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r1c2": {
+   "kind": "text",
+   "text": "0.5%",
+   "bbox": [
+    1239.59,
+    542.33,
+    1281.05,
+    557.86
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 2,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r1c3": {
+   "kind": "text",
+   "text": "7.5 μA",
+   "bbox": [
+    1310.32,
+    542.33,
+    1374.72,
+    557.86
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 1,
+   "col": 3,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r2c0": {
+   "kind": "text",
+   "text": "radio TX",
+   "bbox": [
+    1027.39,
+    575.36,
+    1105.94,
+    590.9
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r2c1": {
+   "kind": "text",
+   "text": "18 mA",
+   "bbox": [
+    1143.04,
+    575.36,
+    1208.21,
+    590.9
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r2c2": {
+   "kind": "text",
+   "text": "0.1%",
+   "bbox": [
+    1239.59,
+    575.36,
+    1281.05,
+    590.9
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 2,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r2c3": {
+   "kind": "text",
+   "text": "18 μA",
+   "bbox": [
+    1310.32,
+    575.36,
+    1370.5,
+    590.9
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 2,
+   "col": 3,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r3c0": {
+   "kind": "text",
+   "text": "LED blink",
+   "bbox": [
+    1027.39,
+    608.4,
+    1117.21,
+    623.94
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 3,
+   "col": 0,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r3c1": {
+   "kind": "text",
+   "text": "2 mA",
+   "bbox": [
+    1148.55,
+    608.4,
+    1202.7,
+    623.94
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 1,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r3c2": {
+   "kind": "text",
+   "text": "0.4%",
+   "bbox": [
+    1239.59,
+    608.4,
+    1281.05,
+    623.94
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 2,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r3c3": {
+   "kind": "text",
+   "text": "8 μA",
+   "bbox": [
+    1310.32,
+    608.4,
+    1359.4,
+    623.94
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 3,
+   "col": 3,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r4c0": {
+   "kind": "text",
+   "text": "divider",
+   "bbox": [
+    1027.39,
+    641.44,
+    1085.75,
+    656.98
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 4,
+   "col": 0,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r4c1": {
+   "kind": "text",
+   "text": "1.2 μA",
+   "bbox": [
+    1143.28,
+    641.44,
+    1207.98,
+    656.98
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 1,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r4c2": {
+   "kind": "text",
+   "text": "100%",
+   "bbox": [
+    1236.25,
+    641.44,
+    1284.39,
+    656.98
+   ],
+   "text_height": 15.54,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 2,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "t_budget.r4c3": {
+   "kind": "text",
+   "text": "1.2 μA",
+   "bbox": [
+    1310.32,
+    641.44,
+    1375.02,
+    656.98
+   ],
+   "text_height": 15.54,
+   "role": "cell",
+   "row": 4,
+   "col": 3,
+   "element": "t_budget",
+   "writer": "writer_0"
+  },
+  "m_iavg": {
+   "kind": "math",
+   "latex": "I_{avg} = \\sum_{k} I_k D_k = 2.48 + 7.5 + 18 + 8 + 1.2",
+   "bbox": [
+    1015.53,
+    688.92,
+    1373.14,
+    726.35
+   ],
+   "baseline": 706.35,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_iavg",
+   "writer": "writer_0"
+  },
+  "m_iavg2": {
+   "kind": "math",
+   "latex": "= 37.2\\,\\mu A",
+   "bbox": [
+    1050.54,
+    744.53,
+    1142.68,
+    760.74
+   ],
+   "baseline": 756.69,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_iavg2",
+   "writer": "writer_0"
+  },
+  "m_life": {
+   "kind": "math",
+   "latex": "t = \\frac{C}{I_{avg}} = \\frac{2400\\,mAh}{37.2\\,\\mu A}",
+   "bbox": [
+    1015.53,
+    783.47,
+    1188.99,
+    817.21
+   ],
+   "baseline": 803.3,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_life",
+   "writer": "writer_0"
+  },
+  "m_life2": {
+   "kind": "math",
+   "latex": "= \\boxed{6.45 \\times 10^4\\,h \\approx 7.4\\,yr}",
+   "bbox": [
+    1027.6,
+    835.39,
+    1226.54,
+    865.31
+   ],
+   "baseline": 853.79,
+   "text_height": 16.22,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_life2",
+   "writer": "writer_0"
+  },
+  "notes.heading": {
+   "kind": "text",
+   "text": "Notes",
+   "bbox": [
+    45.79,
+    628.26,
+    103.19,
+    645.31
+   ],
+   "text_height": 17.05,
+   "role": "heading",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     44.42,
+     647.86
+    ],
+    [
+     103.43,
+     648.34
+    ]
+   ],
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "n_tx.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    45.79,
+    664.82,
+    58.49,
+    680.77
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 0,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "n_tx": {
+   "kind": "text",
+   "text": "TX ≈ 48% of I_avg → batch packets?",
+   "bbox": [
+    64.07,
+    664.82,
+    418.33,
+    680.77
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    45.79,
+    690.91,
+    58.49,
+    706.86
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 1,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.2": {
+   "kind": "text",
+   "text": "derate C -20% for cold → ≈ 5.9 yr, still ≥ 5 yr",
+   "bbox": [
+    64.07,
+    690.91,
+    511.62,
+    706.86
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.3.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    45.79,
+    717.0,
+    58.49,
+    732.95
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 2,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.3": {
+   "kind": "text",
+   "text": "3 MΩ divider: add 100 nF at ADC pin?",
+   "bbox": [
+    64.07,
+    717.0,
+    440.16,
+    732.95
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.4.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    45.79,
+    743.08,
+    58.49,
+    759.04
+   ],
+   "text_height": 15.95,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 3,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.4": {
+   "kind": "text",
+   "text": "LED dimmer? 1 mA → R ≈ 1.6 kΩ",
+   "bbox": [
+    64.07,
+    743.08,
+    389.53,
+    759.04
+   ],
+   "text_height": 15.95,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "a_rl": {
+   "kind": "polyline",
+   "points": [
+    [
+     510.05,
+     527.44
+    ],
+    [
+     843.86,
+     527.44
+    ]
+   ],
+   "role": "annotation_underline",
+   "element": "a_rl",
+   "target": "n_e12",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "title",
+  "title.underline",
+  "given.heading",
+  "given.heading.underline",
+  "given.1.marker",
+  "given.1",
+  "given.2.marker",
+  "given.2",
+  "given.3.marker",
+  "given.3",
+  "given.4.marker",
+  "given.4",
+  "h_div",
+  "h_div.underline",
+  "m_vadc",
+  "m_vadc2",
+  "m_vadc3",
+  "m_idiv",
+  "m_noise",
+  "n_noise",
+  "h_led",
+  "h_led.underline",
+  "m_rled",
+  "m_rled2",
+  "n_e12",
+  "a_rl",
+  "m_iled",
+  "m_pr",
+  "sch.B1",
+  "sch.B1.label",
+  "sch.B1.value",
+  "sch.R1.label",
+  "sch.R1.value",
+  "sch.R1",
+  "sch.vbat.1",
+  "sch.R2",
+  "sch.R2.label",
+  "sch.R2.value",
+  "sch.vmid.1",
+  "sch.gnd.1",
+  "sch.G1",
+  "sch.gnd.2",
+  "sch.ADC",
+  "sch.ADC.label",
+  "sch.vmid.2",
+  "sch.RL",
+  "sch.RL.label",
+  "sch.RL.value",
+  "sch.vbat.2",
+  "sch.D1",
+  "sch.D1.label",
+  "sch.led_a",
+  "sch.GPIO",
+  "sch.GPIO.label",
+  "sch.led_k",
+  "h_budget",
+  "h_budget.underline",
+  "t_budget.h0",
+  "t_budget.h1",
+  "t_budget.h2",
+  "t_budget.h3",
+  "t_budget.border",
+  "t_budget.rule_h1",
+  "t_budget.rule_h2",
+  "t_budget.rule_h3",
+  "t_budget.rule_h4",
+  "t_budget.rule_h5",
+  "t_budget.rule_c0",
+  "t_budget.rule_c1",
+  "t_budget.rule_c2",
+  "t_budget.r0c0",
+  "t_budget.r0c1",
+  "t_budget.r0c2",
+  "t_budget.r0c3",
+  "t_budget.r1c0",
+  "t_budget.r1c1",
+  "t_budget.r1c2",
+  "t_budget.r1c3",
+  "t_budget.r2c0",
+  "t_budget.r2c1",
+  "t_budget.r2c2",
+  "t_budget.r2c3",
+  "t_budget.r3c0",
+  "t_budget.r3c1",
+  "t_budget.r3c2",
+  "t_budget.r3c3",
+  "t_budget.r4c0",
+  "t_budget.r4c1",
+  "t_budget.r4c2",
+  "t_budget.r4c3",
+  "m_iavg",
+  "m_iavg2",
+  "m_life",
+  "m_life2",
+  "notes.heading",
+  "notes.heading.underline",
+  "n_tx.marker",
+  "n_tx",
+  "notes.2.marker",
+  "notes.2",
+  "notes.3.marker",
+  "notes.3",
+  "notes.4.marker",
+  "notes.4"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "t_budget",
+   "after": {
+    "id": "t_budget.border"
+   },
+   "target": [
+    {
+     "id": "t_budget.rule_h1"
+    },
+    {
+     "id": "t_budget.rule_h2"
+    },
+    {
+     "id": "t_budget.rule_h3"
+    },
+    {
+     "id": "t_budget.rule_h4"
+    },
+    {
+     "id": "t_budget.rule_h5"
+    },
+    {
+     "id": "t_budget.rule_c0"
+    },
+    {
+     "id": "t_budget.rule_c1"
+    },
+    {
+     "id": "t_budget.rule_c2"
+    }
+   ]
+  }
+ ],
+ "layout_attempt": 6
+}

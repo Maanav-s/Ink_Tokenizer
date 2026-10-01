@@ -1,7 +1,7 @@
 {
  "schema": "ink_tokenizer.synthetic_page.layout/v1",
  "page_id": "page_0001",
- "layout_seed": 0,
+ "layout_seed": 2,
  "unit": "mm",
  "page": {
   "width": 1200.0,
@@ -10,32 +10,32 @@
   "y_axis": "down"
  },
  "style": {
-  "h": 19.916,
-  "title": 28.332,
-  "heading": 21.548,
-  "subbullet": 17.628,
-  "note": 16.439,
-  "table": 17.936,
-  "diagram": 15.991,
-  "math": 21.617,
-  "line_gap": 1.716,
-  "block_gap": 1.247,
-  "col_gap": 3.38,
-  "margin_x": 57.388,
-  "margin_y": 22.502,
-  "indent": 1.309,
+  "h": 23.165,
+  "title": 31.16,
+  "heading": 23.501,
+  "subbullet": 19.749,
+  "note": 19.092,
+  "table": 22.871,
+  "diagram": 21.425,
+  "math": 25.871,
+  "line_gap": 1.819,
+  "block_gap": 1.553,
+  "col_gap": 2.036,
+  "margin_x": 41.194,
+  "margin_y": 24.095,
+  "indent": 1.385,
   "dash": "*",
   "numbered": "{}.",
   "title_underline": false,
   "title_center": false,
-  "heading_underline": true,
-  "table_style": "open",
-  "table_rules": "first",
+  "heading_underline": false,
+  "table_style": "header",
+  "table_rules": "after_header",
   "table_left_align": false,
-  "row_h": 1.75,
-  "cell_pad": 0.772,
-  "side_by_side": 0.327,
-  "fill": 0.936,
+  "row_h": 1.948,
+  "cell_pad": 0.719,
+  "side_by_side": 0.498,
+  "fill": 0.558,
   "multi_writer": false,
   "correction_rate": 0.1,
   "scale": 1.0,
@@ -44,8 +44,8 @@
   "blocks": {
    "tt_1": {
     "fill": "inputs_then_outputs",
-    "rules": "first",
-    "style": "open"
+    "rules": "after_header",
+    "style": "header"
    },
    "math_1": {},
    "math_2": {},
@@ -62,12 +62,12 @@
    "kind": "text",
    "text": "Full adder - design session",
    "bbox": [
-    57.39,
-    22.5,
-    518.08,
-    50.83
+    41.19,
+    24.09,
+    547.87,
+    55.25
    ],
-   "text_height": 28.33,
+   "text_height": 31.16,
    "role": "title",
    "bold": true,
    "element": "title",
@@ -77,12 +77,12 @@
    "kind": "text",
    "text": "*",
    "bbox": [
-    57.39,
-    75.67,
-    73.24,
-    95.59
+    41.19,
+    91.23,
+    59.63,
+    114.4
    ],
-   "text_height": 19.92,
+   "text_height": 23.17,
    "role": "list_marker",
    "list": "notes",
    "level": 0,
@@ -94,12 +94,12 @@
    "kind": "text",
    "text": "need 1-bit FA cell for 4-bit ripple carry",
    "bbox": [
-    80.21,
-    75.67,
-    575.95,
-    95.59
+    67.74,
+    91.23,
+    644.35,
+    114.4
    ],
-   "text_height": 19.92,
+   "text_height": 23.17,
    "role": "bullet",
    "element": "notes",
    "writer": "writer_0"
@@ -108,12 +108,12 @@
    "kind": "text",
    "text": "*",
    "bbox": [
-    57.39,
-    109.84,
-    73.24,
-    129.76
+    41.19,
+    133.38,
+    59.63,
+    156.55
    ],
-   "text_height": 19.92,
+   "text_height": 23.17,
    "role": "list_marker",
    "list": "notes",
    "level": 0,
@@ -125,12 +125,12 @@
    "kind": "text",
    "text": "in: A, B, Cin   out: S, Cout",
    "bbox": [
-    80.21,
-    109.84,
-    398.72,
-    129.76
+    67.74,
+    133.38,
+    438.2,
+    156.55
    ],
-   "text_height": 19.92,
+   "text_height": 23.17,
    "role": "bullet",
    "element": "notes",
    "writer": "writer_0"
@@ -139,12 +139,12 @@
    "kind": "text",
    "text": "*",
    "bbox": [
-    57.39,
-    144.02,
-    73.24,
-    163.93
+    41.19,
+    175.53,
+    59.63,
+    198.69
    ],
-   "text_height": 19.92,
+   "text_height": 23.17,
    "role": "list_marker",
    "list": "notes",
    "level": 0,
@@ -156,106 +156,26 @@
    "kind": "text",
    "text": "build w/ 2 XOR, 2 AND, 1 OR",
    "bbox": [
-    80.21,
-    144.02,
-    450.83,
-    163.93
+    67.74,
+    175.53,
+    498.82,
+    198.69
    ],
-   "text_height": 19.92,
+   "text_height": 23.17,
    "role": "bullet",
    "element": "notes",
-   "writer": "writer_0"
-  },
-  "tt_1.rule_h1": {
-   "kind": "polyline",
-   "points": [
-    [
-     57.39,
-     222.97
-    ],
-    [
-     333.95,
-     222.97
-    ]
-   ],
-   "role": "rule",
-   "element": "tt_1",
-   "writer": "writer_0"
-  },
-  "tt_1.rule_c0": {
-   "kind": "polyline",
-   "points": [
-    [
-     109.07,
-     188.77
-    ],
-    [
-     109.07,
-     474.49
-    ]
-   ],
-   "role": "rule",
-   "element": "tt_1",
-   "writer": "writer_0"
-  },
-  "tt_1.rule_c1": {
-   "kind": "polyline",
-   "points": [
-    [
-     152.89,
-     189.98
-    ],
-    [
-     152.89,
-     477.55
-    ]
-   ],
-   "role": "rule",
-   "element": "tt_1",
-   "writer": "writer_0"
-  },
-  "tt_1.rule_c2": {
-   "kind": "polyline",
-   "points": [
-    [
-     212.81,
-     188.9
-    ],
-    [
-     212.81,
-     479.26
-    ]
-   ],
-   "role": "rule",
-   "element": "tt_1",
-   "writer": "writer_0"
-  },
-  "tt_1.rule_c3": {
-   "kind": "polyline",
-   "points": [
-    [
-     253.9,
-     189.47
-    ],
-    [
-     253.9,
-     477.27
-    ]
-   ],
-   "role": "rule",
-   "element": "tt_1",
    "writer": "writer_0"
   },
   "tt_1.h0": {
    "kind": "text",
    "text": "A",
    "bbox": [
-    75.33,
-    197.76,
-    95.21,
-    215.7
+    715.03,
+    112.79,
+    740.4,
+    135.66
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -267,12 +187,12 @@
    "kind": "text",
    "text": "B",
    "bbox": [
-    122.92,
-    197.76,
-    139.03,
-    215.7
+    773.28,
+    112.79,
+    793.83,
+    135.66
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -284,12 +204,12 @@
    "kind": "text",
    "text": "Cin",
    "bbox": [
-    166.74,
-    197.76,
-    198.95,
-    215.7
+    826.72,
+    112.79,
+    867.79,
+    135.66
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -301,12 +221,12 @@
    "kind": "text",
    "text": "S",
    "bbox": [
-    226.66,
-    197.76,
-    240.05,
-    215.7
+    900.68,
+    112.79,
+    917.76,
+    135.66
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -318,12 +238,12 @@
    "kind": "text",
    "text": "Cout",
    "bbox": [
-    267.76,
-    197.76,
-    315.27,
-    215.7
+    950.64,
+    112.79,
+    1011.23,
+    135.66
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -331,16 +251,48 @@
    "element": "tt_1",
    "writer": "writer_0"
   },
+  "tt_1.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     691.52,
+     147.18
+    ],
+    [
+     1034.6,
+     147.18
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_1",
+   "writer": "writer_0"
+  },
+  "tt_1.rule_c2": {
+   "kind": "polyline",
+   "points": [
+    [
+     884.24,
+     98.43
+    ],
+    [
+     884.24,
+     510.3
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_1",
+   "writer": "writer_0"
+  },
   "tt_1.r0c0": {
    "kind": "text",
    "text": "0",
    "bbox": [
-    78.85,
-    229.16,
-    91.69,
-    247.09
+    719.53,
+    157.33,
+    735.9,
+    180.2
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -352,12 +304,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    124.56,
-    229.16,
-    137.4,
-    247.09
+    775.37,
+    157.33,
+    791.74,
+    180.2
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -369,12 +321,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    176.43,
-    229.16,
-    189.26,
-    247.09
+    839.07,
+    157.33,
+    855.44,
+    180.2
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -386,29 +338,36 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    78.85,
-    260.55,
-    91.69,
-    278.48
+    719.53,
+    201.88,
+    735.9,
+    224.75
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 1,
    "col": 0,
    "element": "tt_1",
+   "corrections": [
+    {
+     "index": 0,
+     "wrong": "8",
+     "style": "overwrite"
+    }
+   ],
    "writer": "writer_0"
   },
   "tt_1.r1c1": {
    "kind": "text",
    "text": "0",
    "bbox": [
-    124.56,
-    260.55,
-    137.4,
-    278.48
+    775.37,
+    201.88,
+    791.74,
+    224.75
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 1,
@@ -420,12 +379,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    176.44,
-    260.55,
-    189.25,
-    278.48
+    839.09,
+    201.88,
+    855.42,
+    224.75
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 1,
@@ -437,12 +396,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    78.85,
-    291.94,
-    91.69,
-    309.87
+    719.53,
+    246.42,
+    735.9,
+    269.29
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 2,
@@ -454,12 +413,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    124.57,
-    291.94,
-    137.38,
-    309.87
+    775.39,
+    246.42,
+    791.72,
+    269.29
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 2,
@@ -471,12 +430,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    176.43,
-    291.94,
-    189.26,
-    309.87
+    839.07,
+    246.42,
+    855.44,
+    269.29
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 2,
@@ -488,12 +447,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    78.85,
-    323.33,
-    91.69,
-    341.27
+    719.53,
+    290.96,
+    735.9,
+    313.84
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -505,12 +464,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    124.57,
-    323.33,
-    137.38,
-    341.27
+    775.39,
+    290.96,
+    791.72,
+    313.84
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -522,12 +481,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    176.44,
-    323.33,
-    189.25,
-    341.27
+    839.09,
+    290.96,
+    855.42,
+    313.84
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -539,12 +498,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    78.86,
-    354.72,
-    91.68,
-    372.66
+    719.55,
+    335.51,
+    735.88,
+    358.38
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 4,
@@ -556,12 +515,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    124.56,
-    354.72,
-    137.4,
-    372.66
+    775.37,
+    335.51,
+    791.74,
+    358.38
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 4,
@@ -573,12 +532,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    176.43,
-    354.72,
-    189.26,
-    372.66
+    839.07,
+    335.51,
+    855.44,
+    358.38
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 4,
@@ -590,12 +549,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    78.86,
-    386.11,
-    91.68,
-    404.05
+    719.55,
+    380.05,
+    735.88,
+    402.93
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 5,
@@ -607,12 +566,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    124.56,
-    386.11,
-    137.4,
-    404.05
+    775.37,
+    380.05,
+    791.74,
+    402.93
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 5,
@@ -624,12 +583,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    176.44,
-    386.11,
-    189.25,
-    404.05
+    839.09,
+    380.05,
+    855.42,
+    402.93
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 5,
@@ -641,12 +600,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    78.86,
-    417.5,
-    91.68,
-    435.44
+    719.55,
+    424.6,
+    735.88,
+    447.47
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 6,
@@ -658,12 +617,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    124.57,
-    417.5,
-    137.38,
-    435.44
+    775.39,
+    424.6,
+    791.72,
+    447.47
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 6,
@@ -675,12 +634,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    176.43,
-    417.5,
-    189.26,
-    435.44
+    839.07,
+    424.6,
+    855.44,
+    447.47
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 6,
@@ -692,12 +651,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    78.86,
-    448.9,
-    91.68,
-    466.83
+    719.55,
+    469.14,
+    735.88,
+    492.01
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 7,
@@ -709,36 +668,29 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    124.57,
-    448.9,
-    137.38,
-    466.83
+    775.39,
+    469.14,
+    791.72,
+    492.01
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 7,
    "col": 1,
    "element": "tt_1",
-   "corrections": [
-    {
-     "index": 0,
-     "wrong": "7",
-     "style": "overwrite"
-    }
-   ],
    "writer": "writer_0"
   },
   "tt_1.r7c2": {
    "kind": "text",
    "text": "1",
    "bbox": [
-    176.44,
-    448.9,
-    189.25,
-    466.83
+    839.09,
+    469.14,
+    855.42,
+    492.01
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 7,
@@ -750,12 +702,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    226.94,
-    229.16,
-    239.77,
-    247.09
+    901.03,
+    157.33,
+    917.4,
+    180.2
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -767,12 +719,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    226.95,
-    260.55,
-    239.76,
-    278.48
+    901.05,
+    201.88,
+    917.39,
+    224.75
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 1,
@@ -784,12 +736,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    226.95,
-    291.94,
-    239.76,
-    309.87
+    901.05,
+    246.42,
+    917.39,
+    269.29
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 2,
@@ -801,12 +753,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    226.94,
-    323.33,
-    239.77,
-    341.27
+    901.03,
+    290.96,
+    917.4,
+    313.84
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -818,12 +770,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    226.95,
-    354.72,
-    239.76,
-    372.66
+    901.05,
+    335.51,
+    917.39,
+    358.38
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 4,
@@ -835,12 +787,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    226.94,
-    386.11,
-    239.77,
-    404.05
+    901.03,
+    380.05,
+    917.4,
+    402.93
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 5,
@@ -852,12 +804,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    226.94,
-    417.5,
-    239.77,
-    435.44
+    901.03,
+    424.6,
+    917.4,
+    447.47
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 6,
@@ -869,12 +821,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    226.95,
-    448.9,
-    239.76,
-    466.83
+    901.05,
+    469.14,
+    917.39,
+    492.01
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 7,
@@ -886,12 +838,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    285.09,
-    229.16,
-    297.93,
-    247.09
+    972.75,
+    157.33,
+    989.12,
+    180.2
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -903,12 +855,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    285.09,
-    260.55,
-    297.93,
-    278.48
+    972.75,
+    201.88,
+    989.12,
+    224.75
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 1,
@@ -920,36 +872,29 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    285.09,
-    291.94,
-    297.93,
-    309.87
+    972.75,
+    246.42,
+    989.12,
+    269.29
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 2,
    "col": 4,
    "element": "tt_1",
-   "corrections": [
-    {
-     "index": 0,
-     "wrong": "6",
-     "style": "overwrite"
-    }
-   ],
    "writer": "writer_0"
   },
   "tt_1.r3c4": {
    "kind": "text",
    "text": "1",
    "bbox": [
-    285.11,
-    323.33,
-    297.92,
-    341.27
+    972.77,
+    290.96,
+    989.1,
+    313.84
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -961,12 +906,12 @@
    "kind": "text",
    "text": "0",
    "bbox": [
-    285.09,
-    354.72,
-    297.93,
-    372.66
+    972.75,
+    335.51,
+    989.12,
+    358.38
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 4,
@@ -978,12 +923,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    285.11,
-    386.11,
-    297.92,
-    404.05
+    972.77,
+    380.05,
+    989.1,
+    402.93
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 5,
@@ -995,12 +940,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    285.11,
-    417.5,
-    297.92,
-    435.44
+    972.77,
+    424.6,
+    989.1,
+    447.47
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 6,
@@ -1012,12 +957,12 @@
    "kind": "text",
    "text": "1",
    "bbox": [
-    285.11,
-    448.9,
-    297.92,
-    466.83
+    972.77,
+    469.14,
+    989.1,
+    492.01
    ],
-   "text_height": 17.94,
+   "text_height": 22.87,
    "align": "center",
    "role": "cell",
    "row": 7,
@@ -1029,15 +974,15 @@
    "kind": "math",
    "latex": "S = A \\oplus B \\oplus C_{in}",
    "bbox": [
-    643.27,
-    80.64,
-    822.82,
-    102.25
+    691.52,
+    546.28,
+    906.41,
+    572.15
    ],
-   "baseline": 96.85,
-   "text_height": 21.62,
+   "baseline": 565.68,
+   "text_height": 25.87,
    "options": {
-    "frac_order": "bar_num_den",
+    "frac_order": "num_bar_den",
     "radical_bar": "joined"
    },
    "role": "math",
@@ -1048,13 +993,13 @@
    "kind": "math",
    "latex": "C_{out} = AB + AC_{in} + BC_{in}",
    "bbox": [
-    643.27,
-    127.09,
-    927.59,
-    148.71
+    691.52,
+    608.12,
+    1031.8,
+    633.99
    ],
-   "baseline": 143.3,
-   "text_height": 21.62,
+   "baseline": 627.53,
+   "text_height": 25.87,
    "options": {
     "frac_order": "num_bar_den",
     "radical_bar": "joined"
@@ -1067,54 +1012,54 @@
    "kind": "math",
    "latex": "= AB + C_{in}(A \\oplus B)",
    "bbox": [
-    692.92,
-    168.58,
-    919.29,
-    194.09
+    750.94,
+    662.78,
+    1021.86,
+    693.31
    ],
-   "baseline": 188.68,
-   "text_height": 21.62,
+   "baseline": 686.84,
+   "text_height": 25.87,
    "options": {
     "frac_order": "bar_num_den",
-    "radical_bar": "joined"
+    "radical_bar": "after"
    },
    "role": "math",
    "element": "math_3",
-   "writer": "writer_0"
-  },
-  "dia_1.pin_A": {
-   "kind": "pin",
-   "point": [
-    679.41,
-    296.89
-   ],
-   "radius": 3.4246990579518157,
-   "element": "dia_1",
-   "role": "pin",
    "writer": "writer_0"
   },
   "dia_1.pin_A.label": {
    "kind": "text",
    "text": "A",
    "bbox": [
-    654.26,
-    290.82,
-    671.99,
-    306.81
+    55.91,
+    274.28,
+    79.67,
+    295.71
    ],
-   "text_height": 15.99,
+   "text_height": 21.43,
    "align": "right",
    "element": "dia_1",
    "role": "pin_label",
    "writer": "writer_0"
   },
+  "dia_1.pin_A": {
+   "kind": "pin",
+   "point": [
+    87.62,
+    282.42
+   ],
+   "radius": 2.5908968918843844,
+   "element": "dia_1",
+   "role": "pin",
+   "writer": "writer_0"
+  },
   "dia_1.pin_B": {
    "kind": "pin",
    "point": [
-    679.41,
-    321.89
+    87.62,
+    312.42
    ],
-   "radius": 3.4246990579518157,
+   "radius": 2.5908968918843844,
    "element": "dia_1",
    "role": "pin",
    "writer": "writer_0"
@@ -1123,27 +1068,12 @@
    "kind": "text",
    "text": "B",
    "bbox": [
-    657.62,
-    315.82,
-    671.99,
-    331.81
+    60.43,
+    304.28,
+    79.67,
+    325.71
    ],
-   "text_height": 15.99,
-   "align": "right",
-   "element": "dia_1",
-   "role": "pin_label",
-   "writer": "writer_0"
-  },
-  "dia_1.pin_Cin.label": {
-   "kind": "text",
-   "text": "Cin",
-   "bbox": [
-    643.27,
-    365.82,
-    671.99,
-    381.81
-   ],
-   "text_height": 15.99,
+   "text_height": 21.43,
    "align": "right",
    "element": "dia_1",
    "role": "pin_label",
@@ -1152,48 +1082,50 @@
   "dia_1.pin_Cin": {
    "kind": "pin",
    "point": [
-    679.41,
-    371.89
+    87.62,
+    402.42
    ],
-   "radius": 3.4246990579518157,
+   "radius": 2.5908968918843844,
    "element": "dia_1",
    "role": "pin",
    "writer": "writer_0"
   },
-  "dia_1.xor_1": {
-   "kind": "gate",
-   "gate": "xor2",
+  "dia_1.pin_Cin.label": {
+   "kind": "text",
+   "text": "Cin",
    "bbox": [
-    719.41,
-    246.89,
-    769.41,
-    286.89
+    41.19,
+    394.28,
+    79.67,
+    415.71
    ],
+   "text_height": 21.43,
+   "align": "right",
    "element": "dia_1",
-   "role": "gate",
+   "role": "pin_label",
    "writer": "writer_0"
   },
   "dia_1.and_1": {
    "kind": "gate",
    "gate": "and2",
    "bbox": [
-    719.41,
-    316.89,
-    769.41,
-    356.89
+    141.62,
+    234.42,
+    201.62,
+    282.42
    ],
    "element": "dia_1",
    "role": "gate",
    "writer": "writer_0"
   },
-  "dia_1.xor_2": {
+  "dia_1.xor_1": {
    "kind": "gate",
    "gate": "xor2",
    "bbox": [
-    809.41,
-    256.89,
-    859.41,
-    296.89
+    141.62,
+    306.42,
+    201.62,
+    354.42
    ],
    "element": "dia_1",
    "role": "gate",
@@ -1203,10 +1135,23 @@
    "kind": "gate",
    "gate": "and2",
    "bbox": [
-    809.41,
-    316.89,
-    859.41,
-    356.89
+    255.62,
+    294.42,
+    315.62,
+    342.42
+   ],
+   "element": "dia_1",
+   "role": "gate",
+   "writer": "writer_0"
+  },
+  "dia_1.xor_2": {
+   "kind": "gate",
+   "gate": "xor2",
+   "bbox": [
+    255.62,
+    366.42,
+    315.62,
+    414.42
    ],
    "element": "dia_1",
    "role": "gate",
@@ -1216,47 +1161,36 @@
    "kind": "gate",
    "gate": "or2",
    "bbox": [
-    899.41,
-    326.89,
-    949.41,
-    366.89
+    369.62,
+    264.42,
+    429.62,
+    312.42
    ],
    "element": "dia_1",
    "role": "gate",
-   "writer": "writer_0"
-  },
-  "dia_1.pin_S": {
-   "kind": "pin",
-   "point": [
-    984.41,
-    276.89
-   ],
-   "radius": 3.4246990579518157,
-   "element": "dia_1",
-   "role": "pin",
    "writer": "writer_0"
   },
   "dia_1.pin_S.label": {
    "kind": "text",
    "text": "S",
    "bbox": [
-    991.83,
-    270.82,
-    1003.77,
-    286.81
+    485.57,
+    382.28,
+    501.57,
+    403.71
    ],
-   "text_height": 15.99,
+   "text_height": 21.43,
    "element": "dia_1",
    "role": "pin_label",
    "writer": "writer_0"
   },
-  "dia_1.pin_Cout": {
+  "dia_1.pin_S": {
    "kind": "pin",
    "point": [
-    984.41,
-    346.89
+    477.62,
+    390.42
    ],
-   "radius": 3.4246990579518157,
+   "radius": 2.5908968918843844,
    "element": "dia_1",
    "role": "pin",
    "writer": "writer_0"
@@ -1265,57 +1199,45 @@
    "kind": "text",
    "text": "Cout",
    "bbox": [
-    991.83,
-    340.82,
-    1034.19,
-    356.81
+    485.57,
+    280.28,
+    542.32,
+    301.71
    ],
-   "text_height": 15.99,
+   "text_height": 21.43,
    "element": "dia_1",
    "role": "pin_label",
    "writer": "writer_0"
   },
-  "dia_1.w_2": {
-   "kind": "wire",
-   "points": [
-    [
-     679.41,
-     296.89
-    ],
-    [
-     709.41,
-     296.89
-    ],
-    [
-     709.41,
-     326.89
-    ],
-    [
-     719.41,
-     326.89
-    ]
+  "dia_1.pin_Cout": {
+   "kind": "pin",
+   "point": [
+    477.62,
+    288.42
    ],
+   "radius": 2.5908968918843844,
    "element": "dia_1",
-   "role": "wire",
-   "net": "A",
-   "from": "pin_A.y",
-   "to": "and_1.a",
+   "role": "pin",
    "writer": "writer_0"
   },
   "dia_1.w_1": {
    "kind": "wire",
    "points": [
     [
-     689.41,
-     296.89
+     87.62,
+     282.42
     ],
     [
-     689.41,
-     256.89
+     117.62,
+     282.42
     ],
     [
-     719.41,
-     256.89
+     117.62,
+     318.42
+    ],
+    [
+     141.62,
+     318.42
     ]
    ],
    "element": "dia_1",
@@ -1323,55 +1245,55 @@
    "net": "A",
    "from": "pin_A.y",
    "to": "xor_1.a",
-   "dots": [
-    [
-     689.41,
-     296.89
-    ]
-   ],
    "writer": "writer_0"
   },
-  "dia_1.w_4": {
+  "dia_1.w_2": {
    "kind": "wire",
    "points": [
     [
-     679.41,
-     321.89
+     117.62,
+     282.42
     ],
     [
-     699.41,
-     321.89
+     117.62,
+     246.42
     ],
     [
-     699.41,
-     346.89
-    ],
-    [
-     719.41,
-     346.89
+     141.62,
+     246.42
     ]
    ],
    "element": "dia_1",
    "role": "wire",
-   "net": "B",
-   "from": "pin_B.y",
-   "to": "and_1.b",
+   "net": "A",
+   "from": "pin_A.y",
+   "to": "and_1.a",
+   "dots": [
+    [
+     117.62,
+     282.42
+    ]
+   ],
    "writer": "writer_0"
   },
   "dia_1.w_3": {
    "kind": "wire",
    "points": [
     [
-     699.41,
-     321.89
+     87.62,
+     312.42
     ],
     [
-     699.41,
-     276.89
+     105.62,
+     312.42
     ],
     [
-     719.41,
-     276.89
+     105.62,
+     342.42
+    ],
+    [
+     141.62,
+     342.42
     ]
    ],
    "element": "dia_1",
@@ -1379,63 +1301,47 @@
    "net": "B",
    "from": "pin_B.y",
    "to": "xor_1.b",
-   "dots": [
-    [
-     699.41,
-     321.89
-    ]
-   ],
    "writer": "writer_0"
   },
-  "dia_1.w_8": {
+  "dia_1.w_4": {
    "kind": "wire",
    "points": [
     [
-     679.41,
-     371.89
+     105.62,
+     312.42
     ],
     [
-     784.41,
-     371.89
+     105.62,
+     270.42
     ],
     [
-     784.41,
-     361.89
-    ],
-    [
-     799.41,
-     361.89
-    ],
-    [
-     799.41,
-     346.89
-    ],
-    [
-     809.41,
-     346.89
+     141.62,
+     270.42
     ]
    ],
    "element": "dia_1",
    "role": "wire",
-   "net": "Cin",
-   "from": "pin_Cin.y",
-   "to": "and_2.b",
+   "net": "B",
+   "from": "pin_B.y",
+   "to": "and_1.b",
+   "dots": [
+    [
+     105.62,
+     312.42
+    ]
+   ],
    "writer": "writer_0"
   },
   "dia_1.w_7": {
    "kind": "wire",
    "points": [
     [
-     799.41,
-     346.89
+     87.62,
+     402.42
     ],
     [
-     799.41,
-     286.89
-    ],
-    [
-     809.41,
-     286.89
+     255.62,
+     402.42
     ]
    ],
    "element": "dia_1",
@@ -1443,72 +1349,33 @@
    "net": "Cin",
    "from": "pin_Cin.y",
    "to": "xor_2.b",
-   "dots": [
-    [
-     799.41,
-     346.89
-    ]
-   ],
    "writer": "writer_0"
   },
-  "dia_1.w_5": {
+  "dia_1.w_8": {
    "kind": "wire",
    "points": [
     [
-     769.41,
-     266.89
+     243.62,
+     402.42
     ],
     [
-     809.41,
-     266.89
+     243.62,
+     330.42
+    ],
+    [
+     255.62,
+     330.42
     ]
    ],
    "element": "dia_1",
    "role": "wire",
-   "net": "P",
-   "from": "xor_1.y",
-   "to": "xor_2.a",
-   "writer": "writer_0"
-  },
-  "dia_1.lbl_P": {
-   "kind": "text",
-   "text": "P",
-   "bbox": [
-    776.91,
-    244.51,
-    791.19,
-    260.5
-   ],
-   "text_height": 15.99,
-   "element": "dia_1",
-   "role": "net_label",
-   "writer": "writer_0"
-  },
-  "dia_1.w_6": {
-   "kind": "wire",
-   "points": [
-    [
-     789.41,
-     266.89
-    ],
-    [
-     789.41,
-     326.89
-    ],
-    [
-     809.41,
-     326.89
-    ]
-   ],
-   "element": "dia_1",
-   "role": "wire",
-   "net": "P",
-   "from": "xor_1.y",
-   "to": "and_2.a",
+   "net": "Cin",
+   "from": "pin_Cin.y",
+   "to": "and_2.b",
    "dots": [
     [
-     789.41,
-     266.89
+     243.62,
+     402.42
     ]
    ],
    "writer": "writer_0"
@@ -1517,28 +1384,20 @@
    "kind": "wire",
    "points": [
     [
-     769.41,
-     336.89
+     201.62,
+     258.42
     ],
     [
-     794.41,
-     336.89
+     333.62,
+     258.42
     ],
     [
-     794.41,
-     376.89
+     333.62,
+     300.42
     ],
     [
-     879.41,
-     376.89
-    ],
-    [
-     879.41,
-     356.89
-    ],
-    [
-     899.41,
-     356.89
+     369.62,
+     300.42
     ]
    ],
    "element": "dia_1",
@@ -1552,45 +1411,104 @@
    "kind": "text",
    "text": "G",
    "bbox": [
-    803.32,
-    382.49,
-    819.21,
-    398.48
+    210.62,
+    228.43,
+    231.9,
+    249.85
    ],
-   "text_height": 15.99,
+   "text_height": 21.43,
    "element": "dia_1",
    "role": "net_label",
    "writer": "writer_0"
   },
-  "dia_1.w_11": {
+  "dia_1.w_6": {
    "kind": "wire",
    "points": [
     [
-     859.41,
-     276.89
+     201.62,
+     330.42
     ],
     [
-     984.41,
-     276.89
+     231.62,
+     330.42
+    ],
+    [
+     231.62,
+     306.42
+    ],
+    [
+     255.62,
+     306.42
     ]
    ],
    "element": "dia_1",
    "role": "wire",
-   "net": "S",
-   "from": "xor_2.y",
-   "to": "pin_S.a",
+   "net": "P",
+   "from": "xor_1.y",
+   "to": "and_2.a",
+   "writer": "writer_0"
+  },
+  "dia_1.lbl_P": {
+   "kind": "text",
+   "text": "P",
+   "bbox": [
+    210.62,
+    300.43,
+    229.75,
+    321.85
+   ],
+   "text_height": 21.43,
+   "element": "dia_1",
+   "role": "net_label",
+   "writer": "writer_0"
+  },
+  "dia_1.w_5": {
+   "kind": "wire",
+   "points": [
+    [
+     231.62,
+     330.42
+    ],
+    [
+     231.62,
+     378.42
+    ],
+    [
+     255.62,
+     378.42
+    ]
+   ],
+   "element": "dia_1",
+   "role": "wire",
+   "net": "P",
+   "from": "xor_1.y",
+   "to": "xor_2.a",
+   "dots": [
+    [
+     231.62,
+     330.42
+    ]
+   ],
    "writer": "writer_0"
   },
   "dia_1.w_10": {
    "kind": "wire",
    "points": [
     [
-     859.41,
-     336.89
+     315.62,
+     318.42
     ],
     [
-     899.41,
-     336.89
+     345.62,
+     318.42
+    ],
+    [
+     345.62,
+     276.42
+    ],
+    [
+     369.62,
+     276.42
     ]
    ],
    "element": "dia_1",
@@ -1600,16 +1518,35 @@
    "to": "or_1.a",
    "writer": "writer_0"
   },
+  "dia_1.w_11": {
+   "kind": "wire",
+   "points": [
+    [
+     315.62,
+     390.42
+    ],
+    [
+     477.62,
+     390.42
+    ]
+   ],
+   "element": "dia_1",
+   "role": "wire",
+   "net": "S",
+   "from": "xor_2.y",
+   "to": "pin_S.a",
+   "writer": "writer_0"
+  },
   "dia_1.w_12": {
    "kind": "wire",
    "points": [
     [
-     949.41,
-     346.89
+     429.62,
+     288.42
     ],
     [
-     984.41,
-     346.89
+     477.62,
+     288.42
     ]
    ],
    "element": "dia_1",
@@ -1623,12 +1560,13 @@
    "kind": "text",
    "text": "1-bit FA",
    "bbox": [
-    651.27,
-    218.92,
-    740.32,
-    234.91
+    232.1,
+    428.56,
+    351.42,
+    449.99
    ],
-   "text_height": 15.99,
+   "text_height": 21.43,
+   "align": "center",
    "element": "dia_1",
    "role": "caption",
    "writer": "writer_0"
@@ -1642,16 +1580,13 @@
   "notes.2",
   "notes.3.marker",
   "notes.3",
-  "tt_1.rule_h1",
-  "tt_1.rule_c0",
-  "tt_1.rule_c1",
-  "tt_1.rule_c2",
-  "tt_1.rule_c3",
   "tt_1.h0",
   "tt_1.h1",
   "tt_1.h2",
   "tt_1.h3",
   "tt_1.h4",
+  "tt_1.rule_h1",
+  "tt_1.rule_c2",
   "tt_1.r0c0",
   "tt_1.r0c1",
   "tt_1.r0c2",
@@ -1695,34 +1630,34 @@
   "math_1",
   "math_2",
   "math_3",
-  "dia_1.pin_A",
   "dia_1.pin_A.label",
+  "dia_1.pin_A",
   "dia_1.pin_B",
   "dia_1.pin_B.label",
-  "dia_1.pin_Cin.label",
   "dia_1.pin_Cin",
-  "dia_1.xor_1",
+  "dia_1.pin_Cin.label",
   "dia_1.and_1",
-  "dia_1.xor_2",
+  "dia_1.xor_1",
   "dia_1.and_2",
+  "dia_1.xor_2",
   "dia_1.or_1",
-  "dia_1.pin_S",
   "dia_1.pin_S.label",
-  "dia_1.pin_Cout",
+  "dia_1.pin_S",
   "dia_1.pin_Cout.label",
-  "dia_1.w_2",
+  "dia_1.pin_Cout",
   "dia_1.w_1",
-  "dia_1.w_4",
+  "dia_1.w_2",
   "dia_1.w_3",
-  "dia_1.w_8",
+  "dia_1.w_4",
   "dia_1.w_7",
-  "dia_1.w_5",
-  "dia_1.lbl_P",
-  "dia_1.w_6",
+  "dia_1.w_8",
   "dia_1.w_9",
   "dia_1.lbl_G",
-  "dia_1.w_11",
+  "dia_1.w_6",
+  "dia_1.lbl_P",
+  "dia_1.w_5",
   "dia_1.w_10",
+  "dia_1.w_11",
   "dia_1.w_12",
   "dia_1.lbl_caption"
  ],
@@ -1737,19 +1672,10 @@
    },
    "target": [
     {
-     "id": "tt_1.rule_c0"
-    },
-    {
-     "id": "tt_1.rule_c1"
-    },
-    {
      "id": "tt_1.rule_c2"
-    },
-    {
-     "id": "tt_1.rule_c3"
     }
    ]
   }
  ],
- "layout_attempt": 0
+ "layout_attempt": 1
 }

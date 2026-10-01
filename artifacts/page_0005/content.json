@@ -1,0 +1,66 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0005",
+  "topic": "digital design review: 2-to-1 multiplexer and a 4-bit even-parity checker",
+  "provenance": {"generator": "claude-opus-5-5 / content_prompt v1", "automated": true},
+  "elements": [
+    {"id": "title", "type": "text", "role": "title", "text": "Design review - 2:1 MUX + 4b even parity chk"},
+    {"id": "h_mux", "type": "text", "role": "heading", "text": "1) 2:1 MUX (S=0 → A, S=1 → B)"},
+    {"id": "tt_mux", "type": "table", "kind": "truth_table",
+     "header": ["S", "A", "B", "Y"],
+     "input_columns": [0, 1, 2], "output_columns": [3],
+     "row_order": "binary_counting_msb_first",
+     "rows": [
+       ["0", "0", "0", "0"],
+       ["0", "0", "1", "0"],
+       ["0", "1", "0", "1"],
+       ["0", "1", "1", "1"],
+       ["1", "0", "0", "0"],
+       ["1", "0", "1", "1"],
+       ["1", "1", "0", "0"],
+       ["1", "1", "1", "1"]
+     ]},
+    {"id": "eq_y", "type": "math", "latex": "Y = \\overline{S}\\,A + S\\,B", "text": "Y = S'A + SB", "defines": "Y"},
+    {"id": "eq_y_nand", "type": "math", "latex": "= \\overline{\\overline{\\overline{S}\\,A} \\cdot \\overline{S\\,B}}", "text": "= ((S'A)'(SB)')'", "defines": "Y", "continues": "eq_y"},
+    {"id": "n_nand", "type": "text", "role": "note", "text": "NAND-only form → 4 gates (+1 inv on S)"},
+    {"id": "ckt_mux", "type": "circuit",
+     "components": [
+       {"id": "pS", "type": "input_pin", "label": "S"},
+       {"id": "pA", "type": "input_pin", "label": "A"},
+       {"id": "pB", "type": "input_pin", "label": "B"},
+       {"id": "inv", "type": "not"},
+       {"id": "g1", "type": "and2"},
+       {"id": "g2", "type": "and2"},
+       {"id": "g3", "type": "or2"},
+       {"id": "pY", "type": "output_pin", "label": "Y"}
+     ],
+     "wires": [
+       {"id": "w1", "net": "S", "from": "pS.y", "to": "inv.a"},
+       {"id": "w2", "net": "nS", "from": "inv.y", "to": "g1.a"},
+       {"id": "w3", "net": "A", "from": "pA.y", "to": "g1.b"},
+       {"id": "w4", "net": "S", "from": "pS.y", "to": "g2.a"},
+       {"id": "w5", "net": "B", "from": "pB.y", "to": "g2.b"},
+       {"id": "w6", "net": "t1", "from": "g1.y", "to": "g3.a"},
+       {"id": "w7", "net": "t2", "from": "g2.y", "to": "g3.b"},
+       {"id": "w8", "net": "Y", "from": "g3.y", "to": "pY.a"}
+     ],
+     "labels": [
+       {"id": "lab_ns", "text": "S'", "attached_to": "net:nS"}
+     ]},
+    {"id": "n_hazard", "type": "text", "role": "note", "text": "static-1 hazard when A=B=1, S toggles → add AB term?"},
+    {"id": "h_par", "type": "text", "role": "heading", "text": "2) 4b even-parity checker (b3..b0 incl. P bit)"},
+    {"id": "eq_e", "type": "math", "latex": "E = b_3 \\oplus b_2 \\oplus b_1 \\oplus b_0", "text": "E = b3 xor b2 xor b1 xor b0", "defines": "E"},
+    {"id": "n_par1", "type": "text", "role": "note", "text": "E=1 → odd # of 1s → error flag"},
+    {"id": "n_par2", "type": "text", "role": "note", "text": "tree of 3 XOR2: (b3⊕b2)⊕(b1⊕b0), depth 2 vs 3 chained"},
+    {"id": "n_par3", "type": "text", "role": "note", "text": "t_pd ≈ 2 × t_XOR ≈ 2 × 120 ps = 240 ps"},
+    {"id": "ul_e", "type": "annotation", "kind": "box", "target": "eq_e"},
+    {"id": "next", "type": "list", "style": "numbered", "heading": "Next steps",
+     "items": [
+       {"id": "ns1", "text": "sim MUX vs TT (all 8 rows) - exhaustive"},
+       {"id": "ns2", "text": "decide: add AB hazard term? (async path only)"},
+       {"id": "ns3", "text": "parity: tree vs chain → check timing @ 500 MHz"},
+       {"id": "ns4", "text": "write TB for parity: 16 vectors, inject 1-bit err"}
+     ]},
+    {"id": "arr_hz", "type": "annotation", "kind": "arrow", "from": "n_hazard", "to": "ns2"}
+  ]
+}

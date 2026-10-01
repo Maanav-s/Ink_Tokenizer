@@ -1,7 +1,7 @@
 {
  "schema": "ink_tokenizer.synthetic_page.layout/v1",
  "page_id": "page_0002",
- "layout_seed": 0,
+ "layout_seed": 2,
  "unit": "mm",
  "page": {
   "width": 1200.0,
@@ -10,34 +10,34 @@
   "y_axis": "down"
  },
  "style": {
-  "h": 19.057,
-  "title": 25.661,
-  "heading": 19.303,
-  "subbullet": 17.043,
-  "note": 17.27,
-  "table": 16.46,
-  "diagram": 15.262,
-  "math": 19.671,
-  "line_gap": 1.82,
-  "block_gap": 1.149,
-  "col_gap": 3.155,
-  "margin_x": 40.902,
-  "margin_y": 22.337,
-  "indent": 1.751,
-  "dash": "*",
+  "h": 19.344,
+  "title": 26.082,
+  "heading": 19.776,
+  "subbullet": 18.234,
+  "note": 15.626,
+  "table": 17.582,
+  "diagram": 16.317,
+  "math": 20.453,
+  "line_gap": 1.835,
+  "block_gap": 1.572,
+  "col_gap": 3.147,
+  "margin_x": 49.142,
+  "margin_y": 19.469,
+  "indent": 1.418,
+  "dash": "-",
   "numbered": "{}.",
-  "title_underline": true,
+  "title_underline": false,
   "title_center": false,
-  "heading_underline": false,
+  "heading_underline": true,
   "table_style": "grid",
   "table_rules": "after_header",
-  "table_left_align": false,
+  "table_left_align": true,
   "row_h": 1.856,
-  "cell_pad": 0.601,
-  "side_by_side": 0.464,
-  "fill": 0.67,
+  "cell_pad": 0.888,
+  "side_by_side": 0.25,
+  "fill": 0.682,
   "multi_writer": false,
-  "correction_rate": 0.0,
+  "correction_rate": 0.06,
   "scale": 1.0,
   "page_w": 1200.0,
   "page_h": 800.0
@@ -52,43 +52,27 @@
    "kind": "text",
    "text": "Deploy pipeline - canary + rollback",
    "bbox": [
-    43.18,
-    22.34,
-    592.08,
-    48.0
+    49.14,
+    19.47,
+    607.05,
+    45.55
    ],
-   "text_height": 25.66,
+   "text_height": 26.08,
    "role": "title",
    "bold": true,
    "element": "title",
    "writer": "writer_0"
   },
-  "title.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     40.9,
-     51.85
-    ],
-    [
-     592.69,
-     52.66
-    ]
-   ],
-   "element": "title",
-   "writer": "writer_0"
-  },
   "notes.1.marker": {
    "kind": "text",
-   "text": "*",
+   "text": "-",
    "bbox": [
-    40.9,
-    74.55,
-    56.07,
-    93.61
+    49.14,
+    75.95,
+    67.1,
+    95.3
    ],
-   "text_height": 19.06,
+   "text_height": 19.34,
    "role": "list_marker",
    "list": "notes",
    "level": 0,
@@ -100,26 +84,26 @@
    "kind": "text",
    "text": "canary: 10% traffic first",
    "bbox": [
-    62.74,
-    74.55,
-    347.41,
-    93.61
+    73.87,
+    75.95,
+    362.83,
+    95.3
    ],
-   "text_height": 19.06,
+   "text_height": 19.34,
    "role": "bullet",
    "element": "notes",
    "writer": "writer_0"
   },
   "notes.2.marker": {
    "kind": "text",
-   "text": "*",
+   "text": "-",
    "bbox": [
-    40.9,
-    109.23,
-    56.07,
-    128.29
+    49.14,
+    111.46,
+    67.1,
+    130.8
    ],
-   "text_height": 19.06,
+   "text_height": 19.34,
    "role": "list_marker",
    "list": "notes",
    "level": 0,
@@ -131,26 +115,26 @@
    "kind": "text",
    "text": "gate: 5xx err rate, 5 min",
    "bbox": [
-    62.74,
-    109.23,
-    343.71,
-    128.29
+    73.87,
+    111.46,
+    359.07,
+    130.8
    ],
-   "text_height": 19.06,
+   "text_height": 19.34,
    "role": "bullet",
    "element": "notes",
    "writer": "writer_0"
   },
   "notes.3.marker": {
    "kind": "text",
-   "text": "*",
+   "text": "-",
    "bbox": [
-    40.9,
-    143.91,
-    56.07,
-    162.97
+    49.14,
+    146.96,
+    67.1,
+    166.31
    ],
-   "text_height": 19.06,
+   "text_height": 19.34,
    "role": "list_marker",
    "list": "notes",
    "level": 0,
@@ -162,56 +146,57 @@
    "kind": "text",
    "text": "rollback is automatic",
    "bbox": [
-    62.74,
-    143.91,
-    295.42,
-    162.97
+    73.87,
+    146.96,
+    310.06,
+    166.31
    ],
-   "text_height": 19.06,
+   "text_height": 19.34,
    "role": "bullet",
    "element": "notes",
+   "writer": "writer_0"
+  },
+  "fc_1.n1.box": {
+   "kind": "rect",
+   "bbox": [
+    444.8,
+    82.03,
+    616.27,
+    123.83
+   ],
+   "corner_radius": 20.89975345166266,
+   "element": "fc_1",
+   "role": "node_box",
    "writer": "writer_0"
   },
   "fc_1.n1.text": {
    "kind": "text",
    "text": "push to main",
    "bbox": [
-    74.91,
-    280.46,
-    191.62,
-    295.72
+    468.15,
+    95.75,
+    592.92,
+    112.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
-   "writer": "writer_0"
-  },
-  "fc_1.n1.box": {
-   "kind": "ellipse",
-   "bbox": [
-    40.9,
-    268.86,
-    225.62,
-    305.49
-   ],
-   "element": "fc_1",
-   "role": "node_box",
    "writer": "writer_0"
   },
   "fc_1.e1.arrow": {
    "kind": "arrow",
    "points": [
     [
-     225.62,
-     287.17
+     530.53,
+     123.83
     ],
     [
-     288.46,
-     287.17
+     530.53,
+     160.03
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n1",
@@ -222,12 +207,12 @@
    "kind": "text",
    "text": "read deploy.yaml",
    "bbox": [
-    298.63,
-    280.46,
-    447.9,
-    295.72
+    450.74,
+    173.75,
+    610.33,
+    190.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
@@ -236,12 +221,12 @@
   "fc_1.n2.box": {
    "kind": "parallelogram",
    "bbox": [
-    280.3,
-    268.31,
-    466.22,
-    306.03
+    429.05,
+    160.03,
+    632.01,
+    201.83
    ],
-   "skew": 16.31641321905687,
+   "skew": 20.632980464321843,
    "element": "fc_1",
    "role": "node_box",
    "writer": "writer_0"
@@ -250,122 +235,107 @@
    "kind": "arrow",
    "points": [
     [
-     458.07,
-     287.17
+     530.53,
+     201.83
     ],
     [
-     546.53,
-     287.17
+     530.53,
+     238.03
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n2",
    "to": "n3",
    "writer": "writer_0"
   },
-  "fc_1.n3.text.0": {
-   "kind": "text",
-   "text": "build +",
-   "bbox": [
-    569.74,
-    268.85,
-    632.78,
-    284.12
-   ],
-   "text_height": 15.26,
-   "align": "center",
-   "element": "fc_1",
-   "role": "node_text",
-   "writer": "writer_0"
-  },
-  "fc_1.n3.text.1": {
-   "kind": "text",
-   "text": "unit tests",
-   "bbox": [
-    559.53,
-    292.06,
-    642.99,
-    307.32
-   ],
-   "text_height": 15.26,
-   "align": "center",
-   "element": "fc_1",
-   "role": "node_text",
-   "writer": "writer_0"
-  },
   "fc_1.n3.box": {
    "kind": "rect",
    "bbox": [
-    546.53,
-    256.71,
-    655.99,
-    317.64
+    431.26,
+    238.03,
+    629.81,
+    279.83
    ],
    "element": "fc_1",
    "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n3.text": {
+   "kind": "text",
+   "text": "build + unit tests",
+   "bbox": [
+    447.56,
+    251.75,
+    613.5,
+    268.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
    "writer": "writer_0"
   },
   "fc_1.e3.arrow": {
    "kind": "arrow",
    "points": [
     [
-     655.99,
-     287.17
+     530.53,
+     279.83
     ],
     [
-     736.3,
-     287.17
+     530.53,
+     312.05
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n3",
    "to": "n4",
    "writer": "writer_0"
   },
-  "fc_1.n4.box": {
-   "kind": "diamond",
-   "bbox": [
-    736.3,
-    263.7,
-    946.22,
-    310.65
-   ],
-   "element": "fc_1",
-   "role": "node_box",
-   "writer": "writer_0"
-  },
   "fc_1.n4.text": {
    "kind": "text",
    "text": "tests pass?",
    "bbox": [
-    791.12,
-    280.46,
-    891.41,
-    295.72
+    476.92,
+    335.75,
+    584.14,
+    352.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.n4.box": {
+   "kind": "diamond",
+   "bbox": [
+    434.38,
+    312.05,
+    626.69,
+    373.81
+   ],
+   "element": "fc_1",
+   "role": "node_box",
    "writer": "writer_0"
   },
   "fc_1.e4.arrow": {
    "kind": "arrow",
    "points": [
     [
-     841.26,
-     310.65
+     530.53,
+     373.81
     ],
     [
-     841.26,
-     352.71
+     530.53,
+     406.03
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n4",
@@ -376,84 +346,50 @@
    "kind": "text",
    "text": "yes",
    "bbox": [
-    803.83,
-    319.04,
-    832.87,
-    334.3
+    539.51,
+    382.79,
+    570.55,
+    399.11
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "element": "fc_1",
    "role": "edge_label",
-   "writer": "writer_0"
-  },
-  "fc_1.n5.text.0": {
-   "kind": "text",
-   "text": "deploy",
-   "bbox": [
-    813.52,
-    364.85,
-    869.01,
-    380.12
-   ],
-   "text_height": 15.26,
-   "align": "center",
-   "element": "fc_1",
-   "role": "node_text",
-   "writer": "writer_0"
-  },
-  "fc_1.n5.text.1": {
-   "kind": "text",
-   "text": "canary 10%",
-   "bbox": [
-    788.7,
-    388.06,
-    893.83,
-    403.32
-   ],
-   "text_height": 15.26,
-   "align": "center",
-   "element": "fc_1",
-   "role": "node_text",
    "writer": "writer_0"
   },
   "fc_1.n5.box": {
    "kind": "rect",
    "bbox": [
-    775.69,
-    352.71,
-    906.83,
-    413.64
+    423.71,
+    406.03,
+    637.36,
+    447.83
    ],
    "element": "fc_1",
    "role": "node_box",
    "writer": "writer_0"
   },
-  "fc_1.e6.arrow": {
-   "kind": "arrow",
-   "points": [
-    [
-     841.26,
-     413.64
-    ],
-    [
-     841.26,
-     448.31
-    ]
+  "fc_1.n5.text": {
+   "kind": "text",
+   "text": "deploy canary 10%",
+   "bbox": [
+    440.01,
+    419.75,
+    621.06,
+    436.07
    ],
-   "head": 5.8169295072871865,
+   "text_height": 16.32,
+   "align": "center",
    "element": "fc_1",
-   "role": "edge",
-   "from": "n5",
-   "to": "n6",
+   "role": "node_text",
    "writer": "writer_0"
   },
   "fc_1.n6.box": {
    "kind": "rect",
    "bbox": [
-    781.03,
-    448.31,
-    901.49,
-    486.03
+    463.74,
+    484.03,
+    597.32,
+    525.83
    ],
    "element": "fc_1",
    "role": "node_box",
@@ -463,43 +399,43 @@
    "kind": "text",
    "text": "wait 5 min",
    "bbox": [
-    794.04,
-    460.46,
-    888.48,
-    475.72
+    480.05,
+    497.75,
+    581.02,
+    514.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
    "writer": "writer_0"
   },
-  "fc_1.e7.arrow": {
+  "fc_1.e6.arrow": {
    "kind": "arrow",
    "points": [
     [
-     841.26,
-     486.03
+     530.53,
+     447.83
     ],
     [
-     841.26,
-     521.7
+     530.53,
+     484.03
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
-   "from": "n6",
-   "to": "n7",
+   "from": "n5",
+   "to": "n6",
    "writer": "writer_0"
   },
   "fc_1.n7.box": {
    "kind": "diamond",
    "bbox": [
-    742.94,
-    521.7,
-    939.58,
-    568.65
+    440.46,
+    558.05,
+    620.61,
+    619.81
    ],
    "element": "fc_1",
    "role": "node_box",
@@ -509,30 +445,49 @@
    "kind": "text",
    "text": "err < 1%?",
    "bbox": [
-    794.63,
-    538.46,
-    887.9,
-    553.72
+    480.67,
+    581.75,
+    580.39,
+    598.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e7.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     525.83
+    ],
+    [
+     530.53,
+     558.05
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n6",
+   "to": "n7",
    "writer": "writer_0"
   },
   "fc_1.e8.arrow": {
    "kind": "arrow",
    "points": [
     [
-     841.26,
-     568.65
+     530.53,
+     619.81
     ],
     [
-     841.26,
-     599.7
+     530.53,
+     654.05
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n7",
@@ -543,45 +498,12 @@
    "kind": "text",
    "text": "yes",
    "bbox": [
-    803.83,
-    577.04,
-    832.87,
-    592.3
+    539.51,
+    628.79,
+    570.55,
+    645.11
    ],
-   "text_height": 15.26,
-   "element": "fc_1",
-   "role": "edge_label",
-   "writer": "writer_0"
-  },
-  "fc_1.e9.arrow": {
-   "kind": "arrow",
-   "points": [
-    [
-     742.94,
-     545.17
-    ],
-    [
-     648.6,
-     545.17
-    ]
-   ],
-   "head": 5.8169295072871865,
-   "element": "fc_1",
-   "role": "edge",
-   "from": "n7",
-   "to": "n10",
-   "writer": "writer_0"
-  },
-  "fc_1.e9.label": {
-   "kind": "text",
-   "text": "no",
-   "bbox": [
-    713.83,
-    551.28,
-    734.55,
-    566.54
-   ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "element": "fc_1",
    "role": "edge_label",
    "writer": "writer_0"
@@ -589,10 +511,10 @@
   "fc_1.n8.box": {
    "kind": "diamond",
    "bbox": [
-    752.41,
-    599.7,
-    930.11,
-    646.65
+    449.14,
+    654.05,
+    611.93,
+    715.81
    ],
    "element": "fc_1",
    "role": "node_box",
@@ -602,12 +524,12 @@
    "kind": "text",
    "text": "at 100%?",
    "bbox": [
-    799.63,
-    616.46,
-    882.89,
-    631.72
+    486.03,
+    677.75,
+    575.04,
+    694.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
@@ -617,15 +539,15 @@
    "kind": "arrow",
    "points": [
     [
-     752.41,
-     623.17
+     611.93,
+     684.93
     ],
     [
-     685.96,
-     623.17
+     695.58,
+     684.93
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n8",
@@ -636,56 +558,57 @@
    "kind": "text",
    "text": "no",
    "bbox": [
-    723.3,
-    629.28,
-    744.02,
-    644.54
+    620.9,
+    658.83,
+    643.05,
+    675.14
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "element": "fc_1",
    "role": "edge_label",
-   "writer": "writer_0"
-  },
-  "fc_1.n12.box": {
-   "kind": "ellipse",
-   "bbox": [
-    803.88,
-    682.86,
-    878.65,
-    719.49
-   ],
-   "element": "fc_1",
-   "role": "node_box",
    "writer": "writer_0"
   },
   "fc_1.n12.text": {
    "kind": "text",
    "text": "done",
    "bbox": [
-    820.82,
-    694.46,
-    861.7,
-    709.72
+    508.68,
+    761.75,
+    552.39,
+    778.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.n12.box": {
+   "kind": "rect",
+   "bbox": [
+    485.33,
+    748.03,
+    575.73,
+    789.83
+   ],
+   "corner_radius": 20.89975345166266,
+   "element": "fc_1",
+   "role": "node_box",
    "writer": "writer_0"
   },
   "fc_1.e10.arrow": {
    "kind": "arrow",
    "points": [
     [
-     841.26,
-     646.65
+     530.53,
+     715.81
     ],
     [
-     841.26,
-     682.86
+     530.53,
+     748.03
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n8",
@@ -696,12 +619,12 @@
    "kind": "text",
    "text": "yes",
    "bbox": [
-    803.83,
-    655.04,
-    832.87,
-    670.3
+    539.51,
+    724.79,
+    570.55,
+    741.11
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "element": "fc_1",
    "role": "edge_label",
    "writer": "writer_0"
@@ -709,10 +632,10 @@
   "fc_1.n9.box": {
    "kind": "rect",
    "bbox": [
-    516.56,
-    604.31,
-    685.96,
-    642.03
+    695.58,
+    664.03,
+    881.49,
+    705.83
    ],
    "element": "fc_1",
    "role": "node_box",
@@ -722,12 +645,12 @@
    "kind": "text",
    "text": "traffic += 30%",
    "bbox": [
-    529.57,
-    616.46,
-    672.96,
-    631.72
+    711.88,
+    677.75,
+    865.18,
+    694.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
@@ -737,27 +660,27 @@
    "kind": "arrow",
    "points": [
     [
-     649.26,
-     604.31
+     740.53,
+     664.03
     ],
     [
-     649.26,
-     575.17
+     740.53,
+     618.93
     ],
     [
-     703.26,
-     575.17
+     662.53,
+     618.93
     ],
     [
-     703.26,
-     467.17
+     662.53,
+     504.93
     ],
     [
-     781.03,
-     467.17
+     597.32,
+     504.93
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n9",
@@ -767,10 +690,10 @@
   "fc_1.n10.box": {
    "kind": "rect",
    "bbox": [
-    553.92,
-    526.31,
-    648.6,
-    564.03
+    735.53,
+    568.03,
+    841.54,
+    609.83
    ],
    "element": "fc_1",
    "role": "node_box",
@@ -780,56 +703,59 @@
    "kind": "text",
    "text": "rollback",
    "bbox": [
-    566.93,
-    538.46,
-    635.59,
-    553.72
+    751.83,
+    581.75,
+    825.24,
+    598.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
    "writer": "writer_0"
   },
-  "fc_1.e13.arrow": {
+  "fc_1.e9.arrow": {
    "kind": "arrow",
    "points": [
     [
-     625.26,
-     526.31
+     620.61,
+     588.93
     ],
     [
-     625.26,
-     329.17
-    ],
-    [
-     727.26,
-     329.17
-    ],
-    [
-     727.26,
-     203.17
-    ],
-    [
-     745.76,
-     203.17
+     735.53,
+     588.93
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
-   "from": "n10",
-   "to": "n11",
+   "from": "n7",
+   "to": "n10",
+   "writer": "writer_0"
+  },
+  "fc_1.e9.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    629.58,
+    562.83,
+    651.73,
+    579.14
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
    "writer": "writer_0"
   },
   "fc_1.n11.box": {
-   "kind": "ellipse",
+   "kind": "rect",
    "bbox": [
-    745.76,
-    184.86,
-    936.76,
-    221.49
+    700.49,
+    484.03,
+    876.58,
+    525.83
    ],
+   "corner_radius": 20.89975345166266,
    "element": "fc_1",
    "role": "node_box",
    "writer": "writer_0"
@@ -838,12 +764,12 @@
    "kind": "text",
    "text": "stop + notify",
    "bbox": [
-    780.74,
-    196.46,
-    901.78,
-    211.72
+    723.83,
+    497.75,
+    853.23,
+    514.07
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "align": "center",
    "element": "fc_1",
    "role": "node_text",
@@ -853,15 +779,23 @@
    "kind": "arrow",
    "points": [
     [
-     841.26,
-     263.7
+     626.69,
+     342.93
     ],
     [
-     841.26,
-     221.49
+     680.53,
+     342.93
+    ],
+    [
+     680.53,
+     504.93
+    ],
+    [
+     700.49,
+     504.93
     ]
    ],
-   "head": 5.8169295072871865,
+   "head": 6.5593731782940345,
    "element": "fc_1",
    "role": "edge",
    "from": "n4",
@@ -872,59 +806,73 @@
    "kind": "text",
    "text": "no",
    "bbox": [
-    812.15,
-    240.04,
-    832.87,
-    255.3
+    635.66,
+    316.83,
+    657.81,
+    333.14
    ],
-   "text_height": 15.26,
+   "text_height": 16.32,
    "element": "fc_1",
    "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.e13.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     788.53,
+     568.03
+    ],
+    [
+     788.53,
+     525.83
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n10",
+   "to": "n11",
    "writer": "writer_0"
   }
  },
  "writing_order": [
   "title",
-  "title.underline",
   "notes.1.marker",
   "notes.1",
   "notes.2.marker",
   "notes.2",
   "notes.3.marker",
   "notes.3",
-  "fc_1.n1.text",
   "fc_1.n1.box",
+  "fc_1.n1.text",
   "fc_1.e1.arrow",
   "fc_1.n2.text",
   "fc_1.n2.box",
   "fc_1.e2.arrow",
-  "fc_1.n3.text.0",
-  "fc_1.n3.text.1",
   "fc_1.n3.box",
+  "fc_1.n3.text",
   "fc_1.e3.arrow",
-  "fc_1.n4.box",
   "fc_1.n4.text",
+  "fc_1.n4.box",
   "fc_1.e4.arrow",
   "fc_1.e4.label",
-  "fc_1.n5.text.0",
-  "fc_1.n5.text.1",
   "fc_1.n5.box",
-  "fc_1.e6.arrow",
+  "fc_1.n5.text",
   "fc_1.n6.box",
   "fc_1.n6.text",
-  "fc_1.e7.arrow",
+  "fc_1.e6.arrow",
   "fc_1.n7.box",
   "fc_1.n7.text",
+  "fc_1.e7.arrow",
   "fc_1.e8.arrow",
   "fc_1.e8.label",
-  "fc_1.e9.arrow",
-  "fc_1.e9.label",
   "fc_1.n8.box",
   "fc_1.n8.text",
   "fc_1.e11.arrow",
   "fc_1.e11.label",
-  "fc_1.n12.box",
   "fc_1.n12.text",
+  "fc_1.n12.box",
   "fc_1.e10.arrow",
   "fc_1.e10.label",
   "fc_1.n9.box",
@@ -932,11 +880,13 @@
   "fc_1.e12.arrow",
   "fc_1.n10.box",
   "fc_1.n10.text",
-  "fc_1.e13.arrow",
+  "fc_1.e9.arrow",
+  "fc_1.e9.label",
   "fc_1.n11.box",
   "fc_1.n11.text",
   "fc_1.e5.arrow",
-  "fc_1.e5.label"
+  "fc_1.e5.label",
+  "fc_1.e13.arrow"
  ],
  "targets": [
   {
@@ -987,20 +937,6 @@
    "tier": "structural",
    "element": "fc_1",
    "after": {
-    "id": "fc_1.n1.text"
-   },
-   "target": [
-    {
-     "id": "fc_1.n1.box"
-    }
-   ]
-  },
-  {
-   "id": "tgt_4",
-   "kind": "node_outline",
-   "tier": "structural",
-   "element": "fc_1",
-   "after": {
     "id": "fc_1.n2.text"
    },
    "target": [
@@ -1010,33 +946,33 @@
    ]
   },
   {
+   "id": "tgt_4",
+   "kind": "node_outline",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.n4.text"
+   },
+   "target": [
+    {
+     "id": "fc_1.n4.box"
+    }
+   ]
+  },
+  {
    "id": "tgt_5",
    "kind": "node_outline",
    "tier": "structural",
    "element": "fc_1",
    "after": {
-    "id": "fc_1.n3.text.1"
+    "id": "fc_1.n12.text"
    },
    "target": [
     {
-     "id": "fc_1.n3.box"
-    }
-   ]
-  },
-  {
-   "id": "tgt_6",
-   "kind": "node_outline",
-   "tier": "structural",
-   "element": "fc_1",
-   "after": {
-    "id": "fc_1.n5.text.1"
-   },
-   "target": [
-    {
-     "id": "fc_1.n5.box"
+     "id": "fc_1.n12.box"
     }
    ]
   }
  ],
- "layout_attempt": 5
+ "layout_attempt": 1
 }

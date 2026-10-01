@@ -36,7 +36,7 @@ from fonts import BASE
 
 CONTENT_SCHEMA = "ink_tokenizer.synthetic_page.content/v1"
 LAYOUT_SCHEMA = "ink_tokenizer.synthetic_page.layout/v1"
-PAGE_W, PAGE_H = 1200.0, 800.0
+PAGE_W, PAGE_H = 1200.0, 800.0  # the default whiteboard; dense content gets a bigger one
 TEXT_ROLES = ("title", "heading", "bullet", "subbullet", "note", "caption", "text")
 
 
@@ -70,7 +70,7 @@ def sample_style(rng):
         "table_style": rng.choice(["grid", "open", "open", "header"]),
         "table_rules": rng.choice(["after_header", "after_header", "first", "last"]),
         "table_left_align": rng.random() < 0.3,
-        "row_h": rng.uniform(1.65, 1.95),       # row height, units of table text height
+        "row_h": rng.uniform(1.75, 2.0),       # row height, units of table text height
         "cell_pad": rng.uniform(0.6, 0.9),      # units of table text height
         "side_by_side": rng.uniform(0.2, 0.7),  # preference for placing a block beside the previous one
         "fill": rng.uniform(0.55, 0.95),        # how full a column gets before starting another
@@ -255,7 +255,7 @@ def build_table(blk, st, rng, metrics, max_w):
             x = xs[j] + pad if left else (xs[j] + xs[j + 1]) / 2
             leaf = f"{tid}.h{j}" if row == "header" else f"{tid}.r{row}c{j}"
             # Caps centred a little above the row's middle, leaving room for descenders.
-            item = lc.label_item(s, x, y_mid + 0.5 * th, th, metrics, align="left" if left else "center",
+            item = lc.label_item(s, x, y_mid + 0.47 * th, th, metrics, align="left" if left else "center",
                                  role="header_cell" if row == "header" else "cell", row=row, col=j)
             cells.append((leaf, item, row, j))
 
@@ -334,7 +334,7 @@ def build_diagram(blk, st, rng, metrics, max_w):
     fn = {"flowchart": diagram_layout.layout_flowchart, "circuit": diagram_layout.layout_circuit,
           "schematic": diagram_layout.layout_schematic}[blk["type"]]
     res = fn(blk, rng, {"text_height": st["diagram"], "max_width": max_w,
-                        "max_height": PAGE_H - 2 * st["margin_y"]})
+                        "max_height": st["page_h"] - 2 * st["margin_y"]})
     b = Block(blk["id"], blk["type"])
     for leaf in res["order"]:
         b.add(leaf, res["items"][leaf])
@@ -355,7 +355,7 @@ def pack(blocks, content_blocks, st, rng):
     placed = {}  # id -> (x, y, w, h)
 
     def free(x, y, w, hh):
-        if x < mx * 0.5 or y < my * 0.5 or x + w > PAGE_W - mx * 0.5 or y + hh > PAGE_H - my * 0.5:
+        if x < mx * 0.5 or y < my * 0.5 or x + w > st["page_w"] - mx * 0.5 or y + hh > st["page_h"] - my * 0.5:
             return False
         return not any(lc.overlap([x, y, x + w, y + hh], [px, py, px + pw, py + ph], gap * 0.6)
                        for px, py, pw, ph in placed.values())
@@ -368,7 +368,7 @@ def pack(blocks, content_blocks, st, rng):
     # stops (softly) at col_limit, chosen from the total height of the blocks.
     body = [b for b in blocks if by_id[b.id].get("role") != "title"]
     title_h = sum(b.h + gap * 1.2 for b in blocks if b not in body)
-    avail = PAGE_H - 2 * my - title_h
+    avail = st["page_h"] - 2 * my - title_h
     total = sum(b.h + gap for b in body)
     n_cols = max(1, math.ceil(total / (avail * st["fill"])))
     col_limit = max(max((b.h for b in body), default=0), total / n_cols * rng.uniform(1.0, 1.15))
@@ -380,7 +380,7 @@ def pack(blocks, content_blocks, st, rng):
     for b in blocks:
         c = by_id[b.id]
         if c.get("role") == "title" and prev is None:
-            x = (PAGE_W - b.w) / 2 if st["title_center"] else mx
+            x = (st["page_w"] - b.w) / 2 if st["title_center"] else mx
             if not free(x, my, b.w, b.h):
                 raise LayoutError("title does not fit")
             placed[b.id] = (x, my, b.w, b.h)
@@ -410,15 +410,15 @@ def pack(blocks, content_blocks, st, rng):
         # (a wide line at the top may push it down).
         right = max([px + pw for px, py, pw, ph in placed.values() if px + pw > col_x and py + ph > top]
                     or [mx - cgap])
-        y_new = next((y for y in frange(top, PAGE_H - b.h, 5.0) if free(right + cgap, y, b.w, b.h)), top)
+        y_new = next((y for y in frange(top, st["page_h"] - b.h, 5.0) if free(right + cgap, y, b.w, b.h)), top)
         cands.append((True, right + cgap, y_new))
         if prev is not None:
             cands.append(below)  # fall back to an over-full column
         pos = next(((new, x, y) for new, x, y in cands if free(x, y, b.w, b.h)), None)
         if pos is None:  # scan for any free spot, top to bottom, left to right
             step = 10.0
-            pos = next(((True, x, y) for y in frange(top, PAGE_H - b.h, step)
-                        for x in frange(mx, PAGE_W - b.w, step) if free(x, y, b.w, b.h)), None)
+            pos = next(((True, x, y) for y in frange(top, st["page_h"] - b.h, step)
+                        for x in frange(mx, st["page_w"] - b.w, step) if free(x, y, b.w, b.h)), None)
         if pos is None:
             raise LayoutError(f"block {b.id!r} ({b.w:.0f} x {b.h:.0f} mm) does not fit")
         new_col, x, y = pos
@@ -452,7 +452,7 @@ def assign_writers(layout, blocks, pos, st, rng):
     layout["writers"] = [{"id": "writer_0"}]
     if not st["multi_writer"] or len(blocks) < 4:
         return
-    right = [b for b in blocks[1:] if pos[b.id][0] > PAGE_W * 0.42]
+    right = [b for b in blocks[1:] if pos[b.id][0] > st["page_w"] * 0.42]
     left = [b for b in blocks if b not in right]
     if not right or len(left) < 2:
         return
@@ -503,7 +503,7 @@ def add_corrections(layout, st, rng, metrics):
             extra = metrics.width(wrong, h) + 0.25 * h
             x0, y0, x1, y1 = it["bbox"]
             grown = [x0, y0, x1 + extra, y1]
-            if grown[2] > PAGE_W - 10 or any(lc.overlap(grown, bb, 2.0) for k, bb in boxes.items()
+            if grown[2] > st["page_w"] - 10 or any(lc.overlap(grown, bb, 2.0) for k, bb in boxes.items()
                                              if k != leaf and not lc.overlap(it["bbox"], bb, 2.0)):
                 continue
             it["bbox"] = grown
@@ -574,7 +574,7 @@ def add_annotations(layout, annotations, st, rng):
             pts = arrow_between(sa, sb, st["h"])
             others = [lc.item_bbox(it) for leaf, it in items.items()
                       if not leaf_matches(it, leaf, a["from"]) and not leaf_matches(it, leaf, a["to"])]
-            if pts is None or math.dist(pts[0], pts[-1]) > 0.35 * PAGE_W or any(segment_hits(p, q, bb) for p, q in zip(pts, pts[1:]) for bb in others):
+            if pts is None or math.dist(pts[0], pts[-1]) > 0.35 * st["page_w"] or any(segment_hits(p, q, bb) for p, q in zip(pts, pts[1:]) for bb in others):
                 continue  # no clean path; leave the arrow out
             item = {"kind": "arrow", "points": pts, "head": 0.4 * st["h"]}
             at = len(order)
@@ -624,10 +624,13 @@ def layout_page(content, seed, metrics=None, check=None):
         raise LayoutError(f"expected schema {CONTENT_SCHEMA}, got {content.get('schema')!r}")
     metrics = metrics or lc.pool_metrics()
     problems = []
-    for attempt in range(8):
+    for attempt in range(12):
         rng = random.Random(f"{content['page_id']}:{seed}:{attempt}")
         st = sample_style(rng)
-        scale = 0.92 ** max(0, attempt - 2)  # new draws first, then smaller text
+        # New draws first, then smaller text, then a bigger board.
+        scale = 0.92 ** min(max(0, attempt - 2), 3)
+        board = 1.0 if attempt < 6 else 1.25 if attempt < 9 else 1.5
+        st["page_w"], st["page_h"] = PAGE_W * board, PAGE_H * board
         for k in ("h", "title", "heading", "subbullet", "note", "table", "diagram", "math"):
             st[k] *= scale
         try:
@@ -648,7 +651,7 @@ def build(content, seed, st, rng, metrics):
     unknown = [e["type"] for e in content["elements"] if e["type"] not in BUILDERS and e["type"] != "annotation"]
     if unknown:
         raise LayoutError(f"unknown element types {unknown}")
-    max_w = PAGE_W - 2 * st["margin_x"]
+    max_w = st["page_w"] - 2 * st["margin_x"]
     blocks = []
     for k, c in enumerate(blocks_c):
         b = BUILDERS[c["type"]](c, st, rng, metrics, max_w)
@@ -660,7 +663,7 @@ def build(content, seed, st, rng, metrics):
         blocks.append(b)
     pos = pack(blocks, blocks_c, st, rng)
     layout = {"schema": LAYOUT_SCHEMA, "page_id": content["page_id"], "layout_seed": seed, "unit": "mm",
-              "page": {"width": PAGE_W, "height": PAGE_H, "origin": "top-left", "y_axis": "down"},
+              "page": {"width": st["page_w"], "height": st["page_h"], "origin": "top-left", "y_axis": "down"},
               "style": {k: (round(v, 3) if isinstance(v, float) else v) for k, v in st.items()},
               "writers": [], "items": {}, "writing_order": []}
     for b in blocks:

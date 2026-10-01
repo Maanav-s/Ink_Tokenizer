@@ -1,7 +1,7 @@
 {
  "schema": "ink_tokenizer.synthetic_page.layout/v1",
  "page_id": "page_0003",
- "layout_seed": 0,
+ "layout_seed": 1,
  "unit": "mm",
  "page": {
   "width": 1200.0,
@@ -10,47 +10,47 @@
   "y_axis": "down"
  },
  "style": {
-  "h": 17.761,
-  "title": 25.478,
-  "heading": 18.751,
-  "subbullet": 15.216,
-  "note": 16.354,
-  "table": 15.892,
-  "diagram": 16.023,
-  "math": 18.361,
-  "line_gap": 1.765,
-  "block_gap": 1.216,
-  "col_gap": 2.711,
-  "margin_x": 54.855,
-  "margin_y": 20.399,
-  "indent": 1.637,
+  "h": 18.722,
+  "title": 24.459,
+  "heading": 19.531,
+  "subbullet": 17.157,
+  "note": 16.167,
+  "table": 17.971,
+  "diagram": 16.317,
+  "math": 19.866,
+  "line_gap": 1.844,
+  "block_gap": 0.994,
+  "col_gap": 2.477,
+  "margin_x": 40.43,
+  "margin_y": 26.591,
+  "indent": 1.472,
   "dash": "-",
   "numbered": "{})",
   "title_underline": false,
   "title_center": false,
-  "heading_underline": true,
-  "table_style": "grid",
-  "table_rules": "first",
+  "heading_underline": false,
+  "table_style": "open",
+  "table_rules": "after_header",
   "table_left_align": false,
-  "row_h": 1.771,
-  "cell_pad": 0.646,
-  "side_by_side": 0.317,
-  "fill": 0.681,
+  "row_h": 1.934,
+  "cell_pad": 0.802,
+  "side_by_side": 0.42,
+  "fill": 0.792,
   "multi_writer": false,
-  "correction_rate": 0.0,
+  "correction_rate": 0.06,
   "scale": 1.0,
   "page_w": 1200.0,
   "page_h": 800.0,
   "blocks": {
    "h_act": {
     "fill": "rows",
-    "rules": "first",
-    "style": "grid"
+    "rules": "after_header",
+    "style": "open"
    },
    "h_sched": {
     "fill": "rows",
-    "rules": "first",
-    "style": "grid"
+    "rules": "after_header",
+    "style": "open"
    }
   }
  },
@@ -64,12 +64,12 @@
    "kind": "text",
    "text": "Sensor brd rev B - power design review",
    "bbox": [
-    54.85,
-    20.4,
-    669.9,
-    45.88
+    40.43,
+    26.59,
+    630.87,
+    51.05
    ],
-   "text_height": 25.48,
+   "text_height": 24.46,
    "role": "title",
    "bold": true,
    "element": "title",
@@ -79,12 +79,12 @@
    "kind": "text",
    "text": "Thu 1 Oct   att: MK, JR, AS, DP, LT",
    "bbox": [
-    54.85,
-    67.47,
-    425.74,
-    83.83
+    40.43,
+    69.66,
+    407.08,
+    85.82
    ],
-   "text_height": 16.35,
+   "text_height": 16.17,
    "role": "note",
    "element": "meta",
    "writer": "writer_0"
@@ -93,29 +93,13 @@
    "kind": "text",
    "text": "Agenda",
    "bbox": [
-    57.58,
-    105.42,
-    141.32,
-    124.17
+    40.43,
+    104.43,
+    127.66,
+    123.96
    ],
-   "text_height": 18.75,
+   "text_height": 19.53,
    "role": "heading",
-   "element": "agenda",
-   "writer": "writer_0"
-  },
-  "agenda.heading.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     54.85,
-     126.99
-    ],
-    [
-     143.87,
-     126.14
-    ]
-   ],
    "element": "agenda",
    "writer": "writer_0"
   },
@@ -123,12 +107,12 @@
    "kind": "text",
    "text": "1)",
    "bbox": [
-    57.58,
-    148.07,
-    81.71,
-    165.83
+    40.43,
+    150.51,
+    65.87,
+    169.23
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "agenda",
    "level": 0,
@@ -140,12 +124,12 @@
    "kind": "text",
    "text": "3V3 rail: LDO vs buck",
    "bbox": [
-    88.27,
-    148.07,
-    322.02,
-    165.83
+    72.78,
+    150.51,
+    319.18,
+    169.23
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "agenda",
    "writer": "writer_0"
@@ -154,12 +138,12 @@
    "kind": "text",
    "text": "2)",
    "bbox": [
-    57.58,
-    179.42,
-    82.05,
-    197.18
+    40.43,
+    185.04,
+    66.23,
+    203.76
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "agenda",
    "level": 0,
@@ -171,12 +155,12 @@
    "kind": "text",
    "text": "Vin range + rev-pol prot.",
    "bbox": [
-    88.27,
-    179.42,
-    361.06,
-    197.18
+    72.78,
+    185.04,
+    360.34,
+    203.76
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "agenda",
    "writer": "writer_0"
@@ -185,12 +169,12 @@
    "kind": "text",
    "text": "3)",
    "bbox": [
-    57.58,
-    210.76,
-    81.71,
-    228.52
+    40.43,
+    219.57,
+    65.87,
+    238.29
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "agenda",
    "level": 0,
@@ -202,12 +186,12 @@
    "kind": "text",
    "text": "sleep current budget",
    "bbox": [
-    88.27,
-    210.76,
-    303.72,
-    228.52
+    72.78,
+    219.57,
+    299.88,
+    238.29
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "agenda",
    "writer": "writer_0"
@@ -216,12 +200,12 @@
    "kind": "text",
    "text": "4)",
    "bbox": [
-    57.58,
-    242.1,
-    81.71,
-    259.87
+    40.43,
+    254.1,
+    65.87,
+    272.83
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "agenda",
    "level": 0,
@@ -233,43 +217,34 @@
    "kind": "text",
    "text": "rev B schedule / owners",
    "bbox": [
-    88.27,
-    242.1,
-    349.97,
-    259.87
+    72.78,
+    254.1,
+    364.69,
+    272.83
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "agenda",
+   "corrections": [
+    {
+     "index": 6,
+     "wrong": "s",
+     "style": "strike"
+    }
+   ],
    "writer": "writer_0"
   },
   "decisions.heading": {
    "kind": "text",
    "text": "Decisions",
    "bbox": [
-    56.04,
-    281.46,
-    159.93,
-    300.21
+    40.43,
+    291.43,
+    148.64,
+    310.96
    ],
-   "text_height": 18.75,
+   "text_height": 19.53,
    "role": "heading",
-   "element": "decisions",
-   "writer": "writer_0"
-  },
-  "decisions.heading.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     54.85,
-     303.03
-    ],
-    [
-     164.17,
-     302.49
-    ]
-   ],
    "element": "decisions",
    "writer": "writer_0"
   },
@@ -277,12 +252,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    56.04,
-    324.11,
-    72.53,
-    341.87
+    40.43,
+    337.51,
+    57.82,
+    356.24
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "decisions",
    "level": 0,
@@ -294,12 +269,12 @@
    "kind": "text",
    "text": "3V3 → sync buck, 2 MHz",
    "bbox": [
-    78.75,
-    324.11,
-    347.17,
-    341.87
+    64.37,
+    337.51,
+    347.31,
+    356.24
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "decisions",
    "writer": "writer_0"
@@ -308,12 +283,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    85.11,
-    353.51,
-    99.24,
-    368.72
+    68.0,
+    370.72,
+    83.93,
+    387.88
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "list_marker",
    "list": "decisions",
    "level": 1,
@@ -325,12 +300,12 @@
    "kind": "text",
    "text": "LDO only as post-reg for AFE",
    "bbox": [
-    104.57,
-    353.51,
-    395.21,
-    368.72
+    89.93,
+    370.72,
+    417.63,
+    387.88
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "subbullet",
    "element": "decisions",
    "writer": "writer_0"
@@ -339,12 +314,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    85.11,
-    380.36,
-    99.24,
-    395.58
+    68.0,
+    402.37,
+    83.93,
+    419.52
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "list_marker",
    "list": "decisions",
    "level": 1,
@@ -356,12 +331,12 @@
    "kind": "text",
    "text": "target η ≥ 85% @ 50 mA",
    "bbox": [
-    104.57,
-    380.36,
-    340.67,
-    395.58
+    89.93,
+    402.37,
+    356.14,
+    419.52
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "subbullet",
    "element": "decisions",
    "writer": "writer_0"
@@ -370,12 +345,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    56.04,
-    409.16,
-    72.53,
-    426.92
+    40.43,
+    435.33,
+    57.82,
+    454.05
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "decisions",
    "level": 0,
@@ -387,12 +362,12 @@
    "kind": "text",
    "text": "Vin 2.7-5.5 V, P-FET rev-pol",
    "bbox": [
-    78.75,
-    409.16,
-    402.28,
-    426.92
+    64.37,
+    435.33,
+    405.41,
+    454.05
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "decisions",
    "writer": "writer_0"
@@ -401,12 +376,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    56.04,
-    440.51,
-    72.53,
-    458.27
+    40.43,
+    469.86,
+    57.82,
+    488.58
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "decisions",
    "level": 0,
@@ -418,12 +393,12 @@
    "kind": "text",
    "text": "keep 2V5 ref ±0.1%, split AGND",
    "bbox": [
-    78.75,
-    440.51,
-    427.61,
-    458.27
+    64.37,
+    469.86,
+    432.1,
+    488.58
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "decisions",
    "writer": "writer_0"
@@ -432,29 +407,13 @@
    "kind": "text",
    "text": "Open questions",
    "bbox": [
-    478.29,
-    71.79,
-    643.01,
-    90.54
+    478.48,
+    73.38,
+    650.06,
+    92.91
    ],
-   "text_height": 18.75,
+   "text_height": 19.53,
    "role": "heading",
-   "element": "questions",
-   "writer": "writer_0"
-  },
-  "questions.heading.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     475.76,
-     93.36
-    ],
-    [
-     644.47,
-     94.01
-    ]
-   ],
    "element": "questions",
    "writer": "writer_0"
   },
@@ -462,12 +421,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    478.29,
-    114.44,
-    494.78,
-    132.2
+    478.48,
+    119.46,
+    495.87,
+    138.18
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "questions",
    "level": 0,
@@ -479,12 +438,12 @@
    "kind": "text",
    "text": "buck Iq in sleep ≤ 1 μA?",
    "bbox": [
-    501.0,
-    114.44,
-    767.53,
-    132.2
+    502.42,
+    119.46,
+    783.37,
+    138.18
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "questions",
    "writer": "writer_0"
@@ -493,12 +452,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    507.36,
-    143.84,
-    521.49,
-    159.05
+    506.05,
+    152.67,
+    521.98,
+    169.82
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "list_marker",
    "list": "questions",
    "level": 1,
@@ -510,12 +469,12 @@
    "kind": "text",
    "text": "DS: 0.6 μA typ, no max given",
    "bbox": [
-    526.81,
-    143.84,
-    798.09,
-    159.05
+    527.98,
+    152.67,
+    833.85,
+    169.82
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "subbullet",
    "element": "questions",
    "writer": "writer_0"
@@ -524,12 +483,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    478.29,
-    172.64,
-    494.78,
-    190.4
+    478.48,
+    185.63,
+    495.87,
+    204.36
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "questions",
    "level": 0,
@@ -541,12 +500,12 @@
    "kind": "text",
    "text": "inrush on USB hot-plug?",
    "bbox": [
-    501.0,
-    172.64,
-    764.2,
-    190.4
+    502.42,
+    185.63,
+    779.86,
+    204.36
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "questions",
    "writer": "writer_0"
@@ -555,12 +514,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    507.36,
-    202.04,
-    521.49,
-    217.25
+    506.05,
+    218.84,
+    521.98,
+    236.0
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "list_marker",
    "list": "questions",
    "level": 1,
@@ -572,12 +531,12 @@
    "kind": "text",
    "text": "soft-start ≥ 1 ms enough?",
    "bbox": [
-    526.81,
-    202.04,
-    771.74,
-    217.25
+    527.98,
+    218.84,
+    804.13,
+    236.0
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "subbullet",
    "element": "questions",
    "writer": "writer_0"
@@ -586,12 +545,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    478.29,
-    230.84,
-    494.78,
-    248.6
+    478.48,
+    251.81,
+    495.87,
+    270.53
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "questions",
    "level": 0,
@@ -603,12 +562,12 @@
    "kind": "text",
    "text": "EMI vs RF front end ??",
    "bbox": [
-    501.0,
-    230.84,
-    767.9,
-    248.6
+    502.42,
+    251.81,
+    783.76,
+    270.53
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "questions",
    "writer": "writer_0"
@@ -617,29 +576,13 @@
    "kind": "text",
    "text": "Risks",
    "bbox": [
-    846.44,
-    71.79,
-    902.77,
-    90.54
+    478.48,
+    289.14,
+    537.16,
+    308.67
    ],
-   "text_height": 18.75,
+   "text_height": 19.53,
    "role": "heading",
-   "element": "risks",
-   "writer": "writer_0"
-  },
-  "risks.heading.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     846.25,
-     93.36
-    ],
-    [
-     903.23,
-     93.7
-    ]
-   ],
    "element": "risks",
    "writer": "writer_0"
   },
@@ -647,12 +590,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    846.44,
-    114.44,
-    862.93,
-    132.2
+    478.48,
+    335.22,
+    495.87,
+    353.94
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "risks",
    "level": 0,
@@ -664,12 +607,12 @@
    "kind": "text",
    "text": "buck ripple → ADC noise",
    "bbox": [
-    869.15,
-    114.44,
-    1131.2,
-    132.2
+    502.42,
+    335.22,
+    778.64,
+    353.94
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "risks",
    "writer": "writer_0"
@@ -678,12 +621,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    875.51,
-    143.84,
-    889.64,
-    159.05
+    506.05,
+    368.43,
+    521.98,
+    385.58
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "list_marker",
    "list": "risks",
    "level": 1,
@@ -695,12 +638,12 @@
    "kind": "text",
    "text": "spec ripple ≤ 10 mVpp",
    "bbox": [
-    894.97,
-    143.84,
-    1097.88,
-    159.05
+    527.98,
+    368.43,
+    756.77,
+    385.58
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "subbullet",
    "element": "risks",
    "writer": "writer_0"
@@ -709,12 +652,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    875.51,
-    170.69,
-    889.64,
-    185.91
+    506.05,
+    400.07,
+    521.98,
+    417.23
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "list_marker",
    "list": "risks",
    "level": 1,
@@ -726,12 +669,12 @@
    "kind": "text",
    "text": "LC filter + keep-out",
    "bbox": [
-    894.97,
-    170.69,
-    1084.01,
-    185.91
+    527.98,
+    400.07,
+    741.12,
+    417.23
    ],
-   "text_height": 15.22,
+   "text_height": 17.16,
    "role": "subbullet",
    "element": "risks",
    "writer": "writer_0"
@@ -740,12 +683,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    846.44,
-    199.49,
-    862.93,
-    217.25
+    478.48,
+    433.03,
+    495.87,
+    451.76
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "risks",
    "level": 0,
@@ -757,12 +700,12 @@
    "kind": "text",
    "text": "inductor lead time 12 wk",
    "bbox": [
-    869.15,
-    199.49,
-    1130.01,
-    217.25
+    502.42,
+    433.03,
+    777.39,
+    451.76
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "risks",
    "writer": "writer_0"
@@ -771,12 +714,12 @@
    "kind": "text",
    "text": "-",
    "bbox": [
-    846.44,
-    230.84,
-    862.93,
-    248.6
+    478.48,
+    467.57,
+    495.87,
+    486.29
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "list_marker",
    "list": "risks",
    "level": 0,
@@ -788,12 +731,12 @@
    "kind": "text",
    "text": "ΔT @ 300 mA burst ~8 C ?",
    "bbox": [
-    869.15,
-    230.84,
-    1171.36,
-    248.6
+    502.42,
+    467.57,
+    820.98,
+    486.29
    ],
-   "text_height": 17.76,
+   "text_height": 18.72,
    "role": "bullet",
    "element": "risks",
    "writer": "writer_0"
@@ -802,166 +745,26 @@
    "kind": "text",
    "text": "Action items",
    "bbox": [
-    447.2,
-    261.79,
-    588.47,
-    280.54
+    478.48,
+    504.89,
+    625.63,
+    524.42
    ],
-   "text_height": 18.75,
+   "text_height": 19.53,
    "role": "heading",
    "element": "h_act",
-   "writer": "writer_0"
-  },
-  "h_act.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     444.85,
-     283.36
-    ],
-    [
-     590.43,
-     284.23
-    ]
-   ],
-   "element": "h_act",
-   "writer": "writer_0"
-  },
-  "act.border": {
-   "kind": "rect",
-   "bbox": [
-    444.85,
-    293.11,
-    829.04,
-    487.29
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_h1": {
-   "kind": "polyline",
-   "points": [
-    [
-     444.85,
-     325.47
-    ],
-    [
-     829.04,
-     325.47
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_h2": {
-   "kind": "polyline",
-   "points": [
-    [
-     444.85,
-     357.84
-    ],
-    [
-     829.04,
-     357.84
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_h3": {
-   "kind": "polyline",
-   "points": [
-    [
-     444.85,
-     390.2
-    ],
-    [
-     829.04,
-     390.2
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_h4": {
-   "kind": "polyline",
-   "points": [
-    [
-     444.85,
-     422.56
-    ],
-    [
-     829.04,
-     422.56
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_h5": {
-   "kind": "polyline",
-   "points": [
-    [
-     444.85,
-     454.93
-    ],
-    [
-     829.04,
-     454.93
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_c0": {
-   "kind": "polyline",
-   "points": [
-    [
-     501.45,
-     293.11
-    ],
-    [
-     501.45,
-     487.29
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
-   "writer": "writer_0"
-  },
-  "act.rule_c1": {
-   "kind": "polyline",
-   "points": [
-    [
-     755.82,
-     293.11
-    ],
-    [
-     755.82,
-     487.29
-    ]
-   ],
-   "role": "rule",
-   "element": "act",
    "writer": "writer_0"
   },
   "act.h0": {
    "kind": "text",
    "text": "who",
    "bbox": [
-    455.55,
-    300.87,
-    490.76,
-    316.76
+    495.52,
+    545.67,
+    535.34,
+    563.64
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -973,12 +776,12 @@
    "kind": "text",
    "text": "task",
    "bbox": [
-    511.73,
-    300.87,
-    549.19,
-    316.76
+    564.63,
+    545.67,
+    606.99,
+    563.64
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "header_cell",
    "row": "header",
    "col": 1,
@@ -989,12 +792,12 @@
    "kind": "text",
    "text": "due",
    "bbox": [
-    776.54,
-    300.87,
-    808.32,
-    316.76
+    869.66,
+    545.67,
+    905.6,
+    563.64
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -1002,16 +805,64 @@
    "element": "act",
    "writer": "writer_0"
   },
+  "act.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     478.48,
+     572.57
+    ],
+    [
+     934.55,
+     572.57
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_0"
+  },
+  "act.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     550.22,
+     533.79
+    ],
+    [
+     550.22,
+     748.79
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_0"
+  },
+  "act.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     843.43,
+     534.39
+    ],
+    [
+     843.43,
+     746.74
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_0"
+  },
   "act.r0c0": {
    "kind": "text",
    "text": "MK",
    "bbox": [
-    455.13,
-    333.23,
-    491.18,
-    349.12
+    495.05,
+    580.42,
+    535.82,
+    598.39
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -1023,12 +874,12 @@
    "kind": "text",
    "text": "buck schem + BOM",
    "bbox": [
-    511.73,
-    333.23,
-    704.64,
-    349.12
+    564.63,
+    580.42,
+    782.77,
+    598.39
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "cell",
    "row": 0,
    "col": 1,
@@ -1039,12 +890,12 @@
    "kind": "text",
    "text": "Wk41",
    "bbox": [
-    766.24,
-    333.23,
-    818.62,
-    349.12
+    858.01,
+    580.42,
+    917.24,
+    598.39
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -1056,12 +907,12 @@
    "kind": "text",
    "text": "JR",
    "bbox": [
-    460.36,
-    365.6,
-    485.95,
-    381.49
+    500.96,
+    615.16,
+    529.9,
+    633.13
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 1,
@@ -1073,12 +924,12 @@
    "kind": "text",
    "text": "inrush / soft-start sim",
    "bbox": [
-    511.73,
-    365.6,
-    736.11,
-    381.49
+    564.63,
+    615.16,
+    818.36,
+    633.13
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "cell",
    "row": 1,
    "col": 1,
@@ -1089,12 +940,12 @@
    "kind": "text",
    "text": "Wk41",
    "bbox": [
-    766.24,
-    365.6,
-    818.62,
-    381.49
+    858.01,
+    615.16,
+    917.24,
+    633.13
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 1,
@@ -1106,12 +957,12 @@
    "kind": "text",
    "text": "AS",
    "bbox": [
-    458.41,
-    397.96,
-    487.9,
-    413.85
+    498.76,
+    649.91,
+    532.11,
+    667.88
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 2,
@@ -1123,12 +974,12 @@
    "kind": "text",
    "text": "Iq meas. on eval brd",
    "bbox": [
-    511.73,
-    397.96,
-    708.39,
-    413.85
+    564.63,
+    649.91,
+    787.01,
+    667.88
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "cell",
    "row": 2,
    "col": 1,
@@ -1139,12 +990,12 @@
    "kind": "text",
    "text": "Wk42",
    "bbox": [
-    766.09,
-    397.96,
-    818.77,
-    413.85
+    857.84,
+    649.91,
+    917.41,
+    667.88
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 2,
@@ -1156,12 +1007,12 @@
    "kind": "text",
    "text": "DP",
    "bbox": [
-    457.48,
-    430.32,
-    488.82,
-    446.22
+    497.71,
+    684.66,
+    533.15,
+    702.63
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -1173,12 +1024,12 @@
    "kind": "text",
    "text": "layout keep-out vs ADC",
    "bbox": [
-    511.73,
-    430.32,
-    745.54,
-    446.22
+    564.63,
+    684.66,
+    829.03,
+    702.63
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "cell",
    "row": 3,
    "col": 1,
@@ -1189,12 +1040,12 @@
    "kind": "text",
    "text": "Wk42",
    "bbox": [
-    766.09,
-    430.32,
-    818.77,
-    446.22
+    857.84,
+    684.66,
+    917.41,
+    702.63
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 3,
@@ -1206,12 +1057,12 @@
    "kind": "text",
    "text": "LT",
    "bbox": [
-    461.98,
-    462.69,
-    484.33,
-    478.58
+    502.8,
+    719.4,
+    528.06,
+    737.37
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 4,
@@ -1223,12 +1074,12 @@
    "kind": "text",
    "text": "order L samples",
    "bbox": [
-    511.73,
-    462.69,
-    663.91,
-    478.58
+    564.63,
+    719.4,
+    736.71,
+    737.37
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "cell",
    "row": 4,
    "col": 1,
@@ -1239,135 +1090,50 @@
    "kind": "text",
    "text": "Wk41",
    "bbox": [
-    766.24,
-    462.69,
-    818.62,
-    478.58
+    858.01,
+    719.4,
+    917.24,
+    737.37
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 4,
    "col": 2,
    "element": "act",
+   "corrections": [
+    {
+     "index": 2,
+     "wrong": "3",
+     "style": "overwrite"
+    }
+   ],
    "writer": "writer_0"
   },
   "h_sched": {
    "kind": "text",
    "text": "Schedule",
    "bbox": [
-    447.24,
-    508.89,
-    541.75,
-    527.64
+    40.43,
+    503.38,
+    138.87,
+    522.91
    ],
-   "text_height": 18.75,
+   "text_height": 19.53,
    "role": "heading",
    "element": "h_sched",
-   "writer": "writer_0"
-  },
-  "h_sched.underline": {
-   "kind": "polyline",
-   "role": "underline",
-   "points": [
-    [
-     444.85,
-     530.45
-    ],
-    [
-     546.71,
-     530.7
-    ]
-   ],
-   "element": "h_sched",
-   "writer": "writer_0"
-  },
-  "sched.border": {
-   "kind": "rect",
-   "bbox": [
-    444.85,
-    539.58,
-    775.13,
-    604.31
-   ],
-   "role": "rule",
-   "element": "sched",
-   "writer": "writer_0"
-  },
-  "sched.rule_h1": {
-   "kind": "polyline",
-   "points": [
-    [
-     444.85,
-     571.94
-    ],
-    [
-     775.13,
-     571.94
-    ]
-   ],
-   "role": "rule",
-   "element": "sched",
-   "writer": "writer_0"
-  },
-  "sched.rule_c0": {
-   "kind": "polyline",
-   "points": [
-    [
-     523.68,
-     539.58
-    ],
-    [
-     523.68,
-     604.31
-    ]
-   ],
-   "role": "rule",
-   "element": "sched",
-   "writer": "writer_0"
-  },
-  "sched.rule_c1": {
-   "kind": "polyline",
-   "points": [
-    [
-     599.16,
-     539.58
-    ],
-    [
-     599.16,
-     604.31
-    ]
-   ],
-   "role": "rule",
-   "element": "sched",
-   "writer": "writer_0"
-  },
-  "sched.rule_c2": {
-   "kind": "polyline",
-   "points": [
-    [
-     672.09,
-     539.58
-    ],
-    [
-     672.09,
-     604.31
-    ]
-   ],
-   "role": "rule",
-   "element": "sched",
    "writer": "writer_0"
   },
   "sched.h0": {
    "kind": "text",
    "text": "Wk41",
    "bbox": [
-    458.08,
-    547.34,
-    510.45,
-    563.23
+    60.52,
+    546.11,
+    119.75,
+    564.08
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -1379,12 +1145,12 @@
    "kind": "text",
    "text": "Wk42",
    "bbox": [
-    535.08,
-    547.34,
-    587.76,
-    563.23
+    153.18,
+    546.11,
+    212.75,
+    564.08
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -1396,12 +1162,12 @@
    "kind": "text",
    "text": "Wk43",
    "bbox": [
-    609.44,
-    547.34,
-    661.82,
-    563.23
+    242.84,
+    546.11,
+    302.07,
+    564.08
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "header_cell",
    "row": "header",
@@ -1413,15 +1179,79 @@
    "kind": "text",
    "text": "Wk44",
    "bbox": [
-    682.36,
-    547.34,
-    734.74,
-    563.23
+    330.88,
+    546.11,
+    390.11,
+    564.08
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "header_cell",
    "row": "header",
    "col": 3,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     40.43,
+     573.01
+    ],
+    [
+     443.27,
+     573.01
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     137.49,
+     532.27
+    ],
+    [
+     137.49,
+     612.89
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     228.43,
+     535.08
+    ],
+    [
+     228.43,
+     613.41
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_c2": {
+   "kind": "polyline",
+   "points": [
+    [
+     316.47,
+     532.49
+    ],
+    [
+     316.47,
+     612.57
+    ]
+   ],
+   "role": "rule",
    "element": "sched",
    "writer": "writer_0"
   },
@@ -1429,12 +1259,12 @@
    "kind": "text",
    "text": "schem",
    "bbox": [
-    455.13,
-    579.7,
-    513.4,
-    595.6
+    57.19,
+    580.85,
+    123.08,
+    598.83
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -1446,12 +1276,12 @@
    "kind": "text",
    "text": "layout",
    "bbox": [
-    533.95,
-    579.7,
-    588.89,
-    595.6
+    151.9,
+    580.85,
+    214.02,
+    598.83
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -1463,12 +1293,12 @@
    "kind": "text",
    "text": "fab",
    "bbox": [
-    619.54,
-    579.7,
-    651.71,
-    595.6
+    254.26,
+    580.85,
+    290.64,
+    598.83
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "align": "center",
    "role": "cell",
    "row": 0,
@@ -1480,12 +1310,12 @@
    "kind": "text",
    "text": "bring-up",
    "bbox": [
-    682.36,
-    579.7,
-    764.85,
-    595.6
+    330.88,
+    580.85,
+    424.16,
+    598.83
    ],
-   "text_height": 15.89,
+   "text_height": 17.97,
    "role": "cell",
    "row": 0,
    "col": 3,
@@ -1496,12 +1326,12 @@
    "kind": "text",
    "text": "! L lead time gates bring-up",
    "bbox": [
-    823.28,
-    508.89,
-    1100.49,
-    525.24
+    40.43,
+    632.01,
+    314.47,
+    648.18
    ],
-   "text_height": 16.35,
+   "text_height": 16.17,
    "role": "note",
    "element": "note_lead",
    "writer": "writer_0"
@@ -1510,12 +1340,12 @@
    "kind": "text",
    "text": "next review: Wk42 Thu",
    "bbox": [
-    823.28,
-    546.84,
-    1042.4,
-    563.19
+    40.43,
+    666.79,
+    257.04,
+    682.95
    ],
-   "text_height": 16.35,
+   "text_height": 16.17,
    "role": "note",
    "element": "note_next",
    "writer": "writer_0"
@@ -1523,15 +1353,32 @@
   "box_dec": {
    "kind": "rect",
    "bbox": [
-    51.07,
-    319.14,
-    352.14,
-    346.84
+    33.88,
+    330.96,
+    353.86,
+    362.79
    ],
    "corner_radius": 0,
    "role": "annotation_box",
    "element": "box_dec",
    "target": "dec_1",
+   "writer": "writer_0"
+  },
+  "arrow_lead": {
+   "kind": "arrow",
+   "points": [
+    [
+     320.09,
+     640.1
+    ],
+    [
+     497.18,
+     728.39
+    ]
+   ],
+   "head": 7.488873377174641,
+   "role": "annotation_arrow",
+   "element": "arrow_lead",
    "writer": "writer_0"
   }
  },
@@ -1539,7 +1386,6 @@
   "title",
   "meta",
   "agenda.heading",
-  "agenda.heading.underline",
   "agenda.1.marker",
   "agenda.1",
   "agenda.2.marker",
@@ -1549,10 +1395,8 @@
   "agenda.4.marker",
   "agenda.4",
   "decisions.heading",
-  "decisions.heading.underline",
   "dec_1.marker",
   "dec_1",
-  "box_dec",
   "dec_1.1.marker",
   "dec_1.1",
   "dec_1.2.marker",
@@ -1562,7 +1406,6 @@
   "decisions.3.marker",
   "decisions.3",
   "questions.heading",
-  "questions.heading.underline",
   "questions.1.marker",
   "questions.1",
   "questions.1.1.marker",
@@ -1574,7 +1417,6 @@
   "questions.3.marker",
   "questions.3",
   "risks.heading",
-  "risks.heading.underline",
   "risks.1.marker",
   "risks.1",
   "risks.1.1.marker",
@@ -1586,18 +1428,12 @@
   "risks.3.marker",
   "risks.3",
   "h_act",
-  "h_act.underline",
-  "act.border",
-  "act.rule_h1",
-  "act.rule_h2",
-  "act.rule_h3",
-  "act.rule_h4",
-  "act.rule_h5",
-  "act.rule_c0",
-  "act.rule_c1",
   "act.h0",
   "act.h1",
   "act.h2",
+  "act.rule_h1",
+  "act.rule_c0",
+  "act.rule_c1",
   "act.r0c0",
   "act.r0c1",
   "act.r0c2",
@@ -1614,22 +1450,22 @@
   "act.r4c1",
   "act.r4c2",
   "h_sched",
-  "h_sched.underline",
-  "sched.border",
-  "sched.rule_h1",
-  "sched.rule_c0",
-  "sched.rule_c1",
-  "sched.rule_c2",
   "sched.h0",
   "sched.h1",
   "sched.h2",
   "sched.h3",
+  "sched.rule_h1",
+  "sched.rule_c0",
+  "sched.rule_c1",
+  "sched.rule_c2",
   "sched.r0c0",
   "sched.r0c1",
   "sched.r0c2",
   "sched.r0c3",
   "note_lead",
-  "note_next"
+  "note_next",
+  "box_dec",
+  "arrow_lead"
  ],
  "targets": [
   {
@@ -1668,24 +1504,9 @@
    "tier": "structural",
    "element": "act",
    "after": {
-    "id": "act.border"
+    "id": "act.rule_h1"
    },
    "target": [
-    {
-     "id": "act.rule_h1"
-    },
-    {
-     "id": "act.rule_h2"
-    },
-    {
-     "id": "act.rule_h3"
-    },
-    {
-     "id": "act.rule_h4"
-    },
-    {
-     "id": "act.rule_h5"
-    },
     {
      "id": "act.rule_c0"
     },
@@ -1700,12 +1521,9 @@
    "tier": "structural",
    "element": "sched",
    "after": {
-    "id": "sched.border"
+    "id": "sched.rule_h1"
    },
    "target": [
-    {
-     "id": "sched.rule_h1"
-    },
     {
      "id": "sched.rule_c0"
     },

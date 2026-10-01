@@ -542,8 +542,7 @@ def check_ink(groups, traces, page, tag="", clean=False):
     for gi, (_, item, _) in enumerate(groups):
         tgt = item.get("target")
         if item.get("role", "").startswith("annotation_") and tgt:
-            allowed |= {(gi, gj) for gj, (_, it2, _) in enumerate(groups)
-                        if it2.get("element") == tgt or ids[gj] == tgt}
+            allowed |= {(gi, gj) for gj, (_, it2, _) in enumerate(groups) if annotates(tgt, ids[gj], it2)}
         if item.get("role") == "underline":  # a title or heading underline and its text
             allowed |= {(gi, gj) for gj, (_, it2, _) in enumerate(groups) if it2.get("element") == item.get("element")}
     hits = {}
@@ -566,6 +565,14 @@ def check_ink(groups, traces, page, tag="", clean=False):
         if n >= min_cells:
             errs.append(f"{tag}ink of {ids[a]} touches {ids[b]} ({n} cells)")
     return errs
+
+
+def annotates(ref, leaf, item):
+    """True if an annotation of `ref` (element, leaf, list item or table row
+    <table>.r<i>) covers this item."""
+    m = re.fullmatch(r"(.+)\.r(\d+)", ref)
+    return (leaf in (ref, f"{ref}.marker") or item.get("element") == ref or item.get("line_of") == ref
+            or (m is not None and item.get("element") == m.group(1) and str(item.get("row")) == m.group(2)))
 
 
 def check_ink_clean(layout, fonts=FONT_POOL):
@@ -604,7 +611,7 @@ def check_inkml(path, layout=None):
     groups, traces, page = read_inkml_groups(path)
     if layout:  # restore annotation targets, which the InkML doesn't carry
         groups = [(eid, {**item, **{k: v for k, v in layout["items"].get(eid, {}).items()
-                                    if k in ("target", "role", "element")}}, units)
+                                    if k in ("target", "role", "element", "row", "line_of")}}, units)
                   for eid, item, units in groups]
     return check_ink(groups, traces, page)
 

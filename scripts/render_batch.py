@@ -55,7 +55,12 @@ def run(pages, layouts, fonts, seeds, noise, relayout=False, png=True, clean=Fal
         for ls in layouts:
             path = layout_engine.default_path(page, ls)
             if relayout or not os.path.exists(path):
-                layout_engine.write_layout(page, ls)
+                try:
+                    layout_engine.write_layout(page, ls)
+                except layout_engine.LayoutError as e:
+                    manifest["rejected"].append({"layout_seed": ls, "problems": [str(e)]})
+                    print(f"no layout for seed {ls}: {e}")
+                    continue
             layout = json.load(open(path))
             # Either every font for every layout, or `per_layout` of them,
             # rotating through the list so each layout gets different ones.

@@ -1,188 +1,28 @@
 {
-  "schema": "ink_tokenizer.synthetic_page.content/v0",
-  "page_id": "page_0002",
-  "topic": "software process: CI deploy pipeline with canary rollout and automatic rollback",
-  "provenance": {
-    "generator": "hand-produced by LLM agent (Claude)",
-    "automated": false
-  },
-  "elements": [
-    {
-      "id": "title",
-      "type": "text",
-      "role": "title",
-      "text": "Deploy pipeline - canary + rollback"
-    },
-    {
-      "id": "note_1",
-      "type": "text",
-      "role": "bullet",
-      "text": "- canary: 10% traffic first"
-    },
-    {
-      "id": "note_2",
-      "type": "text",
-      "role": "bullet",
-      "text": "- gate: 5xx err rate, 5 min"
-    },
-    {
-      "id": "note_3",
-      "type": "text",
-      "role": "bullet",
-      "text": "- rollback is automatic"
-    },
-    {
-      "id": "fc_1",
-      "type": "flowchart",
-      "nodes": [
-        {
-          "id": "n1",
-          "shape": "terminator",
-          "text": "push to main",
-          "terminal": "start"
-        },
-        {
-          "id": "n2",
-          "shape": "io",
-          "text": "read deploy.yaml"
-        },
-        {
-          "id": "n3",
-          "shape": "process",
-          "text": "build + unit tests"
-        },
-        {
-          "id": "n4",
-          "shape": "decision",
-          "text": "tests pass?"
-        },
-        {
-          "id": "n5",
-          "shape": "process",
-          "text": "deploy canary 10%"
-        },
-        {
-          "id": "n6",
-          "shape": "process",
-          "text": "wait 5 min"
-        },
-        {
-          "id": "n7",
-          "shape": "decision",
-          "text": "err < 1%?"
-        },
-        {
-          "id": "n8",
-          "shape": "decision",
-          "text": "at 100%?"
-        },
-        {
-          "id": "n9",
-          "shape": "process",
-          "text": "traffic += 30%"
-        },
-        {
-          "id": "n10",
-          "shape": "process",
-          "text": "rollback"
-        },
-        {
-          "id": "n11",
-          "shape": "terminator",
-          "text": "stop + notify",
-          "terminal": "end"
-        },
-        {
-          "id": "n12",
-          "shape": "terminator",
-          "text": "done",
-          "terminal": "end"
-        }
-      ],
-      "edges": [
-        {
-          "id": "e1",
-          "from": "n1",
-          "to": "n2"
-        },
-        {
-          "id": "e2",
-          "from": "n2",
-          "to": "n3"
-        },
-        {
-          "id": "e3",
-          "from": "n3",
-          "to": "n4"
-        },
-        {
-          "id": "e4",
-          "from": "n4",
-          "to": "n5",
-          "label": "yes"
-        },
-        {
-          "id": "e5",
-          "from": "n4",
-          "to": "n11",
-          "label": "no"
-        },
-        {
-          "id": "e6",
-          "from": "n5",
-          "to": "n6"
-        },
-        {
-          "id": "e7",
-          "from": "n6",
-          "to": "n7"
-        },
-        {
-          "id": "e8",
-          "from": "n7",
-          "to": "n8",
-          "label": "yes"
-        },
-        {
-          "id": "e9",
-          "from": "n7",
-          "to": "n10",
-          "label": "no"
-        },
-        {
-          "id": "e10",
-          "from": "n8",
-          "to": "n12",
-          "label": "yes"
-        },
-        {
-          "id": "e11",
-          "from": "n8",
-          "to": "n9",
-          "label": "no"
-        },
-        {
-          "id": "e12",
-          "from": "n9",
-          "to": "n6"
-        },
-        {
-          "id": "e13",
-          "from": "n10",
-          "to": "n11"
-        }
-      ],
-      "layout_item_ids": {
-        "pattern": "fc_1.<node_or_edge_id>.<part>",
-        "node_parts": [
-          "box",
-          "text"
-        ],
-        "edge_parts": [
-          "arrow",
-          "label"
-        ]
-      }
-    }
-  ]
+ "schema": "ink_tokenizer.synthetic_page.content/v1",
+ "page_id": "page_0002",
+ "topic": "software process: CI deploy pipeline with canary rollout and automatic rollback",
+ "provenance": {"generator": "LLM agent (Claude), ported from the v0 hand-made page", "automated": false},
+ "elements": [
+  {"id": "title", "type": "text", "role": "title", "text": "Deploy pipeline - canary + rollback"},
+  {"id": "notes", "type": "list", "style": "dash", "items": [
+   {"text": "canary: 10% traffic first"},
+   {"text": "gate: 5xx err rate, 5 min"},
+   {"text": "rollback is automatic"}]},
+  {"id": "fc_1", "type": "flowchart",
+   "nodes": [
+    {"id": "n1", "shape": "terminator", "text": "push to main"}, {"id": "n2", "shape": "io", "text": "read deploy.yaml"},
+    {"id": "n3", "shape": "process", "text": "build + unit tests"}, {"id": "n4", "shape": "decision", "text": "tests pass?"},
+    {"id": "n5", "shape": "process", "text": "deploy canary 10%"}, {"id": "n6", "shape": "process", "text": "wait 5 min"},
+    {"id": "n7", "shape": "decision", "text": "err < 1%?"}, {"id": "n8", "shape": "decision", "text": "at 100%?"},
+    {"id": "n9", "shape": "process", "text": "traffic += 30%"}, {"id": "n10", "shape": "process", "text": "rollback"},
+    {"id": "n11", "shape": "terminator", "text": "stop + notify"}, {"id": "n12", "shape": "terminator", "text": "done"}],
+   "edges": [
+    {"id": "e1", "from": "n1", "to": "n2"}, {"id": "e2", "from": "n2", "to": "n3"}, {"id": "e3", "from": "n3", "to": "n4"},
+    {"id": "e4", "from": "n4", "to": "n5", "label": "yes"}, {"id": "e5", "from": "n4", "to": "n11", "label": "no"},
+    {"id": "e6", "from": "n5", "to": "n6"}, {"id": "e7", "from": "n6", "to": "n7"},
+    {"id": "e8", "from": "n7", "to": "n8", "label": "yes"}, {"id": "e9", "from": "n7", "to": "n10", "label": "no"},
+    {"id": "e10", "from": "n8", "to": "n12", "label": "yes"}, {"id": "e11", "from": "n8", "to": "n9", "label": "no"},
+    {"id": "e12", "from": "n9", "to": "n6"}, {"id": "e13", "from": "n10", "to": "n11"}]}
+ ]
 }

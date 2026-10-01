@@ -1,7 +1,7 @@
 {
  "schema": "ink_tokenizer.synthetic_page.layout/v1",
  "page_id": "page_0004",
- "layout_seed": 0,
+ "layout_seed": 2,
  "unit": "mm",
  "page": {
   "width": 1200.0,
@@ -10,34 +10,34 @@
   "y_axis": "down"
  },
  "style": {
-  "h": 24.29,
-  "title": 30.672,
-  "heading": 25.998,
-  "subbullet": 23.032,
-  "note": 21.332,
-  "table": 22.357,
-  "diagram": 20.22,
-  "math": 25.715,
-  "line_gap": 1.69,
-  "block_gap": 1.006,
-  "col_gap": 2.248,
-  "margin_x": 31.172,
-  "margin_y": 29.521,
-  "indent": 1.527,
-  "dash": "*",
-  "numbered": "{}.",
+  "h": 19.419,
+  "title": 25.261,
+  "heading": 21.34,
+  "subbullet": 18.403,
+  "note": 17.63,
+  "table": 18.634,
+  "diagram": 16.353,
+  "math": 20.919,
+  "line_gap": 1.631,
+  "block_gap": 1.59,
+  "col_gap": 2.832,
+  "margin_x": 36.37,
+  "margin_y": 25.614,
+  "indent": 1.542,
+  "dash": "-",
+  "numbered": "{})",
   "title_underline": false,
-  "title_center": false,
+  "title_center": true,
   "heading_underline": false,
-  "table_style": "grid",
-  "table_rules": "after_header",
-  "table_left_align": false,
-  "row_h": 1.982,
-  "cell_pad": 0.834,
-  "side_by_side": 0.55,
-  "fill": 0.691,
+  "table_style": "header",
+  "table_rules": "last",
+  "table_left_align": true,
+  "row_h": 1.859,
+  "cell_pad": 0.866,
+  "side_by_side": 0.351,
+  "fill": 0.558,
   "multi_writer": false,
-  "correction_rate": 0.0,
+  "correction_rate": 0.06,
   "scale": 1.0,
   "page_w": 1200.0,
   "page_h": 800.0,
@@ -63,12 +63,12 @@
    "kind": "text",
    "text": "RC low-pass - step + freq response",
    "bbox": [
-    31.17,
-    29.52,
-    718.95,
-    60.19
+    316.78,
+    25.61,
+    883.22,
+    50.87
    ],
-   "text_height": 30.67,
+   "text_height": 25.26,
    "role": "title",
    "bold": true,
    "element": "title",
@@ -78,29 +78,14 @@
    "kind": "text",
    "text": "given: R = 10 kΩ, C = 100 nF, 5 V step in at t = 0, cap starts at 0 V",
    "bbox": [
-    31.17,
-    84.64,
-    1057.45,
-    108.93
+    36.37,
+    81.75,
+    856.84,
+    101.17
    ],
-   "text_height": 24.29,
+   "text_height": 19.42,
    "role": "bullet",
    "element": "givens",
-   "writer": "writer_0"
-  },
-  "fig_1.V1.label": {
-   "kind": "math",
-   "latex": "V_{in}",
-   "bbox": [
-    31.17,
-    264.98,
-    61.13,
-    285.2
-   ],
-   "baseline": 280.14,
-   "text_height": 20.22,
-   "element": "fig_1",
-   "role": "component_label",
    "writer": "writer_0"
   },
   "fig_1.V1": {
@@ -109,13 +94,29 @@
    "element": "fig_1",
    "role": "component",
    "a": [
-    84.22,
-    248.88
+    86.19,
+    230.43
    ],
    "b": [
-    84.22,
-    298.88
+    86.19,
+    290.43
    ],
+   "size": 1.2697752922703343,
+   "writer": "writer_0"
+  },
+  "fig_1.V1.label": {
+   "kind": "math",
+   "latex": "V_{in}",
+   "bbox": [
+    36.37,
+    253.24,
+    60.6,
+    269.59
+   ],
+   "baseline": 265.5,
+   "text_height": 16.35,
+   "element": "fig_1",
+   "role": "component_label",
    "writer": "writer_0"
   },
   "fig_1.R1": {
@@ -124,64 +125,29 @@
    "element": "fig_1",
    "role": "component",
    "a": [
-    159.22,
-    193.88
+    141.19,
+    160.43
    ],
    "b": [
-    209.22,
-    193.88
+    201.19,
+    160.43
    ],
+   "size": 1.2697752922703343,
    "writer": "writer_0"
   },
   "fig_1.R1.label": {
    "kind": "text",
-   "text": "R",
+   "text": "R = 10 kΩ",
    "bbox": [
-    175.2,
-    133.37,
-    193.25,
-    153.59
+    119.78,
+    132.04,
+    222.6,
+    148.39
    ],
-   "text_height": 20.22,
+   "text_height": 16.35,
    "align": "center",
    "element": "fig_1",
    "role": "component_label",
-   "writer": "writer_0"
-  },
-  "fig_1.R1.value": {
-   "kind": "text",
-   "text": "10 kΩ",
-   "bbox": [
-    150.63,
-    161.68,
-    217.82,
-    181.9
-   ],
-   "text_height": 20.22,
-   "align": "center",
-   "element": "fig_1",
-   "role": "component_label",
-   "writer": "writer_0"
-  },
-  "fig_1.in": {
-   "kind": "wire",
-   "points": [
-    [
-     84.22,
-     248.88
-    ],
-    [
-     84.22,
-     193.88
-    ],
-    [
-     159.22,
-     193.88
-    ]
-   ],
-   "element": "fig_1",
-   "role": "wire",
-   "net": "in",
    "writer": "writer_0"
   },
   "fig_1.GND": {
@@ -190,34 +156,10 @@
    "element": "fig_1",
    "role": "component",
    "a": [
-    184.22,
-    343.88
+    171.19,
+    345.43
    ],
-   "writer": "writer_0"
-  },
-  "fig_1.gnd.1": {
-   "kind": "wire",
-   "points": [
-    [
-     84.22,
-     298.88
-    ],
-    [
-     84.22,
-     333.88
-    ],
-    [
-     184.22,
-     333.88
-    ],
-    [
-     184.22,
-     343.88
-    ]
-   ],
-   "element": "fig_1",
-   "role": "wire",
-   "net": "gnd",
+   "size": 1.2697752922703343,
    "writer": "writer_0"
   },
   "fig_1.C1": {
@@ -226,89 +168,28 @@
    "element": "fig_1",
    "role": "component",
    "a": [
-    274.22,
-    248.88
+    251.19,
+    230.43
    ],
    "b": [
-    274.22,
-    298.88
+    251.19,
+    290.43
    ],
+   "size": 1.2697752922703343,
    "writer": "writer_0"
   },
   "fig_1.C1.label": {
    "kind": "text",
-   "text": "C",
+   "text": "C = 100 nF",
    "bbox": [
-    289.06,
-    250.83,
-    305.79,
-    271.05
+    266.3,
+    253.24,
+    382.54,
+    269.59
    ],
-   "text_height": 20.22,
+   "text_height": 16.35,
    "element": "fig_1",
    "role": "component_label",
-   "writer": "writer_0"
-  },
-  "fig_1.C1.value": {
-   "kind": "text",
-   "text": "100 nF",
-   "bbox": [
-    289.06,
-    279.13,
-    374.16,
-    299.35
-   ],
-   "text_height": 20.22,
-   "element": "fig_1",
-   "role": "component_label",
-   "writer": "writer_0"
-  },
-  "fig_1.out.1": {
-   "kind": "wire",
-   "points": [
-    [
-     209.22,
-     193.88
-    ],
-    [
-     274.22,
-     193.88
-    ],
-    [
-     274.22,
-     248.88
-    ]
-   ],
-   "element": "fig_1",
-   "role": "wire",
-   "net": "out",
-   "writer": "writer_0"
-  },
-  "fig_1.gnd.2": {
-   "kind": "wire",
-   "points": [
-    [
-     184.22,
-     333.88
-    ],
-    [
-     274.22,
-     333.88
-    ],
-    [
-     274.22,
-     298.88
-    ]
-   ],
-   "element": "fig_1",
-   "role": "wire",
-   "net": "gnd",
-   "dots": [
-    [
-     184.22,
-     333.88
-    ]
-   ],
    "writer": "writer_0"
   },
   "fig_1.OUT": {
@@ -317,36 +198,79 @@
    "element": "fig_1",
    "role": "component",
    "a": [
-    354.22,
-    193.88
+    336.19,
+    160.43
    ],
+   "size": 1.2697752922703343,
    "writer": "writer_0"
   },
   "fig_1.OUT.label": {
    "kind": "math",
    "latex": "V_{out}",
    "bbox": [
-    364.81,
-    184.98,
-    405.47,
-    205.2
+    319.75,
+    135.34,
+    352.63,
+    151.7
    ],
-   "baseline": 200.14,
-   "text_height": 20.22,
+   "baseline": 147.61,
+   "text_height": 16.35,
    "element": "fig_1",
    "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.in": {
+   "kind": "wire",
+   "points": [
+    [
+     86.19,
+     230.43
+    ],
+    [
+     86.19,
+     160.43
+    ],
+    [
+     141.19,
+     160.43
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "in",
+   "writer": "writer_0"
+  },
+  "fig_1.out.1": {
+   "kind": "wire",
+   "points": [
+    [
+     201.19,
+     160.43
+    ],
+    [
+     251.19,
+     160.43
+    ],
+    [
+     251.19,
+     230.43
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "out",
    "writer": "writer_0"
   },
   "fig_1.out.2": {
    "kind": "wire",
    "points": [
     [
-     274.22,
-     193.88
+     251.19,
+     160.43
     ],
     [
-     354.22,
-     193.88
+     336.19,
+     160.43
     ]
    ],
    "element": "fig_1",
@@ -354,8 +278,60 @@
    "net": "out",
    "dots": [
     [
-     274.22,
-     193.88
+     251.19,
+     160.43
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.gnd.1": {
+   "kind": "wire",
+   "points": [
+    [
+     86.19,
+     290.43
+    ],
+    [
+     86.19,
+     335.43
+    ],
+    [
+     171.19,
+     335.43
+    ],
+    [
+     171.19,
+     345.43
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "gnd",
+   "writer": "writer_0"
+  },
+  "fig_1.gnd.2": {
+   "kind": "wire",
+   "points": [
+    [
+     171.19,
+     335.43
+    ],
+    [
+     251.19,
+     335.43
+    ],
+    [
+     251.19,
+     290.43
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "gnd",
+   "dots": [
+    [
+     171.19,
+     335.43
     ]
    ],
    "writer": "writer_0"
@@ -364,12 +340,12 @@
    "kind": "text",
    "text": "KCL at out node:",
    "bbox": [
-    460.07,
-    133.37,
-    703.25,
-    157.66
+    437.53,
+    132.04,
+    631.94,
+    151.46
    ],
-   "text_height": 24.29,
+   "text_height": 19.42,
    "role": "bullet",
    "element": "sec_1",
    "writer": "writer_0"
@@ -378,15 +354,15 @@
    "kind": "math",
    "latex": "i = \\frac{V_{in} - V_{out}}{R} = C \\frac{dV_{out}}{dt}",
    "bbox": [
-    460.07,
-    169.81,
-    749.06,
-    226.05
+    437.53,
+    161.17,
+    672.63,
+    206.92
    ],
-   "baseline": 206.29,
-   "text_height": 25.71,
+   "baseline": 190.85,
+   "text_height": 20.92,
    "options": {
-    "frac_order": "bar_num_den",
+    "frac_order": "num_bar_den",
     "radical_bar": "joined"
    },
    "role": "math",
@@ -397,16 +373,16 @@
    "kind": "math",
    "latex": "V_{out}(t) = \\frac{1}{C} \\int_0^t i \\, dt",
    "bbox": [
-    460.07,
-    250.49,
-    694.04,
-    303.47
+    437.53,
+    237.79,
+    627.86,
+    280.89
    ],
-   "baseline": 285.34,
-   "text_height": 25.71,
+   "baseline": 266.14,
+   "text_height": 20.92,
    "options": {
     "frac_order": "num_bar_den",
-    "radical_bar": "after"
+    "radical_bar": "joined"
    },
    "role": "math",
    "element": "eq_2",
@@ -416,13 +392,13 @@
    "kind": "math",
    "latex": "= V_{in} \\left(1 - e^{-t/\\tau}\\right)",
    "bbox": [
-    560.34,
-    323.02,
-    778.77,
-    355.08
+    519.1,
+    305.59,
+    696.79,
+    331.66
    ],
-   "baseline": 348.65,
-   "text_height": 25.71,
+   "baseline": 326.43,
+   "text_height": 20.92,
    "options": {
     "frac_order": "num_bar_den",
     "radical_bar": "after"
@@ -435,13 +411,13 @@
    "kind": "math",
    "latex": "\\tau = RC = 10\\,\\mathrm{k\\Omega} \\cdot 100\\,\\mathrm{nF} = 1\\,\\mathrm{ms}",
    "bbox": [
-    460.07,
-    379.53,
-    894.19,
-    408.07
+    437.53,
+    362.54,
+    790.69,
+    385.76
    ],
-   "baseline": 401.64,
-   "text_height": 25.71,
+   "baseline": 380.53,
+   "text_height": 20.92,
    "options": {
     "frac_order": "num_bar_den",
     "radical_bar": "joined"
@@ -454,12 +430,12 @@
    "kind": "text",
    "text": "sine in, phasors:",
    "bbox": [
-    460.07,
-    432.52,
-    688.65,
-    456.81
+    437.53,
+    416.63,
+    620.27,
+    436.05
    ],
-   "text_height": 24.29,
+   "text_height": 19.42,
    "role": "bullet",
    "element": "sec_2",
    "writer": "writer_0"
@@ -468,15 +444,15 @@
    "kind": "math",
    "latex": "Z_C = \\frac{1}{j \\omega C}",
    "bbox": [
-    460.07,
-    468.95,
-    584.45,
-    519.94
+    437.53,
+    445.76,
+    538.71,
+    487.24
    ],
-   "baseline": 498.0,
-   "text_height": 25.71,
+   "baseline": 469.39,
+   "text_height": 20.92,
    "options": {
-    "frac_order": "bar_num_den",
+    "frac_order": "num_bar_den",
     "radical_bar": "joined"
    },
    "role": "math",
@@ -487,15 +463,15 @@
    "kind": "math",
    "latex": "H(j\\omega) = \\frac{V_{out}}{V_{in}} = \\frac{Z_C}{R + Z_C}",
    "bbox": [
-    460.07,
-    544.39,
-    759.47,
-    605.0
+    911.83,
+    87.92,
+    1155.4,
+    137.23
    ],
-   "baseline": 583.05,
-   "text_height": 25.71,
+   "baseline": 119.38,
+   "text_height": 20.92,
    "options": {
-    "frac_order": "bar_num_den",
+    "frac_order": "num_bar_den",
     "radical_bar": "joined"
    },
    "role": "math",
@@ -506,13 +482,13 @@
    "kind": "math",
    "latex": "= \\frac{1}{1 + j \\omega RC}",
    "bbox": [
-    552.23,
-    624.56,
-    699.56,
-    675.55
+    986.81,
+    161.93,
+    1106.66,
+    203.41
    ],
-   "baseline": 653.6,
-   "text_height": 25.71,
+   "baseline": 185.56,
+   "text_height": 20.92,
    "options": {
     "frac_order": "num_bar_den",
     "radical_bar": "joined"
@@ -525,16 +501,16 @@
    "kind": "math",
    "latex": "|H(j\\omega)| = \\frac{1}{\\sqrt{1 + (\\omega RC)^2}}",
    "bbox": [
-    460.07,
-    699.99,
-    761.58,
-    755.14
+    911.83,
+    234.29,
+    1157.11,
+    279.15
    ],
-   "baseline": 729.04,
-   "text_height": 25.71,
+   "baseline": 257.92,
+   "text_height": 20.92,
    "options": {
     "frac_order": "num_bar_den",
-    "radical_bar": "joined"
+    "radical_bar": "after"
    },
    "role": "math",
    "element": "eq_8",
@@ -544,13 +520,13 @@
    "kind": "math",
    "latex": "\\boxed{f_c = \\frac{1}{2 \\pi RC} = 159\\,\\mathrm{Hz}}",
    "bbox": [
-    816.19,
-    699.99,
-    1116.75,
-    759.25
+    911.83,
+    310.02,
+    1156.35,
+    358.23
    ],
-   "baseline": 735.47,
-   "text_height": 25.71,
+   "baseline": 338.88,
+   "text_height": 20.92,
    "options": {
     "frac_order": "num_bar_den",
     "radical_bar": "after"
@@ -563,22 +539,20 @@
  "writing_order": [
   "title",
   "givens",
-  "fig_1.V1.label",
   "fig_1.V1",
+  "fig_1.V1.label",
   "fig_1.R1",
   "fig_1.R1.label",
-  "fig_1.R1.value",
-  "fig_1.in",
   "fig_1.GND",
-  "fig_1.gnd.1",
   "fig_1.C1",
   "fig_1.C1.label",
-  "fig_1.C1.value",
-  "fig_1.out.1",
-  "fig_1.gnd.2",
   "fig_1.OUT",
   "fig_1.OUT.label",
+  "fig_1.in",
+  "fig_1.out.1",
   "fig_1.out.2",
+  "fig_1.gnd.1",
+  "fig_1.gnd.2",
   "sec_1",
   "eq_1",
   "eq_2",

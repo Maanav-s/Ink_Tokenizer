@@ -20,12 +20,23 @@ pipeline in [docs/synthetic_data.md](../docs/synthetic_data.md):
 | page_0002 | CI deploy pipeline flowchart with canary and rollback |
 | page_0003 | dense design-review notes: lists, action-item and timeline tables, annotations |
 | page_0004 | RC low-pass derivation: fractions, sub/superscripts, ∫, √, schematic |
+| page_0005 | 2:1 mux and 4-bit parity design review: truth table, Boolean algebra, gate circuit, numbered list |
+| page_0006 | payments API sprint planning + incident retro: dense lists, action-item and timeline tables, retry flowchart |
+| page_0007 | sensor-node power budget and LED sizing: derivation with checks, schematic, current table |
 
-**Provenance:** an LLM agent (Claude) wrote the content of all four pages
-by hand. They began as hand-placed v0 pages (content and coordinates
-together) and were ported to content-only v1. Their truth tables, Boolean
-expressions, circuit and numeric equations are checked by
-`scripts/validate_page.py`.
+**Provenance:**
+- **Pages 1–4:** an LLM agent (Claude) wrote their content by hand. They
+  began as hand-placed v0 pages (content and coordinates together) and were
+  ported to content-only v1.
+- **Pages 5–7:** written by LLM subagents given only
+  [docs/content_prompt.md](../docs/content_prompt.md) and a topic, then
+  checked with `validate_page.py`. All three passed on the first try.
+- **Checks:** every page's truth tables, Boolean expressions, circuits and
+  numeric equations are checked by `scripts/validate_page.py`.
+
+Pages 6 and 7 hold more than fits on the standard 1200 × 800 mm board, so
+the engine gave them a larger one (1500 × 1000 or 1800 × 1200 mm). No
+layout of page 6 fits with seed 2.
 
 ## content.json (`ink_tokenizer.synthetic_page.content/v1`)
 
