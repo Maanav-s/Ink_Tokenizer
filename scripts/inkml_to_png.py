@@ -8,10 +8,12 @@ raises rather than drawing them wrong.
 
 Usage:
   uv run --extra render python scripts/inkml_to_png.py page.inkml [out.png]
-      [--px-per-unit 1.5] [--until SECONDS] [--color-groups]
+      [--px-per-unit 1.5] [--until SECONDS] [--color-groups] [--crop X0 Y0 X1 Y1]
 
 --until draws only ink written up to that time, i.e. an in-progress page.
 --color-groups colours each top-level <traceGroup> child differently.
+--crop draws only that region (in InkML units), e.g. to zoom in with a higher
+--px-per-unit.
 """
 import argparse
 import colorsys
@@ -53,9 +55,11 @@ def read_inkml(path):
     return traces, groups, notes
 
 
-def render(path, out, px_per_unit, until, color_groups, line_width):
+def render(path, out, px_per_unit, until, color_groups, line_width, crop=None):
     traces, groups, notes = read_inkml(path)
-    if "page_width_mm" in notes:
+    if crop:
+        x0, y0, x1, y1 = crop
+    elif "page_width_mm" in notes:
         x0, y0, x1, y1 = 0, 0, float(notes["page_width_mm"]), float(notes["page_height_mm"])
     else:
         xs = [p[0] for t in traces.values() for p in t]
@@ -93,6 +97,7 @@ if __name__ == "__main__":
     ap.add_argument("--until", type=float, help="only draw ink with T <= this")
     ap.add_argument("--color-groups", action="store_true")
     ap.add_argument("--line-width", type=int, default=3)
+    ap.add_argument("--crop", type=float, nargs=4, metavar=("X0", "Y0", "X1", "Y1"))
     a = ap.parse_args()
     render(a.inkml, a.out or os.path.splitext(a.inkml)[0] + ".png",
-           a.px_per_unit, a.until, a.color_groups, a.line_width)
+           a.px_per_unit, a.until, a.color_groups, a.line_width, a.crop)

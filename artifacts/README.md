@@ -1,9 +1,9 @@
 # Synthetic page artifacts
 
-These are outputs of steps 1 (content generation) and 2 (layout) of the
-synthetic data pipeline in [docs/synthetic_data.md](../docs/synthetic_data.md).
-No ink has been rendered. Rendering (text-to-ink, diagram jitter, page
-assembly) is a later stage that consumes these files.
+`content.json` and `layout.json` are outputs of steps 1 (content generation)
+and 2 (layout) of the synthetic data pipeline in
+[docs/synthetic_data.md](../docs/synthetic_data.md). The `.inkml` files are a
+naive proof of concept of the later rendering steps (see below).
 
 **Provenance:** `page_0001` was written by hand by an LLM agent (Claude). No
 automated generator exists yet. Its truth table, expressions and circuit were
@@ -16,9 +16,11 @@ Treat it as a sample of the format, not as generator output.
 hard-coded in the script), and `scripts/check_page.py [page_dir]` runs the
 checks above.
 
-`page.inkml` is the page rendered as ink by `scripts/render_inkml.py`, and
-`page.png` is that InkML rasterized by `scripts/inkml_to_png.py` for
-inspection. See "page.inkml" below.
+`page.inkml` is the page rendered as clean ink by `scripts/render_inkml.py`.
+`page_noise1_seed0.inkml` and `page_noise1_seed1.inkml` are the same page
+with handwriting-like variation at level 1, for seeds 0 and 1. Each `.png`
+is its InkML rasterized by `scripts/inkml_to_png.py` for inspection. See
+"Rendered ink" below.
 
 Each page directory holds `content.json` (what is written, the ground truth)
 and `layout.json` (where and in what order it is written). Both files key
@@ -89,32 +91,58 @@ Element types:
   are the remaining truth-table rows and repeated gate scaffolding (see
   AGENTS.md).
 
-## page.inkml (naive Hershey rendering)
+## Rendered ink (naive Hershey rendering)
 
 A proof of concept, not training-quality ink. `scripts/render_inkml.py`
 draws text with a single-stroke Hershey font (`futural` by default),
 draws `⊕` as a circle plus a cross, and draws diagrams from plain geometric
-primitives. It adds no jitter and uses no handwriting model.
+primitives. It uses no handwriting model.
+
+`--noise LEVEL` (default 0) adds handwriting-like variation from
+`scripts/hand_noise.py`, and `--seed` picks the random draw. The variation is
+structured rather than independent per-point noise:
+
+- **Writer:** slant, size and pen speed, shared by everything that writer
+  writes.
+- **Line:** baseline tilt and curvature, and a small offset.
+- **Glyph:** scale, rotation, baseline jitter and spacing.
+- **Stroke:**
+  - smooth elastic warping and a slow wobble;
+  - endpoints land off target, with overshoot or stopping short (diagram
+    lines tend to overshoot);
+  - straight lines bow slightly;
+  - circles come out elliptical and don't close exactly.
+- **Timing:** the pen speeds up at the start of a stroke and slows at its
+  end and in tight curves (a softened two-thirds power law). Pauses between
+  strokes vary randomly.
+
+Level 0 reproduces the clean geometry and constant 150 mm/s pen speed. The
+same seed and level always give the same file.
 
 - `traceFormat` has the channels `X`, `Y` (mm, same frame as layout.json) and
   `T` (seconds from the first stroke).
-- Elements follow `writing_order`. Strokes are sampled at 100 Hz with a
-  constant pen speed of 150 mm/s. Pen-up travel and a pause between elements
-  add the gaps in `T`.
-- `<annotation>`s on `<ink>` give `page_id`, the page size and the y-axis
-  direction.
+- Elements follow `writing_order`. Strokes are sampled at 100 Hz, plus a
+  final sample at each stroke's end, so timestamps strictly increase. Pen-up
+  travel and a pause between elements add the gaps in `T`.
+- `<annotation>`s on `<ink>` give `page_id`, the page size, the y-axis
+  direction, and `noise_level` and `noise_seed`.
 - The top-level `<traceGroup xml:id="elements">` holds one child
   `<traceGroup>` per `writing_order` entry. Each child has an `element_id`
   and a `writer` annotation, and `traceView`s that point to its traces.
   Junction dots are grouped with the wire that branches at them.
+- A fan-out wire's shared trunk is drawn once. A branch's stroke starts at
+  its junction when an earlier wire of the same net already passes through
+  that point.
 
 Commands (run with `uv sync --extra render` installed):
 
 ```bash
-uv run --extra render python scripts/render_inkml.py [page_dir] [--font NAME]
+uv run --extra render python scripts/render_inkml.py [page_dir] [--font NAME] \
+    [--noise LEVEL] [--seed N] [--out FILE]
 uv run --extra render python scripts/inkml_to_png.py artifacts/page_0001/page.inkml \
-    [out.png] [--until SECONDS] [--color-groups]
+    [out.png] [--until SECONDS] [--color-groups] [--crop X0 Y0 X1 Y1] [--px-per-unit N]
 ```
 
 `--until` draws only the ink written up to that time, i.e. an in-progress
-page. `--color-groups` colours each element separately.
+page. `--color-groups` colours each element separately. `--crop` with a
+larger `--px-per-unit` zooms in on a region.

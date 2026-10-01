@@ -89,6 +89,10 @@ the optional `render` extra (Hershey-Fonts, Pillow).
 - [scripts/render_inkml.py](scripts/render_inkml.py) — naive layout-to-InkML
   renderer (Hershey font plus primitives); [scripts/inkml_to_png.py](scripts/inkml_to_png.py)
   rasterizes InkML for inspection. Both need `uv sync --extra render`.
+- [scripts/hand_noise.py](scripts/hand_noise.py) — handwriting-like
+  variation for the renderer (`--noise`, `--seed`). It is structured across
+  writer, line, glyph and stroke, and models pen speed, rather than adding
+  i.i.d. Gaussian noise.
 - Ink format: **InkML**, with X/Y in mm and T in seconds.
 
 Common commands:

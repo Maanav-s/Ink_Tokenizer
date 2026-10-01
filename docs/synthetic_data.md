@@ -36,7 +36,8 @@ the structure it belongs to.
    with heuristics that make them look hand-drawn: artificial jitter on
    points, wobbly lines, overshoot and gaps at corners and joins, uneven
    stroke speed, and variation in size and alignment. Labels inside diagrams
-   go through the text-to-ink model.
+   go through the text-to-ink model. A first version of these heuristics,
+   applied to text as well, is in `scripts/hand_noise.py`.
 5. **Page assembly.** Text and diagram strokes are merged into a single timed
    stroke stream per page. Each stroke keeps a reference back to the
    structural element it came from.

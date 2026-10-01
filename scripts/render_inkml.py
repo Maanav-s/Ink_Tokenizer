@@ -1,7 +1,7 @@
 """Naive ink renderer: content.json + layout.json -> page.inkml.
 
 Proof of concept for the "text to ink" and "diagrams to ink" stages in
-docs/synthetic_data.md, without any handwriting model or jitter:
+docs/synthetic_data.md, without any handwriting model:
 
 - Text is drawn with a single-stroke Hershey font, scaled to the layout's
   text_height. Characters the font lacks (only "⊕" on page_0001) are drawn
@@ -11,8 +11,12 @@ docs/synthetic_data.md, without any handwriting model or jitter:
 - Elements are written in layout.json's writing_order. Each stroke is
   sampled at a fixed rate while the pen moves at constant speed, and pen-up
   travel adds time between strokes, so the T channel is a plausible timeline.
+- With --noise > 0, scripts/hand_noise.py adds handwriting-like variation
+  (writer slant, baseline drift, per-glyph jitter, elastic warping, bowed
+  lines, overshoot, variable pen speed). --noise 0 gives clean geometry.
 
-Usage: uv run --extra render python scripts/render_inkml.py [page_dir] [--font NAME]
+Usage: uv run --extra render python scripts/render_inkml.py [page_dir]
+           [--font NAME] [--noise LEVEL] [--seed N] [--out FILE]
 """
 import argparse
 import json
@@ -22,15 +26,17 @@ import xml.etree.ElementTree as ET
 
 from HersheyFonts import HersheyFonts
 
+from hand_noise import Hand
+
 INKML_NS = "http://www.w3.org/2003/InkML"
 XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
 
-PEN_SPEED = 150.0      # mm/s while the pen is down
 SAMPLE_RATE = 100.0    # Hz, typical digitizer rate
 TRAVEL_SPEED = 400.0   # mm/s while the pen is lifted
 PEN_UP_PAUSE = 0.08    # s, minimum gap between strokes
 ELEMENT_PAUSE = 0.4    # s, extra gap between writing_order entries
 JUNCTION_RADIUS = 1.5  # mm
+DIAGRAM_SCALE = 50.0   # mm, reference size passed to the noise model for diagram strokes
 CIRCLE_SEGMENTS = 24
 
 
@@ -45,6 +51,7 @@ class TextRenderer:
         self.font.normalize_rendering(1.0)  # glyph y in [0, 1]: descender bottom to cap
         opts = self.font.render_options
         self.sx, self.sy, self.y0 = opts.scalex, opts.scaley, opts.yofs
+        self.base = opts.yofs + opts.base_line * opts.scaley  # baseline height, fraction of text_height
 
     def _glyph(self, ch):
         glyphs = list(self.font.glyphs_for_text(ch))
@@ -57,34 +64,73 @@ class TextRenderer:
         g = self._glyph("O" if ch == "⊕" else ch)
         return g.char_width * self.sx * h if g else 0.55 * h
 
-    def strokes(self, text, x0, y_bottom, h):
-        """Strokes (lists of (x, y) in page mm) for text whose box bottom is y_bottom."""
-        out, x = [], x0
+    def strokes(self, text, x0, y_bottom, h, hand, wid):
+        """Strokes (lists of (x, y) in page mm) for text whose box bottom is y_bottom.
+
+        Glyphs are built in line coordinates (X right from x0, Y up from the
+        baseline), varied per glyph and per line by `hand`, then mapped to the page.
+        """
+        line = hand.text_line(wid, h, self.width(text, h))
+        w = line["w"]
+        hs = h * w["size"]
+        glyphs, x = [], 0.0
         for ch in text:
-            adv = self._advance(ch, h)
+            adv = self._advance(ch, hs)
             if ch == "⊕":
-                out += oplus(x + adv / 2, y_bottom - 0.68 * h, 0.27 * h)
+                local = oplus(adv / 2, (0.68 - self.base) * hs, 0.27 * hs, hand)
             else:
                 g = self._glyph(ch)
                 if g is None:
                     raise ValueError(f"font has no glyph for {ch!r}")
-                for s in g.strokes:
-                    out.append([(x + (px - g.left_offset) * self.sx * h,
-                                 y_bottom - (self.y0 + py * self.sy) * h) for px, py in s])
-            x += adv
+                local = [[((px - g.left_offset) * self.sx * hs, (self.y0 + py * self.sy - self.base) * hs)
+                          for px, py in st] for st in g.strokes]
+            gp = hand.glyph(hs)
+            cx, cy = adv / 2, 0.3 * hs  # rotate and scale about the glyph's middle
+            c, sn = math.cos(gp["rot"]), math.sin(gp["rot"])
+            for st in local:
+                pts = []
+                for px, py in st:
+                    dx, dy = (px - cx) * gp["scale"], (py - cy) * gp["scale"]
+                    pts.append((x + cx + c * dx - sn * dy, cy + sn * dx + c * dy + gp["dy"]))
+                glyphs.append(pts)
+            x += adv + gp["space"]
+        y_base = y_bottom - self.base * h
+        ct, st_ = math.cos(line["tilt"]), math.sin(line["tilt"])
+        out = []
+        for st in glyphs:
+            pts = []
+            for X, Y in st:
+                X += w["slant"] * Y
+                Y += line["curve"] * X * X
+                X, Y = ct * X - st_ * Y, st_ * X + ct * Y
+                pts.append((x0 + line["dx"] + X, y_base + line["dy"] - Y))
+            out.append(hand.deform(pts, h, wid, "text"))
         return out
 
 
-def oplus(cx, cy, r):
-    return [circle(cx, cy, r), [(cx - r, cy), (cx + r, cy)], [(cx, cy - r), (cx, cy + r)]]
+def oplus(cx, cy, r, hand):
+    """⊕ in y-up glyph coordinates: a circle, then a horizontal and a vertical bar."""
+    # circle() works in y-down page coordinates; mirror it (and reverse it, to
+    # keep the drawing direction) so it still starts at the top here.
+    ring = [(x, 2 * cy - y) for x, y in reversed(circle(cx, cy, r, hand))]
+    return [ring, [(cx - r, cy), (cx + r, cy)], [(cx, cy + r), (cx, cy - r)]]
 
 
 # ------------------------------------------------------------ primitives
 
-def circle(cx, cy, r, n=CIRCLE_SEGMENTS):
-    # Starts at the top and runs counter-clockwise on the page, like most writers.
-    return [(cx - r * math.sin(2 * math.pi * i / n), cy - r * math.cos(2 * math.pi * i / n))
-            for i in range(n + 1)]
+def circle(cx, cy, r, hand, n=CIRCLE_SEGMENTS):
+    """Starts at the top and runs counter-clockwise on the page, like most writers.
+    `hand` makes it slightly elliptical and over- or under-closed."""
+    aspect, axis, overrun, start = hand.circle_params()
+    sweep = 2 * math.pi + overrun
+    m = max(3, round(n * sweep / (2 * math.pi)))
+    ca, sa = math.cos(axis), math.sin(axis)
+    pts = []
+    for i in range(m + 1):
+        a = start + sweep * i / m
+        ex, ey = -r * math.sin(a) * aspect, -r * math.cos(a)
+        pts.append((cx + ca * ex - sa * ey, cy + sa * ex + ca * ey))
+    return pts
 
 
 def bezier(p0, p1, p2, n=16):
@@ -131,14 +177,24 @@ def gate_strokes(kind, bbox, ports):
 
 # --------------------------------------------------------------- page
 
-def element_strokes(eid, content, layout, text):
+def on_polyline(p, polyline, tol=1e-6):
+    for a, b in zip(polyline, polyline[1:]):
+        L = math.dist(a, b)
+        if L and abs(math.dist(a, p) + math.dist(p, b) - L) < tol:
+            return True
+    return False
+
+
+def element_strokes(eid, content, layout, text, hand):
     """Strokes for one writing_order entry, in the order they are drawn."""
     els = layout["elements"]
+    wid = writer_of(eid, layout)
+    lines = lambda pls: [hand.deform(hand.line(pl), DIAGRAM_SCALE, wid, "line") for pl in pls]
     if eid in els:  # text or math line
         cel = content[eid]
         s = cel.get("written", cel.get("text"))
         x0, _, _, y1 = els[eid]["bbox"]
-        return text.strokes(s, x0, y1, els[eid]["text_height"])
+        return text.strokes(s, x0, y1, els[eid]["text_height"], hand, wid)
 
     container, _, _ = eid.partition(".")
     if container in els and eid in els[container].get("cells", {}):
@@ -148,9 +204,9 @@ def element_strokes(eid, content, layout, text):
         h = tt["text_height"]
         tx0, _, tx1, ty1 = cell["text_bbox"]
         x = (tx0 + tx1) / 2 - text.width(s, h) / 2
-        return text.strokes(s, x, ty1, h)
+        return text.strokes(s, x, ty1, h, hand, wid)
     if container in els and eid in els[container].get("rules", {}):
-        return [els[container]["rules"][eid]["polyline"]]
+        return lines([els[container]["rules"][eid]["polyline"]])
 
     for dia in (e for e in els.values() if "components" in e):
         if eid in dia["components"]:
@@ -159,20 +215,33 @@ def element_strokes(eid, content, layout, text):
                 lx0, _, _, ly1 = comp["label_bbox"]
                 (px, py), = comp["ports"].values()
                 r = (comp["bbox"][2] - comp["bbox"][0]) / 2
-                return text.strokes(ccomp["label"], lx0, ly1, comp["label_text_height"]) + [circle(px, py, r)]
-            return gate_strokes(ccomp["type"], comp["bbox"], comp["ports"])
+                return (text.strokes(ccomp["label"], lx0, ly1, comp["label_text_height"], hand, wid)
+                        + [hand.deform(circle(px, py, r, hand), r * 4, wid, "text")])
+            return lines(gate_strokes(ccomp["type"], comp["bbox"], comp["ports"]))
         if eid in dia["wires"]:
-            strokes = [dia["wires"][eid]["polyline"]]
-            # A junction dot goes in with the wire that branches off it.
+            pl = [tuple(p) for p in dia["wires"][eid]["polyline"]]
+            # Wires are stored point to point, so a fan-out branch repeats its
+            # net's trunk. A writer draws the trunk once: if an earlier wire of the
+            # same net already passes through one of this wire's junctions, the
+            # stroke starts there, and the junction dot goes in with it.
+            net = content[eid]["net"]
+            earlier = layout["writing_order"][:layout["writing_order"].index(eid)]
+            drawn = [dia["wires"][w]["polyline"] for w in earlier
+                     if w in dia["wires"] and content[w]["net"] == net]
+            dots = []
             for j in dia["junctions"]:
-                pl = dia["wires"][eid]["polyline"]
-                if content[eid]["net"] == j["net"] and list(j["point"]) in [list(p) for p in pl[1:-1]]:
-                    strokes.append(circle(*j["point"], JUNCTION_RADIUS, n=8))
+                jp = tuple(j["point"])
+                if j["net"] == net and jp in pl[1:-1] and any(on_polyline(jp, d) for d in drawn):
+                    pl = pl[pl.index(jp):]
+                    dots = [jp]
+            strokes = lines([pl])
+            for jp in dots:
+                strokes.append(circle(*strokes[0][0], JUNCTION_RADIUS, hand, n=8))
             return strokes
         if eid in dia["labels"]:
             lab = dia["labels"][eid]
             x0, _, _, y1 = lab["bbox"]
-            return text.strokes(content[eid]["text"], x0, y1, lab["text_height"])
+            return text.strokes(content[eid]["text"], x0, y1, lab["text_height"], hand, wid)
     raise KeyError(f"no layout for {eid}")
 
 
@@ -203,29 +272,12 @@ def writer_of(eid, layout):
     raise KeyError(eid)
 
 
-def sample_stroke(points, t0):
-    """Constant-speed resampling at SAMPLE_RATE. Returns [(x, y, t)] and end time."""
-    seg = [math.dist(a, b) for a, b in zip(points, points[1:])]
-    total = sum(seg)
-    step = PEN_SPEED / SAMPLE_RATE
-    n = max(1, math.ceil(total / step))
-    out, i, acc = [], 0, 0.0
-    for k in range(n + 1):
-        d = min(total, k * total / n)
-        while i < len(seg) - 1 and acc + seg[i] < d:
-            acc += seg[i]
-            i += 1
-        f = 0.0 if not seg or seg[i] == 0 else (d - acc) / seg[i]
-        a, b = points[i], points[min(i + 1, len(points) - 1)]
-        out.append((a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1]), t0 + k * (total / n) / PEN_SPEED))
-    return out, out[-1][2]
-
-
-def render(page_dir, font):
+def render(page_dir, font, noise, seed, out):
     content = json.load(open(os.path.join(page_dir, "content.json")))
     layout = json.load(open(os.path.join(page_dir, "layout.json")))
     cidx = index_content(content)
     text = TextRenderer(font)
+    hand = Hand(seed, noise)
 
     ET.register_namespace("", INKML_NS)
     q = lambda tag: f"{{{INKML_NS}}}{tag}"
@@ -238,24 +290,25 @@ def render(page_dir, font):
     page = layout["page"]
     for k, v in (("page_id", layout["page_id"]), ("page_width_mm", page["width"]),
                  ("page_height_mm", page["height"]), ("y_axis", page["y_axis"]),
-                 ("generator", f"scripts/render_inkml.py hershey:{font}")):
+                 ("generator", f"scripts/render_inkml.py hershey:{font}"),
+                 ("noise_level", noise), ("noise_seed", seed)):
         a = ET.SubElement(ink, q("annotation"), {"type": k})
         a.text = str(v)
 
     traces, groups, t, pen = [], [], 0.0, None
     for eid in layout["writing_order"]:
-        refs = []
-        for stroke in element_strokes(eid, cidx, layout, text):
+        refs, wid = [], writer_of(eid, layout)
+        for stroke in element_strokes(eid, cidx, layout, text, hand):
             stroke = [tuple(p) for p in stroke]
             if pen is not None:
-                t += PEN_UP_PAUSE + math.dist(pen, stroke[0]) / TRAVEL_SPEED
-            pts, t = sample_stroke(stroke, t)
+                t += hand.pause(PEN_UP_PAUSE) + math.dist(pen, stroke[0]) / TRAVEL_SPEED
+            pts, t = hand.time_stroke(stroke, t, wid, SAMPLE_RATE)
             pen = stroke[-1]
             tid = f"t{len(traces)}"
             traces.append((tid, pts))
             refs.append(tid)
-        groups.append((eid, writer_of(eid, layout), refs))
-        t += ELEMENT_PAUSE
+        groups.append((eid, wid, refs))
+        t += hand.pause(ELEMENT_PAUSE)
 
     for tid, pts in traces:
         el = ET.SubElement(ink, q("trace"), {XML_ID: tid, "contextRef": "#ctx0"})
@@ -269,7 +322,7 @@ def render(page_dir, font):
             ET.SubElement(g, q("traceView"), {"traceDataRef": f"#{tid}"})
 
     ET.indent(ink)
-    out = os.path.join(page_dir, "page.inkml")
+    out = out or os.path.join(page_dir, "page.inkml" if noise == 0 else f"page_noise{noise:g}_seed{seed}.inkml")
     ET.ElementTree(ink).write(out, encoding="utf-8", xml_declaration=True)
     n_pts = sum(len(p) for _, p in traces)
     print(f"wrote {out}: {len(groups)} elements, {len(traces)} traces, {n_pts} points, {t:.1f} s of writing")
@@ -280,5 +333,9 @@ if __name__ == "__main__":
     ap.add_argument("page_dir", nargs="?", default=os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "..", "artifacts", "page_0001"))
     ap.add_argument("--font", default="futural", help="Hershey font name (default: futural)")
+    ap.add_argument("--noise", type=float, default=0.0,
+                    help="handwriting variation level: 0 = clean geometry, 1 = default amount")
+    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--out", help="output path (default: page.inkml, or page_noise<L>_seed<N>.inkml)")
     args = ap.parse_args()
-    render(args.page_dir, args.font)
+    render(args.page_dir, args.font, args.noise, args.seed, args.out)
