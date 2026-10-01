@@ -18,8 +18,8 @@ checks above.
 
 `page.inkml` is the page rendered as clean ink by `scripts/render_inkml.py`.
 `renders/<font>_noise<level>_seed<seed>.inkml` are the same page with
-handwriting-like variation, one per Hershey font (`futural`, `scripts`,
-`cursive`, `timesi`), all at noise level 0.75 with seed 0. Each `.png` is its
+handwriting-like variation, one per font in the batch pool (see
+`fonts/README.md`), all at noise level 0.6 with seed 0. Each `.png` is its
 InkML rasterized by `scripts/inkml_to_png.py` for inspection. See "Rendered
 ink" below.
 
@@ -38,7 +38,7 @@ everything by stable `id`s.
 
 Pages 2–4 were written by LLM subagents. Each generator asserts its own
 content and layout checks before writing. `renders/` in each page holds the
-batch renders (8 fonts at noise 0.75, seed 0) from `scripts/render_batch.py`.
+batch renders (6 fonts at noise 0.6, seed 0) from `scripts/render_batch.py`.
 
 ## content.json (`ink_tokenizer.synthetic_page.content/v0`)
 
@@ -175,8 +175,8 @@ Because allographs are seeded by the seed, a different seed means a
 different writer, not just a different draw for the same writer. Level 1 is
 deliberately messy: an occasional character becomes ambiguous (a "0" that
 reads as "d", a "t" that reads as "l"), which is a realistic recognition
-challenge. The samples use 0.75, between that and the earlier, milder
-version. Level 0 reproduces the clean geometry and constant 150 mm/s pen
+challenge. The batch renders use 0.6, which is close to the first, milder
+version of the noise; 0.75 was still judged slightly too aggressive. Level 0 reproduces the clean geometry and constant 150 mm/s pen
 speed. The same seed and level always give the same file.
 
 **Fonts** (`--font`): several Hershey names share glyph data. `futural`,

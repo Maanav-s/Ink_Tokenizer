@@ -1,7 +1,7 @@
 """Render pages in several fonts and seeds, InkML plus PNG previews.
 
 Usage: uv run --extra render python scripts/render_batch.py [page_dir ...]
-           [--fonts F1,F2,...] [--seeds 0,1] [--noise 0.75] [--no-png]
+           [--fonts F1,F2,...] [--seeds 0,1] [--noise 0.6] [--no-png]
 
 With no page directories, every artifacts/page_*/ that has a layout.json is
 rendered. Output goes to <page_dir>/renders/<font>_noise<L>_seed<N>.inkml
@@ -17,14 +17,17 @@ import inkml_to_png  # noqa: E402
 import render_inkml  # noqa: E402
 
 DEFAULT_FONTS = ["futural", "cursive", "EMSReadability", "EMSReadabilityItalic",
-                 "EMSTech", "EMSNixish", "EMSAllure", "EMSFelix"]
+                 "EMSTech", "EMSAllure"]
+# Noise level for batch renders. 0.6 is close to the first, milder noise
+# version; 0.75 and 1.0 were judged too aggressive.
+DEFAULT_NOISE = 0.6
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("pages", nargs="*")
     ap.add_argument("--fonts", default=",".join(DEFAULT_FONTS))
     ap.add_argument("--seeds", default="0")
-    ap.add_argument("--noise", type=float, default=0.75)
+    ap.add_argument("--noise", type=float, default=DEFAULT_NOISE)
     ap.add_argument("--no-png", action="store_true")
     a = ap.parse_args()
     root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "artifacts")

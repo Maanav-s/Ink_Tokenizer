@@ -19,9 +19,9 @@ Hershey `futural` font's. Text then has the same capital size for a given
 |---|---|---|
 | EMSReadability, EMSReadabilityItalic | clean print | yes |
 | EMSTech | technical print | yes |
-| EMSNixish | rounded print, wide | yes |
+| EMSNixish | rounded print, wide | no (did not look human) |
 | EMSAllure | connected script | yes |
-| EMSFelix | casual print | yes |
+| EMSFelix | casual print | no (did not look human) |
 | EMSNixishItalic | rounded print, italic | no (similar to EMSNixish) |
 | EMSElfin | narrow | no (digits are tiny) |
 | EMSOsmotron | display | no (tall lines collide) |
