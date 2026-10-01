@@ -1,0 +1,1115 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.layout/v0",
+  "page_id": "page_0003",
+  "unit": "mm",
+  "page": {
+    "width": 1200,
+    "height": 800,
+    "origin": "top-left",
+    "y_axis": "down",
+    "surface": "whiteboard"
+  },
+  "writers": [
+    {
+      "id": "writer_0",
+      "style": null
+    }
+  ],
+  "text_metrics": {
+    "char_advance_per_height": 0.55,
+    "note": "bboxes sized from measured Hershey advances (max of futural, cursive, scripts) +5% and +0.4 h noise margin; renderer may refit"
+  },
+  "elements": {
+    "title": {
+      "bbox": [
+        40,
+        25,
+        738.6,
+        53
+      ],
+      "text_height": 28,
+      "writer": "writer_0"
+    },
+    "meta": {
+      "bbox": [
+        40,
+        69,
+        417.2,
+        86
+      ],
+      "text_height": 17,
+      "writer": "writer_0"
+    },
+    "h_agenda": {
+      "bbox": [
+        40,
+        100,
+        141.7,
+        122
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "ag_1": {
+      "bbox": [
+        40,
+        136,
+        313.9,
+        154
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "ag_2": {
+      "bbox": [
+        40,
+        169,
+        359.8,
+        187
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "ag_3": {
+      "bbox": [
+        40,
+        202,
+        302.0,
+        220
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "ag_4": {
+      "bbox": [
+        40,
+        235,
+        348.7,
+        253
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "sec_agenda": {
+      "bbox": [
+        35,
+        95,
+        364.8,
+        258
+      ],
+      "writer": "writer_0"
+    },
+    "h_dec": {
+      "bbox": [
+        40,
+        275,
+        169.4,
+        297
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "dec_1": {
+      "bbox": [
+        40,
+        311,
+        347.7,
+        329
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "dec_1a": {
+      "bbox": [
+        70,
+        348,
+        391.9,
+        364
+      ],
+      "text_height": 16,
+      "writer": "writer_0"
+    },
+    "dec_1b": {
+      "bbox": [
+        70,
+        379,
+        346.7,
+        395
+      ],
+      "text_height": 16,
+      "writer": "writer_0"
+    },
+    "dec_2": {
+      "bbox": [
+        40,
+        410,
+        403.5,
+        428
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "dec_3": {
+      "bbox": [
+        40,
+        443,
+        415.7,
+        461
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "sec_decisions": {
+      "bbox": [
+        35,
+        270,
+        420.7,
+        466
+      ],
+      "writer": "writer_0"
+    },
+    "h_oq": {
+      "bbox": [
+        640,
+        100,
+        849.5,
+        122
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "oq_1": {
+      "bbox": [
+        640,
+        136,
+        950.4,
+        154
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "oq_1a": {
+      "bbox": [
+        670,
+        169,
+        989.0,
+        185
+      ],
+      "text_height": 16,
+      "writer": "writer_0"
+    },
+    "oq_2": {
+      "bbox": [
+        640,
+        200,
+        949.4,
+        218
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "oq_2a": {
+      "bbox": [
+        670,
+        233,
+        966.0,
+        249
+      ],
+      "text_height": 16,
+      "writer": "writer_0"
+    },
+    "oq_3": {
+      "bbox": [
+        640,
+        264,
+        934.7,
+        282
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "sec_questions": {
+      "bbox": [
+        635,
+        95,
+        994.0,
+        287
+      ],
+      "writer": "writer_0"
+    },
+    "h_risk": {
+      "bbox": [
+        640,
+        305,
+        715.3,
+        327
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "rk_1": {
+      "bbox": [
+        640,
+        341,
+        937.1,
+        359
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "rk_1a": {
+      "bbox": [
+        670,
+        374,
+        922.7,
+        390
+      ],
+      "text_height": 16,
+      "writer": "writer_0"
+    },
+    "rk_1b": {
+      "bbox": [
+        670,
+        405,
+        901.9,
+        421
+      ],
+      "text_height": 16,
+      "writer": "writer_0"
+    },
+    "rk_2": {
+      "bbox": [
+        640,
+        436,
+        949.2,
+        454
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "rk_3": {
+      "bbox": [
+        640,
+        469,
+        978.3,
+        487
+      ],
+      "text_height": 18,
+      "writer": "writer_0"
+    },
+    "sec_risks": {
+      "bbox": [
+        635,
+        300,
+        983.3,
+        492
+      ],
+      "writer": "writer_0"
+    },
+    "h_act": {
+      "bbox": [
+        40,
+        482,
+        211.0,
+        504
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "act": {
+      "bbox": [
+        35,
+        512,
+        520,
+        732
+      ],
+      "column_x": [
+        40,
+        110,
+        420,
+        515
+      ],
+      "row_y": [
+        517,
+        552,
+        587,
+        622,
+        657,
+        692,
+        727
+      ],
+      "text_height": 18,
+      "cells": {
+        "act.h0": {
+          "cell_box": [
+            40,
+            517,
+            110,
+            552
+          ],
+          "text_bbox": [
+            51.1,
+            525.5,
+            98.9,
+            543.5
+          ],
+          "row": "header",
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "act.h1": {
+          "cell_box": [
+            110,
+            517,
+            420,
+            552
+          ],
+          "text_bbox": [
+            116,
+            525.5,
+            167.2,
+            543.5
+          ],
+          "row": "header",
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "act.h2": {
+          "cell_box": [
+            420,
+            517,
+            515,
+            552
+          ],
+          "text_bbox": [
+            444.9,
+            525.5,
+            490.1,
+            543.5
+          ],
+          "row": "header",
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "act.r0c0": {
+          "cell_box": [
+            40,
+            552,
+            110,
+            587
+          ],
+          "text_bbox": [
+            54.8,
+            560.5,
+            95.2,
+            578.5
+          ],
+          "row": 0,
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "act.r0c1": {
+          "cell_box": [
+            110,
+            552,
+            420,
+            587
+          ],
+          "text_bbox": [
+            116,
+            560.5,
+            340.7,
+            578.5
+          ],
+          "row": 0,
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "act.r0c2": {
+          "cell_box": [
+            420,
+            552,
+            515,
+            587
+          ],
+          "text_bbox": [
+            436.4,
+            560.5,
+            498.6,
+            578.5
+          ],
+          "row": 0,
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "act.r1c0": {
+          "cell_box": [
+            40,
+            587,
+            110,
+            622
+          ],
+          "text_bbox": [
+            58.7,
+            595.5,
+            91.3,
+            613.5
+          ],
+          "row": 1,
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "act.r1c1": {
+          "cell_box": [
+            110,
+            587,
+            420,
+            622
+          ],
+          "text_bbox": [
+            116,
+            595.5,
+            380.6,
+            613.5
+          ],
+          "row": 1,
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "act.r1c2": {
+          "cell_box": [
+            420,
+            587,
+            515,
+            622
+          ],
+          "text_bbox": [
+            436.4,
+            595.5,
+            498.6,
+            613.5
+          ],
+          "row": 1,
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "act.r2c0": {
+          "cell_box": [
+            40,
+            622,
+            110,
+            657
+          ],
+          "text_bbox": [
+            58.5,
+            630.5,
+            91.5,
+            648.5
+          ],
+          "row": 2,
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "act.r2c1": {
+          "cell_box": [
+            110,
+            622,
+            420,
+            657
+          ],
+          "text_bbox": [
+            116,
+            630.5,
+            354.5,
+            648.5
+          ],
+          "row": 2,
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "act.r2c2": {
+          "cell_box": [
+            420,
+            622,
+            515,
+            657
+          ],
+          "text_bbox": [
+            436.4,
+            630.5,
+            498.6,
+            648.5
+          ],
+          "row": 2,
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "act.r3c0": {
+          "cell_box": [
+            40,
+            657,
+            110,
+            692
+          ],
+          "text_bbox": [
+            57.0,
+            665.5,
+            93.0,
+            683.5
+          ],
+          "row": 3,
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "act.r3c1": {
+          "cell_box": [
+            110,
+            657,
+            420,
+            692
+          ],
+          "text_bbox": [
+            116,
+            665.5,
+            383.1,
+            683.5
+          ],
+          "row": 3,
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "act.r3c2": {
+          "cell_box": [
+            420,
+            657,
+            515,
+            692
+          ],
+          "text_bbox": [
+            436.4,
+            665.5,
+            498.6,
+            683.5
+          ],
+          "row": 3,
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "act.r4c0": {
+          "cell_box": [
+            40,
+            692,
+            110,
+            727
+          ],
+          "text_bbox": [
+            60.2,
+            700.5,
+            89.8,
+            718.5
+          ],
+          "row": 4,
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "act.r4c1": {
+          "cell_box": [
+            110,
+            692,
+            420,
+            727
+          ],
+          "text_bbox": [
+            116,
+            700.5,
+            299.3,
+            718.5
+          ],
+          "row": 4,
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "act.r4c2": {
+          "cell_box": [
+            420,
+            692,
+            515,
+            727
+          ],
+          "text_bbox": [
+            436.4,
+            700.5,
+            498.6,
+            718.5
+          ],
+          "row": 4,
+          "col": 2,
+          "writer": "writer_0"
+        }
+      },
+      "rules": {
+        "act.rule_header": {
+          "polyline": [
+            [
+              36,
+              552
+            ],
+            [
+              519,
+              552
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "act.rule_c0": {
+          "polyline": [
+            [
+              110,
+              514
+            ],
+            [
+              110,
+              730
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "act.rule_c1": {
+          "polyline": [
+            [
+              420,
+              514
+            ],
+            [
+              420,
+              730
+            ]
+          ],
+          "writer": "writer_0"
+        }
+      },
+      "row_boxes": {
+        "act.r0": [
+          40,
+          552,
+          515,
+          587
+        ],
+        "act.r1": [
+          40,
+          587,
+          515,
+          622
+        ],
+        "act.r2": [
+          40,
+          622,
+          515,
+          657
+        ],
+        "act.r3": [
+          40,
+          657,
+          515,
+          692
+        ],
+        "act.r4": [
+          40,
+          692,
+          515,
+          727
+        ]
+      },
+      "writer": "writer_0"
+    },
+    "h_sched": {
+      "bbox": [
+        640,
+        510,
+        764.3,
+        532
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "sched": {
+      "bbox": [
+        635,
+        540,
+        1145,
+        620
+      ],
+      "column_x": [
+        640,
+        765,
+        890,
+        1015,
+        1140
+      ],
+      "row_y": [
+        545,
+        580,
+        615
+      ],
+      "text_height": 18,
+      "cells": {
+        "sched.h0": {
+          "cell_box": [
+            640,
+            545,
+            765,
+            580
+          ],
+          "text_bbox": [
+            671.4,
+            553.5,
+            733.6,
+            571.5
+          ],
+          "row": "header",
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "sched.h1": {
+          "cell_box": [
+            765,
+            545,
+            890,
+            580
+          ],
+          "text_bbox": [
+            796.4,
+            553.5,
+            858.6,
+            571.5
+          ],
+          "row": "header",
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "sched.h2": {
+          "cell_box": [
+            890,
+            545,
+            1015,
+            580
+          ],
+          "text_bbox": [
+            921.4,
+            553.5,
+            983.6,
+            571.5
+          ],
+          "row": "header",
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "sched.h3": {
+          "cell_box": [
+            1015,
+            545,
+            1140,
+            580
+          ],
+          "text_bbox": [
+            1046.4,
+            553.5,
+            1108.6,
+            571.5
+          ],
+          "row": "header",
+          "col": 3,
+          "writer": "writer_0"
+        },
+        "sched.r0c0": {
+          "cell_box": [
+            640,
+            580,
+            765,
+            615
+          ],
+          "text_bbox": [
+            664.2,
+            588.5,
+            740.8,
+            606.5
+          ],
+          "row": 0,
+          "col": 0,
+          "writer": "writer_0"
+        },
+        "sched.r0c1": {
+          "cell_box": [
+            765,
+            580,
+            890,
+            615
+          ],
+          "text_bbox": [
+            792.3,
+            588.5,
+            862.7,
+            606.5
+          ],
+          "row": 0,
+          "col": 1,
+          "writer": "writer_0"
+        },
+        "sched.r0c2": {
+          "cell_box": [
+            890,
+            580,
+            1015,
+            615
+          ],
+          "text_bbox": [
+            932.0,
+            588.5,
+            973.0,
+            606.5
+          ],
+          "row": 0,
+          "col": 2,
+          "writer": "writer_0"
+        },
+        "sched.r0c3": {
+          "cell_box": [
+            1015,
+            580,
+            1140,
+            615
+          ],
+          "text_bbox": [
+            1025.8,
+            588.5,
+            1129.2,
+            606.5
+          ],
+          "row": 0,
+          "col": 3,
+          "writer": "writer_0"
+        }
+      },
+      "rules": {
+        "sched.rule_header": {
+          "polyline": [
+            [
+              636,
+              580
+            ],
+            [
+              1144,
+              580
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "sched.rule_c0": {
+          "polyline": [
+            [
+              765,
+              542
+            ],
+            [
+              765,
+              618
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "sched.rule_c1": {
+          "polyline": [
+            [
+              890,
+              542
+            ],
+            [
+              890,
+              618
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "sched.rule_c2": {
+          "polyline": [
+            [
+              1015,
+              542
+            ],
+            [
+              1015,
+              618
+            ]
+          ],
+          "writer": "writer_0"
+        }
+      },
+      "row_boxes": {
+        "sched.r0": [
+          640,
+          580,
+          1140,
+          615
+        ]
+      },
+      "writer": "writer_0"
+    },
+    "note_lead": {
+      "bbox": [
+        640,
+        652,
+        946.0,
+        669
+      ],
+      "text_height": 17,
+      "writer": "writer_0"
+    },
+    "note_next": {
+      "bbox": [
+        640,
+        735,
+        874.0,
+        752
+      ],
+      "text_height": 17,
+      "writer": "writer_0"
+    },
+    "sk": {
+      "bbox": [
+        32,
+        123,
+        637,
+        712.5
+      ],
+      "items": {
+        "sk.ul_agenda": {
+          "kind": "polyline",
+          "points": [
+            [
+              40,
+              126
+            ],
+            [
+              141.7,
+              126
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "sk.ul_act": {
+          "kind": "polyline",
+          "points": [
+            [
+              40,
+              508
+            ],
+            [
+              211.0,
+              508
+            ]
+          ],
+          "writer": "writer_0"
+        },
+        "sk.box_dec_1": {
+          "kind": "rect",
+          "bbox": [
+            35,
+            306,
+            352.7,
+            334
+          ],
+          "corner_radius": 4,
+          "writer": "writer_0"
+        },
+        "sk.arrow_lead": {
+          "kind": "arrow",
+          "points": [
+            [
+              634,
+              660.5
+            ],
+            [
+              555,
+              701.5
+            ],
+            [
+              523,
+              709.5
+            ]
+          ],
+          "head": 10,
+          "writer": "writer_0"
+        }
+      },
+      "writer": "writer_0"
+    }
+  },
+  "writing_order": [
+    "title",
+    "meta",
+    "h_agenda",
+    "sk.ul_agenda",
+    "ag_1",
+    "ag_2",
+    "ag_3",
+    "ag_4",
+    "h_dec",
+    "dec_1",
+    "dec_1a",
+    "dec_1b",
+    "dec_2",
+    "dec_3",
+    "h_oq",
+    "oq_1",
+    "oq_1a",
+    "oq_2",
+    "oq_2a",
+    "oq_3",
+    "h_risk",
+    "rk_1",
+    "rk_1a",
+    "rk_1b",
+    "rk_2",
+    "rk_3",
+    "h_act",
+    "sk.ul_act",
+    "act.h0",
+    "act.h1",
+    "act.h2",
+    "act.rule_header",
+    "act.rule_c0",
+    "act.rule_c1",
+    "act.r0c0",
+    "act.r0c1",
+    "act.r0c2",
+    "act.r1c0",
+    "act.r1c1",
+    "act.r1c2",
+    "act.r2c0",
+    "act.r2c1",
+    "act.r2c2",
+    "act.r3c0",
+    "act.r3c1",
+    "act.r3c2",
+    "act.r4c0",
+    "act.r4c1",
+    "act.r4c2",
+    "h_sched",
+    "sched.h0",
+    "sched.h1",
+    "sched.h2",
+    "sched.h3",
+    "sched.rule_header",
+    "sched.rule_c0",
+    "sched.rule_c1",
+    "sched.rule_c2",
+    "sched.r0c0",
+    "sched.r0c1",
+    "sched.r0c2",
+    "sched.r0c3",
+    "sk.box_dec_1",
+    "note_lead",
+    "sk.arrow_lead",
+    "note_next"
+  ]
+}
