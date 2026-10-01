@@ -1,0 +1,687 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.layout/v0",
+  "page_id": "page_0002",
+  "unit": "mm",
+  "page": {
+    "width": 1200,
+    "height": 800,
+    "origin": "top-left",
+    "y_axis": "down",
+    "surface": "whiteboard"
+  },
+  "writers": [
+    {
+      "id": "writer_0",
+      "style": null
+    }
+  ],
+  "text_metrics": {
+    "char_advance_per_height": 0.68,
+    "note": "bboxes are layout estimates sized from the futural font's measured advance; renderer may refit"
+  },
+  "elements": {
+    "title": {
+      "bbox": [
+        40,
+        22,
+        754.0,
+        52
+      ],
+      "text_height": 30,
+      "writer": "writer_0"
+    },
+    "note_1": {
+      "bbox": [
+        650,
+        90,
+        1053.9,
+        112
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "note_2": {
+      "bbox": [
+        650,
+        130,
+        1053.9,
+        152
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "note_3": {
+      "bbox": [
+        650,
+        170,
+        994.1,
+        192
+      ],
+      "text_height": 22,
+      "writer": "writer_0"
+    },
+    "fc_1": {
+      "bbox": [
+        45.0,
+        82.0,
+        1110.0,
+        750.0
+      ],
+      "items": {
+        "fc_1.n1.box": {
+          "kind": "rect",
+          "bbox": [
+            90.0,
+            87.0,
+            280.0,
+            133.0
+          ],
+          "corner_radius": 23,
+          "writer": "writer_0"
+        },
+        "fc_1.n1.text": {
+          "kind": "text",
+          "text": "push to main",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            103.4,
+            99.0,
+            266.6,
+            119.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n2.box": {
+          "kind": "polyline",
+          "points": [
+            [
+              72.0,
+              180.0
+            ],
+            [
+              320.0,
+              180.0
+            ],
+            [
+              298.0,
+              230.0
+            ],
+            [
+              50.0,
+              230.0
+            ]
+          ],
+          "closed": true,
+          "writer": "writer_0"
+        },
+        "fc_1.n2.text": {
+          "kind": "text",
+          "text": "read deploy.yaml",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            76.2,
+            194.0,
+            293.8,
+            214.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n3.box": {
+          "kind": "rect",
+          "bbox": [
+            50.0,
+            280.0,
+            320.0,
+            330.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n3.text": {
+          "kind": "text",
+          "text": "build + unit tests",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            62.6,
+            294.0,
+            307.4,
+            314.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n4.box": {
+          "kind": "diamond",
+          "bbox": [
+            75.0,
+            385.0,
+            295.0,
+            475.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n4.text": {
+          "kind": "text",
+          "text": "tests pass?",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            110.2,
+            419.0,
+            259.8,
+            439.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n5.box": {
+          "kind": "rect",
+          "bbox": [
+            370.0,
+            405.0,
+            630.0,
+            455.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n5.text": {
+          "kind": "text",
+          "text": "deploy canary 10%",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            384.4,
+            419.0,
+            615.6,
+            439.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n6.box": {
+          "kind": "rect",
+          "bbox": [
+            410.0,
+            545.0,
+            590.0,
+            595.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n6.text": {
+          "kind": "text",
+          "text": "wait 5 min",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            432.0,
+            559.0,
+            568.0,
+            579.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n7.box": {
+          "kind": "diamond",
+          "bbox": [
+            400.0,
+            655.0,
+            600.0,
+            745.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n7.text": {
+          "kind": "text",
+          "text": "err < 1%?",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            438.8,
+            689.0,
+            561.2,
+            709.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n8.box": {
+          "kind": "diamond",
+          "bbox": [
+            690.0,
+            655.0,
+            890.0,
+            745.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n8.text": {
+          "kind": "text",
+          "text": "at 100%?",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            735.6,
+            689.0,
+            844.4,
+            709.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n9.box": {
+          "kind": "rect",
+          "bbox": [
+            680.0,
+            545.0,
+            900.0,
+            595.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n9.text": {
+          "kind": "text",
+          "text": "traffic += 30%",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            694.8,
+            559.0,
+            885.2,
+            579.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n10.box": {
+          "kind": "rect",
+          "bbox": [
+            105.0,
+            675.0,
+            265.0,
+            725.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n10.text": {
+          "kind": "text",
+          "text": "rollback",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            130.6,
+            689.0,
+            239.4,
+            709.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n11.box": {
+          "kind": "rect",
+          "bbox": [
+            85.0,
+            547.0,
+            285.0,
+            593.0
+          ],
+          "corner_radius": 23,
+          "writer": "writer_0"
+        },
+        "fc_1.n11.text": {
+          "kind": "text",
+          "text": "stop + notify",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            96.6,
+            559.0,
+            273.4,
+            579.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.n12.box": {
+          "kind": "rect",
+          "bbox": [
+            975.0,
+            547.0,
+            1105.0,
+            593.0
+          ],
+          "corner_radius": 23,
+          "writer": "writer_0"
+        },
+        "fc_1.n12.text": {
+          "kind": "text",
+          "text": "done",
+          "align": "center",
+          "text_height": 20,
+          "bbox": [
+            1012.8,
+            559.0,
+            1067.2,
+            579.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e1.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              185.0,
+              133.0
+            ],
+            [
+              185.0,
+              180.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e2.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              185.0,
+              230.0
+            ],
+            [
+              185.0,
+              280.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e3.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              185.0,
+              330.0
+            ],
+            [
+              185.0,
+              385.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e4.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              295.0,
+              430.0
+            ],
+            [
+              370.0,
+              430.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e4.label": {
+          "kind": "text",
+          "text": "yes",
+          "text_height": 20,
+          "bbox": [
+            307.0,
+            405.0,
+            347.8,
+            425.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e5.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              185.0,
+              475.0
+            ],
+            [
+              185.0,
+              547.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e5.label": {
+          "kind": "text",
+          "text": "no",
+          "text_height": 20,
+          "bbox": [
+            192.0,
+            483.0,
+            219.2,
+            503.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e6.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              500.0,
+              455.0
+            ],
+            [
+              500.0,
+              545.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e7.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              500.0,
+              595.0
+            ],
+            [
+              500.0,
+              655.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e8.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              600.0,
+              700.0
+            ],
+            [
+              690.0,
+              700.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e8.label": {
+          "kind": "text",
+          "text": "yes",
+          "text_height": 20,
+          "bbox": [
+            612.0,
+            675.0,
+            652.8,
+            695.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e9.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              400.0,
+              700.0
+            ],
+            [
+              265.0,
+              700.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e9.label": {
+          "kind": "text",
+          "text": "no",
+          "text_height": 20,
+          "bbox": [
+            360.8,
+            675.0,
+            388.0,
+            695.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e10.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              890.0,
+              700.0
+            ],
+            [
+              1040,
+              700
+            ],
+            [
+              1040.0,
+              593.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e10.label": {
+          "kind": "text",
+          "text": "yes",
+          "text_height": 20,
+          "bbox": [
+            902.0,
+            675.0,
+            942.8,
+            695.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e11.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              790.0,
+              655.0
+            ],
+            [
+              790.0,
+              595.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e11.label": {
+          "kind": "text",
+          "text": "no",
+          "text_height": 20,
+          "bbox": [
+            797.0,
+            627.0,
+            824.2,
+            647.0
+          ],
+          "writer": "writer_0"
+        },
+        "fc_1.e12.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              680.0,
+              570.0
+            ],
+            [
+              590.0,
+              570.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        },
+        "fc_1.e13.arrow": {
+          "kind": "arrow",
+          "points": [
+            [
+              185.0,
+              675.0
+            ],
+            [
+              185.0,
+              593.0
+            ]
+          ],
+          "head": 8,
+          "writer": "writer_0"
+        }
+      },
+      "writer": "writer_0"
+    }
+  },
+  "writing_order": [
+    "title",
+    "note_1",
+    "fc_1.n1.text",
+    "fc_1.n1.box",
+    "fc_1.e1.arrow",
+    "fc_1.n2.box",
+    "fc_1.n2.text",
+    "fc_1.e2.arrow",
+    "fc_1.n3.box",
+    "fc_1.n3.text",
+    "fc_1.e3.arrow",
+    "fc_1.n4.box",
+    "fc_1.n4.text",
+    "fc_1.e4.arrow",
+    "fc_1.e4.label",
+    "fc_1.n5.box",
+    "fc_1.n5.text",
+    "fc_1.e6.arrow",
+    "fc_1.n6.box",
+    "fc_1.n6.text",
+    "fc_1.e7.arrow",
+    "fc_1.n7.box",
+    "fc_1.n7.text",
+    "fc_1.e8.arrow",
+    "fc_1.e8.label",
+    "fc_1.n8.box",
+    "fc_1.n8.text",
+    "fc_1.e10.arrow",
+    "fc_1.e10.label",
+    "fc_1.n12.text",
+    "fc_1.n12.box",
+    "fc_1.e11.arrow",
+    "fc_1.e11.label",
+    "fc_1.n9.box",
+    "fc_1.n9.text",
+    "fc_1.e12.arrow",
+    "note_2",
+    "fc_1.e5.arrow",
+    "fc_1.e5.label",
+    "fc_1.n11.text",
+    "fc_1.n11.box",
+    "fc_1.e9.arrow",
+    "fc_1.e9.label",
+    "fc_1.n10.box",
+    "fc_1.n10.text",
+    "fc_1.e13.arrow",
+    "note_3"
+  ]
+}
