@@ -105,9 +105,16 @@ structured rather than independent per-point noise:
 - **Writer:** slant, size and pen speed, shared by everything that writer
   writes.
 - **Line:** baseline tilt and curvature, and a small offset.
-- **Glyph:** scale, rotation, baseline jitter and spacing.
+- **Character shape (allograph):** each writer has a persistent version of
+  every character: a smooth warp, an affine distortion (scale, shear,
+  rotation) and stroke-end offsets, drawn once per (seed, writer,
+  character). Every "0" a writer makes shares the same quirks.
+- **Character instance:** each occurrence adds a smaller warp and jitter on
+  top of the allograph, plus baseline offset and spacing, so repeated
+  letters look alike without being identical.
 - **Stroke:**
-  - smooth elastic warping and a slow wobble;
+  - a slow wobble (diagram strokes also get a smooth elastic warp; text gets
+    its warp per character, above);
   - endpoints land off target, with overshoot or stopping short (diagram
     lines tend to overshoot);
   - straight lines bow slightly;
@@ -116,7 +123,11 @@ structured rather than independent per-point noise:
   end and in tight curves (a softened two-thirds power law). Pauses between
   strokes vary randomly.
 
-Level 0 reproduces the clean geometry and constant 150 mm/s pen speed. The
+Because allographs are seeded by the seed, a different seed means a
+different writer, not just a different draw for the same writer. Level 1 is
+deliberately messy: an occasional character becomes ambiguous (a "0" that
+reads as "d", a "t" that reads as "l"), which is a realistic recognition
+challenge. Use a lower level for tidier writing. Level 0 reproduces the clean geometry and constant 150 mm/s pen speed. The
 same seed and level always give the same file.
 
 - `traceFormat` has the channels `X`, `Y` (mm, same frame as layout.json) and

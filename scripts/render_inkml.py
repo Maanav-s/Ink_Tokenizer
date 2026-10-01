@@ -84,16 +84,12 @@ class TextRenderer:
                     raise ValueError(f"font has no glyph for {ch!r}")
                 local = [[((px - g.left_offset) * self.sx * hs, (self.y0 + py * self.sy - self.base) * hs)
                           for px, py in st] for st in g.strokes]
-            gp = hand.glyph(hs)
-            cx, cy = adv / 2, 0.3 * hs  # rotate and scale about the glyph's middle
-            c, sn = math.cos(gp["rot"]), math.sin(gp["rot"])
-            for st in local:
-                pts = []
-                for px, py in st:
-                    dx, dy = (px - cx) * gp["scale"], (py - cy) * gp["scale"]
-                    pts.append((x + cx + c * dx - sn * dy, cy + sn * dx + c * dy + gp["dy"]))
-                glyphs.append(pts)
-            x += adv + gp["space"]
+            # The writer's persistent shape for this character, then this
+            # occurrence's own variation, both about the glyph's middle.
+            inst = hand.glyph(hs)
+            local = hand.shape_glyph(local, [hand.letter(wid, ch), inst], adv / 2, 0.3 * hs, hs)
+            glyphs += [[(x + px, py + inst["dy"]) for px, py in st] for st in local]
+            x += adv + inst["space"]
         y_base = y_bottom - self.base * h
         ct, st_ = math.cos(line["tilt"]), math.sin(line["tilt"])
         out = []

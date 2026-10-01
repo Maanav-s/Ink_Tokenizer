@@ -9,8 +9,13 @@ models it in layers, each smooth and each scaled by one `level` knob
   letter size, pen speed.
 - Line or element: the baseline tilts and curves slightly, and the whole
   element sits a little off its layout position.
-- Character: each glyph varies a little in size, rotation, baseline offset
-  and spacing.
+- Character shape (allograph): each writer has a persistent version of every
+  character, i.e. a warp, an affine distortion and stroke-end offsets drawn
+  once per (writer, character). Every "0" a writer makes shares the same
+  quirks.
+- Character instance: each occurrence adds a smaller warp of its own, plus
+  scale, rotation, baseline and spacing jitter, so repeated letters look
+  alike without being identical.
 - Stroke:
   - a smooth random displacement field warps shapes ("elastic distortion",
     Simard et al. 2003), applied to point coordinates rather than pixels;
@@ -95,6 +100,7 @@ class Hand:
         self.seed, self.level = seed, level
         self.rng = random.Random(seed)
         self.writers = {}
+        self.letters = {}
 
     def g(self, mu, sd):
         """Gaussian scaled toward its mean by the noise level."""
@@ -107,7 +113,7 @@ class Hand:
             r = random.Random(zlib.crc32(f"{self.seed}:{wid}".encode()))
             lv = self.level
             self.writers[wid] = {
-                "slant": lv * r.gauss(0.12, 0.08),         # shear, + leans right
+                "slant": lv * r.gauss(0.12, 0.12),         # shear, + leans right
                 "size": 1 + lv * r.gauss(0, 0.04),
                 "speed": 150.0 * math.exp(lv * r.gauss(0, 0.2)),  # mm/s
                 "tremor": lv * r.uniform(0.04, 0.12),      # mm
@@ -119,16 +125,78 @@ class Hand:
     def text_line(self, wid, h, length):
         """Per-line placement: offset, baseline tilt and curvature."""
         return {
-            "dx": self.g(0, 0.04 * h), "dy": self.g(0, 0.04 * h),
-            "tilt": self.g(0, math.radians(1.2)),
-            "curve": self.g(0, 0.03 * h) / max(length, h) ** 2,
+            "dx": self.g(0, 0.06 * h), "dy": self.g(0, 0.06 * h),
+            "tilt": self.g(0, math.radians(2.0)),
+            "curve": self.g(0, 0.05 * h) / max(length, h) ** 2,
             "w": self.writer(wid),
         }
 
+    def _shape(self, rng, field_amp, scale_sd, shear_sd, rot_sd, end_sd):
+        lv = self.level
+        g = lambda mu, sd: mu + lv * rng.gauss(0, sd)
+        # The warp's wavelength is longer than a glyph, so it bends a letter
+        # rather than folding it; distortion strain is about field_amp * 2pi / 1.1.
+        return {"field": Field2D(rng, 1.1, lv * field_amp),
+                "sx": g(1, scale_sd), "sy": g(1, scale_sd * 0.75),
+                "shear": g(0, shear_sd), "rot": g(0, rot_sd),
+                "end_sd": lv * end_sd, "ends": [], "rng": rng}
+
+    def letter(self, wid, ch):
+        """A writer's persistent shape for one character (its allograph).
+
+        Seeded by (seed, writer, character) rather than drawn from the page's
+        stream, so it doesn't depend on where the character first occurs.
+        """
+        key = (wid, ch)
+        if key not in self.letters:
+            r = random.Random(zlib.crc32(f"{self.seed}:{wid}:{ch}".encode()))
+            self.letters[key] = self._shape(r, field_amp=0.045, scale_sd=0.09, shear_sd=0.12,
+                                            rot_sd=math.radians(4), end_sd=0.04)
+        return self.letters[key]
+
     def glyph(self, h):
-        """Per-character variation: scale, rotation, baseline jitter, spacing."""
-        return {"scale": self.g(1, 0.06), "rot": self.g(0, math.radians(3)),
-                "dy": self.g(0, 0.03 * h), "space": self.g(0, 0.04 * h)}
+        """One occurrence of a character: a smaller warp and jitter on top of its
+        allograph, plus baseline offset and spacing (dy and space in mm)."""
+        shape = self._shape(self.rng, field_amp=0.02, scale_sd=0.05, shear_sd=0.05,
+                            rot_sd=math.radians(2.5), end_sd=0.02)
+        shape.update(dy=self.g(0, 0.04 * h), space=self.g(0, 0.06 * h))
+        return shape
+
+    @staticmethod
+    def _end_offsets(shape, i):
+        """Start and end offsets for stroke i of a glyph; fixed once drawn."""
+        while len(shape["ends"]) <= i:
+            r, sd = shape["rng"], shape["end_sd"]
+            shape["ends"].append(((r.gauss(0, sd), r.gauss(0, sd)), (r.gauss(0, sd), r.gauss(0, sd))))
+        return shape["ends"][i]
+
+    def shape_glyph(self, strokes, shapes, cx, cy, h):
+        """Apply allograph and instance shapes to one glyph's strokes.
+
+        strokes are in y-up glyph coordinates (mm), and (cx, cy) is the glyph's
+        middle. Each shape is applied in units of the text height h, so the
+        same letter warps the same way at any size.
+        """
+        if self.level == 0:
+            return strokes
+        out = []
+        for i, st in enumerate(strokes):
+            pts = [((x - cx) / h, (y - cy) / h) for x, y in densify(st, 0.03 * h)]
+            n = len(pts) - 1
+            for sh in shapes:
+                (a0, a1), (b0, b1) = self._end_offsets(sh, i)
+                c, sn = math.cos(sh["rot"]), math.sin(sh["rot"])
+                new = []
+                for k, (u, v) in enumerate(pts):
+                    f = k / n if n else 0.0
+                    fu, fv = sh["field"](u, v)
+                    u += fu + (1 - f) * a0 + f * b0
+                    v += fv + (1 - f) * a1 + f * b1
+                    u, v = u * sh["sx"] + sh["shear"] * v, v * sh["sy"]
+                    new.append((c * u - sn * v, sn * u + c * v))
+                pts = new
+            out.append([(cx + u * h, cy + v * h) for u, v in pts])
+        return out
 
     # -------------------------------------------------------------- strokes
 
@@ -147,7 +215,7 @@ class Hand:
 
         # Overshoot or stop short along the tangent at both ends.
         if text:
-            e0, e1 = self.g(0, 0.025 * scale), self.g(0, 0.025 * scale)
+            e0, e1 = self.g(0, 0.04 * scale), self.g(0, 0.04 * scale)
         else:
             e0, e1 = self.g(0.4, 0.8), self.g(0.6, 0.9)  # diagram lines tend to overshoot
         t0, t1 = unit(pts[1], pts[0]), unit(pts[-2], pts[-1])
@@ -166,15 +234,15 @@ class Hand:
         L = s[-1]
 
         # Endpoint error: each end lands off target, blended linearly along the
-        # stroke, so long lines also tilt a little.
-        err = 0.015 * scale if text else 0.7
+        # stroke, so long lines also tilt a little. Text strokes get theirs (and
+        # their warp) per glyph in shape_glyph instead.
+        err = 0.0 if text else 0.7
         a = (self.g(0, err), self.g(0, err))
         b = (self.g(0, err), self.g(0, err))
 
-        field = Field2D(self.rng, 0.9 * scale if text else 60.0,
-                        lv * (0.03 * scale if text else 0.8))
+        field = Field2D(self.rng, 60.0, 0.0 if text else lv * 0.8)
         wobble = Smooth1D(self.rng, 0.6 * scale if text else 25.0,
-                          lv * (0.012 * scale if text else 0.5))
+                          lv * (0.02 * scale if text else 0.5))
         tremor = Smooth1D(self.rng, 2.0, w["tremor"])
         out = []
         for i, ((x, y), si) in enumerate(zip(pts, s)):

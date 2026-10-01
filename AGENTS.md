@@ -91,8 +91,9 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   rasterizes InkML for inspection. Both need `uv sync --extra render`.
 - [scripts/hand_noise.py](scripts/hand_noise.py) — handwriting-like
   variation for the renderer (`--noise`, `--seed`). It is structured across
-  writer, line, glyph and stroke, and models pen speed, rather than adding
-  i.i.d. Gaussian noise.
+  writer, line, per-writer character shape (allograph), character instance
+  and stroke, and models pen speed, rather than adding i.i.d. Gaussian
+  noise.
 - Ink format: **InkML**, with X/Y in mm and T in seconds.
 
 Common commands:
