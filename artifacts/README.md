@@ -16,6 +16,10 @@ Treat it as a sample of the format, not as generator output.
 hard-coded in the script), and `scripts/check_page.py [page_dir]` runs the
 checks above.
 
+`page.inkml` is the page rendered as ink by `scripts/render_inkml.py`, and
+`page.png` is that InkML rasterized by `scripts/inkml_to_png.py` for
+inspection. See "page.inkml" below.
+
 Each page directory holds `content.json` (what is written, the ground truth)
 and `layout.json` (where and in what order it is written). Both files key
 everything by stable `id`s.
@@ -84,3 +88,33 @@ Element types:
 - Completion targets taken from this page must stay structural. Examples
   are the remaining truth-table rows and repeated gate scaffolding (see
   AGENTS.md).
+
+## page.inkml (naive Hershey rendering)
+
+A proof of concept, not training-quality ink. `scripts/render_inkml.py`
+draws text with a single-stroke Hershey font (`futural` by default),
+draws `⊕` as a circle plus a cross, and draws diagrams from plain geometric
+primitives. It adds no jitter and uses no handwriting model.
+
+- `traceFormat` has the channels `X`, `Y` (mm, same frame as layout.json) and
+  `T` (seconds from the first stroke).
+- Elements follow `writing_order`. Strokes are sampled at 100 Hz with a
+  constant pen speed of 150 mm/s. Pen-up travel and a pause between elements
+  add the gaps in `T`.
+- `<annotation>`s on `<ink>` give `page_id`, the page size and the y-axis
+  direction.
+- The top-level `<traceGroup xml:id="elements">` holds one child
+  `<traceGroup>` per `writing_order` entry. Each child has an `element_id`
+  and a `writer` annotation, and `traceView`s that point to its traces.
+  Junction dots are grouped with the wire that branches at them.
+
+Commands (run with `uv sync --extra render` installed):
+
+```bash
+uv run --extra render python scripts/render_inkml.py [page_dir] [--font NAME]
+uv run --extra render python scripts/inkml_to_png.py artifacts/page_0001/page.inkml \
+    [out.png] [--until SECONDS] [--color-groups]
+```
+
+`--until` draws only the ink written up to that time, i.e. an in-progress
+page. `--color-groups` colours each element separately.

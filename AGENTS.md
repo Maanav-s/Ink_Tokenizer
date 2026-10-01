@@ -72,7 +72,8 @@ risks. Most importantly, evaluation must still use real handwriting.
 
 ## Repository State
 
-Early scaffold — Python 3.13, managed with `uv`, no dependencies yet.
+Early scaffold — Python 3.13, managed with `uv`. The only dependencies are
+the optional `render` extra (Hershey-Fonts, Pillow).
 
 - [pyproject.toml](pyproject.toml) — project metadata
 - [main.py](main.py) — placeholder entry point
@@ -85,6 +86,10 @@ Early scaffold — Python 3.13, managed with `uv`, no dependencies yet.
 - [scripts/make_sample_page.py](scripts/make_sample_page.py) and
   [scripts/check_page.py](scripts/check_page.py) — regenerate and validate
   the sample page
+- [scripts/render_inkml.py](scripts/render_inkml.py) — naive layout-to-InkML
+  renderer (Hershey font plus primitives); [scripts/inkml_to_png.py](scripts/inkml_to_png.py)
+  rasterizes InkML for inspection. Both need `uv sync --extra render`.
+- Ink format: **InkML**, with X/Y in mm and T in seconds.
 
 Common commands:
 
