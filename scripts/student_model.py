@@ -15,7 +15,8 @@ onwards, each position predicts:
 - which character the next point draws, as an index 0..U-1 into the text,
   or U for "the line is finished". This head gives every sampled point a
   character label, which the page renderer needs, and decides when to stop.
-  It is trained on the teacher's attention alignment.
+  It is trained on the teacher's attention alignment. Points without an
+  alignment (real ink, chars = -1) only train "not finished yet".
 
 Text characters get a position embedding so the index head can count.
 """
@@ -152,9 +153,20 @@ class Student(nn.Module):
 
         char_target = torch.cat([chars, torch.zeros(B, 1, dtype=chars.dtype, device=chars.device)], dim=1)
         char_target[torch.arange(B), ink_len] = text_len
-        char_ce = F.cross_entropy(char_logit.transpose(1, 2), char_target, reduction="none")
+        # A point whose character is unknown (-1, e.g. real ink without an
+        # alignment) is only trained not to be "finished", so the head still
+        # learns when to stop.
+        known = char_target >= 0
+        log_p = F.log_softmax(char_logit, dim=-1)
+        known_nll = -log_p.gather(-1, char_target.clamp(min=0).unsqueeze(-1)).squeeze(-1)
+        finished = text_len.view(B, 1, 1).expand(B, N + 1, 1)
+        log_p_finished = log_p.gather(-1, finished).squeeze(-1).clamp(max=-1e-6)
+        unfinished_nll = -torch.log(-torch.expm1(log_p_finished))
+        char_ce = torch.where(known, known_nll, unfinished_nll)
         char_ce = (char_ce * char_mask).sum() / char_mask.sum()
-        char_acc = ((char_logit.argmax(-1) == char_target) & char_mask).sum() / char_mask.sum()
+        pred = char_logit.argmax(-1)
+        correct = torch.where(known, pred == char_target, pred != text_len.unsqueeze(1))
+        char_acc = (correct & char_mask).sum() / char_mask.sum()
         return ink_nll, char_ce, char_acc
 
     @torch.no_grad()
