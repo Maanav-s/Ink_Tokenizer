@@ -111,6 +111,17 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - `scripts/legacy_v0/` — generators for the old hand-placed v0 pages,
     kept for reference; the current renderer does not read v0 layouts.
 - Ink format: **InkML**, with X/Y in mm and T in seconds.
+- Text-to-ink teacher (needs the `model` extra):
+  - [teacher_model.py](scripts/teacher_model.py) — the pretrained Graves
+    synthesis network from pytorch-handwriting-synthesis-toolkit, ported to
+    current torch (verified to sample identically to the original) with
+    batched sampling and per-point character alignment.
+  - [fetch_teacher.py](scripts/fetch_teacher.py) — downloads its pinned
+    checkpoint into `models/teacher/` (gitignored).
+  - [text_to_ink.py](scripts/text_to_ink.py) — the text + style -> labelled
+    strokes interface (writing order, no timestamps). It rejects lines and
+    priming that are clearly broken. It cannot detect misspelled words,
+    which the teacher produces often.
 - Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
   packages baked in. `run_in_apptainer.sh` syncs `.venv` to `uv.lock` inside
   it. The `model` extra pins torch 2.9 and prebuilt CUDA 12 wheels of
@@ -120,6 +131,8 @@ Common commands:
 
 ```bash
 scripts/build_apptainer_image.sh                  # once: .apptainer/ink_tokenizer.sif
+scripts/run_in_apptainer.sh cpu python scripts/fetch_teacher.py
+scripts/run_in_apptainer.sh cpu python scripts/text_to_ink.py "Hello world" --out hello.png
 scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
 ```
 
