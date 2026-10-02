@@ -140,9 +140,12 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - [ink_corpus.py](scripts/ink_corpus.py) — model-agnostic shard loader and
     length-bucketed batching (reusable by other student architectures).
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
-    `[text, SEP, ink]`, no attention window: a mixture-density head for the
-    next point and a character-index head that labels points and decides
-    when the line is finished.
+    `[text, SEP, ink]`, with residual cross-attention to positioned text
+    embeddings before the mixture-density and character-index heads.
+    Text keys/values are cached during sampling. New runs default to four
+    attention heads (`--cross-attention-heads 0` disables it); checkpoint
+    resumes preserve the saved architecture, including older models without
+    attention. Use a new run directory to train with attention.
   - [train_student.py](scripts/train_student.py) — training; resumes from
     its run directory. Every `--sample-every` steps it draws held-out lines
     as written by the teacher and by the student, alternating rows, into

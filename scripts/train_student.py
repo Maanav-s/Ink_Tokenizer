@@ -33,7 +33,7 @@ import wandb
 from corpus_artifact import add_wandb_args, pull, shard_names
 from ink_corpus import Corpus
 from sample_student import teacher_vs_student
-from student_model import Student
+from student_model import Student, checkpoint_config
 
 
 def lr_at(step, peak, warmup, total):
@@ -93,7 +93,9 @@ def main(args):
     print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
 
     config = dict(vocab_size=len(train.charset) + 2, d_model=args.d_model, n_layers=args.n_layers,
-                  d_state=args.d_state, headdim=args.headdim)
+                  d_state=args.d_state, headdim=args.headdim, cross_attention_heads=args.cross_attention_heads)
+    if ckpt is not None:
+        config = checkpoint_config(ckpt)
     model = Student(**config).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
     step, epoch, pos = 0, 0, 0
@@ -177,6 +179,8 @@ if __name__ == "__main__":
     ap.add_argument("--n-layers", type=int, default=6)
     ap.add_argument("--d-state", type=int, default=64)
     ap.add_argument("--headdim", type=int, default=32)
+    ap.add_argument("--cross-attention-heads", type=int, default=4,
+                    help="text attention heads for new runs; 0 disables attention; resumes use checkpoint config")
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
     ap.add_argument("--sample-every", type=int, default=2000)
