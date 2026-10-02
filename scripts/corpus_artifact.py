@@ -42,7 +42,11 @@ def shard_names(artifact):
 def push(corpus_dir, entity, project, artifact_name):
     name = artifact_name.split(":")[0]
     api = wandb.Api()
-    if api.artifact_exists(artifact_path(entity, project, name)):
+    try:
+        exists = api.artifact_exists(artifact_path(entity, project, name))
+    except ValueError:  # raised instead of returning False while the project doesn't exist yet
+        exists = False
+    if exists:
         artifact = api.artifact(artifact_path(entity, project, name)).new_draft()
     else:
         artifact = wandb.Artifact(name, ARTIFACT_TYPE)
