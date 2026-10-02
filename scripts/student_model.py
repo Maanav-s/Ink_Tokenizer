@@ -5,9 +5,9 @@ the ink:
 
     [PAD .. PAD, c1 .. cU, SEP, p1 .. pN]
 
-There is no attention window over the text: the Mamba state has to remember
-the text and keep its own place in it. From the SEP position onwards, each
-position predicts:
+After Mamba, a residual cross-attention layer reads the positioned text
+embeddings (including SEP, excluding padding). From the SEP position
+onwards, each position predicts:
 
 - the next point, as the teacher does: a mixture of bivariate Gaussians for
   (dx, dy) and a Bernoulli for end of stroke, in the teacher's normalized
@@ -40,17 +40,52 @@ class Block(nn.Module):
         return x + self.mixer(self.norm(x), inference_params=inference_params)
 
 
+class TextAttention(nn.Module):
+    def __init__(self, d_model, heads):
+        super().__init__()
+        if heads <= 0 or d_model % heads:
+            raise ValueError("cross_attention_heads must be positive and divide d_model")
+        self.heads = heads
+        self.query_norm = nn.RMSNorm(d_model)
+        self.text_norm = nn.RMSNorm(d_model)
+        self.query = nn.Linear(d_model, d_model)
+        self.key = nn.Linear(d_model, d_model)
+        self.value = nn.Linear(d_model, d_model)
+        self.out = nn.Linear(d_model, d_model)
+
+    def split_heads(self, x):
+        return x.reshape(x.shape[0], x.shape[1], self.heads, -1).transpose(1, 2)
+
+    def prepare(self, prefix, text_len):
+        text = self.text_norm(prefix)
+        key = self.split_heads(self.key(text))
+        value = self.split_heads(self.value(text))
+        # SEP remains visible, including for an empty string, so no row is fully masked.
+        positions = torch.arange(prefix.shape[1], device=prefix.device)
+        visible = positions.unsqueeze(0) >= (prefix.shape[1] - 1 - text_len).unsqueeze(1)
+        return key, value, visible[:, None, None, :]
+
+    def forward(self, h, memory):
+        key, value, visible = memory
+        query = self.split_heads(self.query(self.query_norm(h)))
+        context = F.scaled_dot_product_attention(query, key, value, attn_mask=visible)
+        context = context.transpose(1, 2).reshape(h.shape)
+        return h + self.out(context)
+
+
 class Student(nn.Module):
-    def __init__(self, vocab_size, d_model=256, n_layers=6, d_state=64, headdim=32, mixtures=20):
+    def __init__(self, vocab_size, d_model=256, n_layers=6, d_state=64, headdim=32, mixtures=20,
+                 cross_attention_heads=4):
         super().__init__()
         self.config = dict(vocab_size=vocab_size, d_model=d_model, n_layers=n_layers, d_state=d_state,
-                           headdim=headdim, mixtures=mixtures)
+                           headdim=headdim, mixtures=mixtures, cross_attention_heads=cross_attention_heads)
         self.mixtures = mixtures
         self.char_embed = nn.Embedding(vocab_size, d_model, padding_idx=PAD)
         self.text_pos = nn.Embedding(MAX_TEXT + 1, d_model)
         self.point_in = nn.Linear(3, d_model)
         self.blocks = nn.ModuleList(Block(d_model, i, d_state, headdim) for i in range(n_layers))
         self.norm = nn.RMSNorm(d_model)
+        self.text_attention = TextAttention(d_model, cross_attention_heads) if cross_attention_heads else None
         # pi, mu (2), sd (2), rho, eos
         self.mdn = nn.Linear(d_model, 6 * mixtures + 1)
         self.char_head = nn.Linear(d_model, MAX_TEXT + 1)
@@ -75,7 +110,10 @@ class Student(nn.Module):
         j predicts point j + 1 (or "finished" at j = N)."""
         prefix = self.embed_text(text, text_len)
         h = self.run(torch.cat([prefix, self.point_in(offsets)], dim=1))
-        return h[:, prefix.shape[1] - 1:]
+        h = h[:, prefix.shape[1] - 1:]
+        if self.text_attention is not None:
+            h = self.text_attention(h, self.text_attention.prepare(prefix, text_len))
+        return h
 
     def heads(self, h, bias=0.0):
         m = self.mixtures
@@ -132,6 +170,7 @@ class Student(nn.Module):
         steps = max_steps_per_char * int(text_len.max()) + 100
         ip = InferenceParams(max_seqlen=text.shape[1] + 1 + steps, max_batch_size=B)
         prefix = self.embed_text(text, text_len)
+        memory = self.text_attention.prepare(prefix, text_len) if self.text_attention is not None else None
         h = self.run(prefix, ip)[:, -1:]
         ip.seqlen_offset += prefix.shape[1]
 
@@ -140,6 +179,8 @@ class Student(nn.Module):
         points, labels = [], []
         valid = torch.arange(MAX_TEXT + 1, device=device).unsqueeze(0) < text_len.unsqueeze(1)
         for n in range(steps):
+            if self.text_attention is not None:
+                h = self.text_attention(h, memory)
             pi_logit, mu, log_sd, rho, eos_logit, char_logit = (t[:, 0] for t in self.heads(h, bias))
             finish = ~done & (char_logit.argmax(-1) == text_len)
             ended[finish] = n
@@ -181,7 +222,13 @@ def sample_point(pi_logit, mu, log_sd, rho, eos_logit, generator=None):
 
 def load_student(path, device="cuda"):
     ckpt = torch.load(path, map_location=device, weights_only=False)
-    model = Student(**ckpt["config"]).to(device)
+    model = Student(**checkpoint_config(ckpt)).to(device)
     model.load_state_dict(ckpt["model"])
     model.eval()
     return model, ckpt
+
+
+def checkpoint_config(ckpt):
+    config = dict(ckpt["config"])
+    config.setdefault("cross_attention_heads", 0)
+    return config
