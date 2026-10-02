@@ -23,11 +23,55 @@ import torch
 from corpus_artifact import add_wandb_args, pull
 from ink_corpus import char_tokens, encode_texts
 from student_model import load_student
-from text_to_ink import TEXT_HEIGHT, plausible, preview, to_line
+from text_to_ink import TEXT_HEIGHT, ink_extent, plausible, preview, render, to_line
 
 # Rough teacher text height in IAM-OnDB units (descender line to cap line),
 # from eyeballed samples. The student has no priming line to measure it from.
 TEACHER_TEXT_HEIGHT = 500.0
+
+
+def write_student(model, token, mu, std, lines, bias=1.0, seed=0, batch=128):
+    """to_line() dicts for lines written by the student. bias is one value or
+    one per line."""
+    device = next(model.parameters()).device
+    bias = np.broadcast_to(np.asarray(bias, dtype=np.float32), (len(lines),))
+    gen = torch.Generator(device=device).manual_seed(seed)
+    out = []
+    for b in range(0, len(lines), batch):
+        chunk = lines[b:b + batch]
+        text = encode_texts(chunk, token).to(device)
+        text_len = torch.tensor([len(t) for t in chunk], device=device)
+        line_bias = torch.from_numpy(bias[b:b + batch].copy()).to(device).view(-1, 1, 1)
+        for line, (off, chars, finished) in zip(chunk, model.sample(text, text_len, line_bias, generator=gen)):
+            off = off.numpy()
+            ok = finished and plausible(line, off * std + mu)
+            out.append(to_line(line, off, chars.numpy(), mu, std, TEXT_HEIGHT / TEACHER_TEXT_HEIGHT, ok))
+    return out
+
+
+@torch.no_grad()
+def teacher_vs_student(model, corpus, n=8, seed=0):
+    """An image whose rows alternate between the teacher's ink for a corpus
+    line and the student writing the same line at the same bias. The n lines
+    are spread over the corpus's line lengths. Dimmed student rows failed.
+    Student ink far outside the teacher's extent is cut off."""
+    order = np.argsort([len(t) for t in corpus.texts], kind="stable")
+    picks = order[np.linspace(0, len(order) - 1, n).astype(int)]
+    texts = [corpus.texts[i] for i in picks]
+    mu, std = np.array(corpus.meta["mu"]), np.array(corpus.meta["std"])
+    was_training = model.training
+    model.eval()
+    student = write_student(model, corpus.token, mu, std, texts, corpus.bias[picks], seed)
+    model.train(was_training)
+    rows = []
+    for i, text, s in zip(picks, texts, student):
+        a, n_points = corpus.starts[i], corpus.lengths[i]
+        rows.append(to_line(text, corpus.offsets[a:a + n_points], corpus.chars[a:a + n_points], mu, std,
+                            TEXT_HEIGHT / TEACHER_TEXT_HEIGHT))
+        rows.append(s)
+    teacher = [ink_extent(r) for r in rows[::2]]
+    return render(rows, max_width=1.5 * max(e[0] for e in teacher),
+                  max_height=1.5 * max(max(-e[1], e[2]) for e in teacher))
 
 
 class StudentWriter:
@@ -42,17 +86,7 @@ class StudentWriter:
         self.device = device
 
     def write(self, lines, bias=1.0, seed=0, batch=128):
-        gen = torch.Generator(device=self.device).manual_seed(seed)
-        out = []
-        for b in range(0, len(lines), batch):
-            chunk = lines[b:b + batch]
-            text = encode_texts(chunk, self.token).to(self.device)
-            text_len = torch.tensor([len(t) for t in chunk], device=self.device)
-            for line, (off, chars, finished) in zip(chunk, self.model.sample(text, text_len, bias, generator=gen)):
-                off = off.numpy()
-                ok = finished and plausible(line, off * self.std + self.mu)
-                out.append(to_line(line, off, chars.numpy(), self.mu, self.std, TEXT_HEIGHT / TEACHER_TEXT_HEIGHT, ok))
-        return out
+        return write_student(self.model, self.token, self.mu, self.std, lines, bias, seed, batch)
 
 
 def teacher_rejection_rate(corpus_dir):

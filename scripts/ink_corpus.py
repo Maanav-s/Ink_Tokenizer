@@ -33,16 +33,18 @@ class Corpus:
         self.meta = json.load(open(os.path.join(corpus_dir, "meta.json")))
         self.charset = self.meta["charset"]
         self.token = char_tokens(self.charset)
-        offsets, chars, lengths, self.texts = [], [], [], []
+        offsets, chars, lengths, bias, self.texts = [], [], [], [], []
         for path in shards:
             d = np.load(path)
             offsets.append(d["offsets"])
             chars.append(d["chars"])
             lengths.append(d["lengths"])
+            bias.append(d["bias"])
             self.texts.extend(str(t) for t in d["texts"])
         self.offsets = np.concatenate(offsets)
         self.chars = np.concatenate(chars)
         self.lengths = np.concatenate(lengths)
+        self.bias = np.concatenate(bias)
         self.starts = np.concatenate([[0], np.cumsum(self.lengths)[:-1]])
 
     @classmethod

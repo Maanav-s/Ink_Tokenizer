@@ -1,0 +1,2 @@
+WB="--wandb-entity maanavsikaria-university-of-texas-at-austin --wandb-project inkTokensMamba"
+nohup scripts/generate_corpus.sh 4,5,6,7 0 64 $WB > logs/generate.log 2>&1 &
