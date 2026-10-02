@@ -11,6 +11,10 @@ With --wandb-project, the corpus is pulled from the W&B artifact into --corpus
 metrics go to a W&B run that resumes with the run directory. A resumed run
 keeps the corpus version it started with.
 
+Every --sample-every steps, held-out lines written by the teacher and by the
+student are drawn into <run-dir>/samples/step_<step>.png (and logged to W&B)
+for comparison.
+
 Usage: python scripts/train_student.py --run-dir models/student/<name>
            [--corpus data/teacher_corpus] [--steps 50000] [--max-points 65536]
            [--wandb-project P [--wandb-entity E] [--artifact teacher_corpus:latest]]
@@ -28,6 +32,7 @@ import wandb
 
 from corpus_artifact import add_wandb_args, pull, shard_names
 from ink_corpus import Corpus
+from sample_student import teacher_vs_student
 from student_model import Student
 
 
@@ -142,6 +147,13 @@ def main(args):
                 log.flush()
                 if run:
                     run.log(rec, step=step)
+            if step % args.sample_every == 0:
+                os.makedirs(os.path.join(args.run_dir, "samples"), exist_ok=True)
+                img = teacher_vs_student(model, val, args.sample_lines)
+                img.save(os.path.join(args.run_dir, "samples", f"step_{step:07d}.png"))
+                if run:
+                    run.log({"samples": wandb.Image(img, caption="rows alternate teacher, student; "
+                                                                 "dimmed student rows failed")}, step=step)
         if pos >= len(batches):
             epoch, pos = epoch + 1, 0
     save()
@@ -167,6 +179,8 @@ if __name__ == "__main__":
     ap.add_argument("--headdim", type=int, default=32)
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
+    ap.add_argument("--sample-every", type=int, default=2000)
+    ap.add_argument("--sample-lines", type=int, default=8, help="held-out lines drawn per sample image")
     ap.add_argument("--seed", type=int, default=0)
     add_wandb_args(ap, artifact_default="teacher_corpus:latest")
     main(ap.parse_args())

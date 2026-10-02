@@ -130,20 +130,32 @@ class Writer:
         return out
 
 
-def preview(lines, path, px_per_mm=2.0, line_gap=1.6):
+def ink_extent(line):
+    """(width, lowest y, highest y) of a to_line() dict, in mm."""
+    pts = [p for st in line["strokes"] for p in st] or [(0.0, 0.0)]
+    xs, ys = zip(*pts)
+    return max(xs), min(ys), max(ys)
+
+
+def render(lines, px_per_mm=2.0, max_width=None, max_height=None):
     """Draw lines one under another, each point coloured by its character.
-    Rejected lines are drawn dimmed."""
+    Rejected lines are drawn dimmed. Each row is as tall as its own ink; ink
+    beyond max_width or above/below max_height (mm) is cut off, so one
+    runaway line can't blow up the whole image. Returns a PIL image."""
     from PIL import Image, ImageDraw
 
     pad = 10
-    pts = [p for ln in lines for st in ln["strokes"] for p in st] or [(1.0, 1.0)]
-    height = max(p[1] for p in pts)
-    width = max(p[0] for p in pts)
-    row = height * line_gap
-    img = Image.new("RGB", (int(width * px_per_mm) + 2 * pad, int(row * len(lines) * px_per_mm) + 2 * pad), "white")
-    draw = ImageDraw.Draw(img)
-    for r, ln in enumerate(lines):
-        y0 = pad + (r * row + height) * px_per_mm
+    extents = [ink_extent(ln) for ln in lines]
+    width = max([e[0] for e in extents] or [1.0])
+    if max_width:
+        width = min(width, max_width)
+    tiles = []
+    for ln, (_, lo, hi) in zip(lines, extents):
+        if max_height:
+            lo, hi = max(lo, -max_height), min(hi, max_height)
+        tile = Image.new("RGB", (int(width * px_per_mm) + 2 * pad, int((hi - lo) * px_per_mm) + 2 * pad), "white")
+        draw = ImageDraw.Draw(tile)
+        y0 = pad + hi * px_per_mm
         for stroke, chars in zip(ln["strokes"], ln["chars"]):
             xy = [(pad + x * px_per_mm, y0 - y * px_per_mm) for x, y in stroke]
             for (a, b), c in zip(zip(xy, xy[1:]), chars[1:]):
@@ -151,7 +163,17 @@ def preview(lines, path, px_per_mm=2.0, line_gap=1.6):
                 draw.line([a, b], fill=tuple(int(v * 255) for v in rgb), width=2)
             if len(xy) == 1:
                 draw.point(xy[0], fill="black")
-    img.save(path)
+        tiles.append(tile)
+    img = Image.new("RGB", (int(width * px_per_mm) + 2 * pad, sum(t.height for t in tiles) or 1), "white")
+    y = 0
+    for tile in tiles:
+        img.paste(tile, (0, y))
+        y += tile.height
+    return img
+
+
+def preview(lines, path):
+    render(lines).save(path)
 
 
 if __name__ == "__main__":

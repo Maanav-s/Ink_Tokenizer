@@ -144,7 +144,9 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     next point and a character-index head that labels points and decides
     when the line is finished.
   - [train_student.py](scripts/train_student.py) — training; resumes from
-    its run directory.
+    its run directory. Every `--sample-every` steps it draws held-out lines
+    as written by the teacher and by the student, alternating rows, into
+    `<run-dir>/samples/` and W&B.
   - [sample_student.py](scripts/sample_student.py) — preview, and a failure
     rate by line length next to the teacher's rejection rate.
 - Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
