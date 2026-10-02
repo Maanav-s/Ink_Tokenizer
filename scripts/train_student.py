@@ -6,8 +6,14 @@ character-index cross-entropy. The run directory holds checkpoint.pt (latest,
 with optimizer state) and metrics.jsonl. Rerunning with the same --run-dir
 resumes, so a job that hits its wall time can be chained with another.
 
+With --wandb-project, the corpus is pulled from the W&B artifact into --corpus
+(only that version's shards are used, even if the directory has more) and
+metrics go to a W&B run that resumes with the run directory. A resumed run
+keeps the corpus version it started with.
+
 Usage: python scripts/train_student.py --run-dir models/student/<name>
            [--corpus data/teacher_corpus] [--steps 50000] [--max-points 65536]
+           [--wandb-project P [--wandb-entity E] [--artifact teacher_corpus:latest]]
 """
 import argparse
 import json
@@ -17,7 +23,9 @@ import random
 import time
 
 import torch
+import wandb
 
+from corpus_artifact import add_wandb_args, pull, shard_names
 from ink_corpus import Corpus
 from student_model import Student
 
@@ -30,6 +38,19 @@ def lr_at(step, peak, warmup, total):
 
 def to_device(batch, device):
     return {k: v.to(device, non_blocking=True) for k, v in batch.items()}
+
+
+def start_wandb_run(args):
+    id_path = os.path.join(args.run_dir, "wandb_id")
+    if os.path.exists(id_path):
+        run_id = open(id_path).read().strip()
+    else:
+        run_id = wandb.util.generate_id()
+        with open(id_path, "w") as f:
+            f.write(run_id)
+    return wandb.init(entity=args.wandb_entity, project=args.wandb_project, id=run_id, resume="allow",
+                      name=os.path.basename(os.path.normpath(args.run_dir)), job_type="train-student",
+                      config=vars(args), allow_val_change=True)
 
 
 @torch.no_grad()
@@ -48,18 +69,29 @@ def evaluate(model, corpus, max_points, device, limit=200):
 def main(args):
     device = "cuda"
     torch.manual_seed(args.seed)
-    train, val = Corpus.split(args.corpus, args.val_shards)
-    print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
-
     os.makedirs(args.run_dir, exist_ok=True)
     ckpt_path = os.path.join(args.run_dir, "checkpoint.pt")
+    ckpt = torch.load(ckpt_path, map_location=device, weights_only=False) if os.path.exists(ckpt_path) else None
+
+    run, names = None, None
+    if args.wandb_project:
+        if ckpt is not None:
+            args.artifact = ckpt["args"].get("artifact", args.artifact)
+        run = start_wandb_run(args)
+        artifact = pull(args.corpus, args.wandb_entity, args.wandb_project, args.artifact, run)
+        args.artifact = artifact.name  # pinned, e.g. teacher_corpus:v3, so chained jobs see the same data
+        run.config.update({"artifact": args.artifact}, allow_val_change=True)
+        names = shard_names(artifact)
+        print(f"corpus {artifact.name}", flush=True)
+    train, val = Corpus.split(args.corpus, args.val_shards, names)
+    print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
+
     config = dict(vocab_size=len(train.charset) + 2, d_model=args.d_model, n_layers=args.n_layers,
                   d_state=args.d_state, headdim=args.headdim)
     model = Student(**config).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
     step, epoch, pos = 0, 0, 0
-    if os.path.exists(ckpt_path):
-        ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
+    if ckpt is not None:
         model.load_state_dict(ckpt["model"])
         opt.load_state_dict(ckpt["opt"])
         step, epoch, pos = ckpt["step"], ckpt["epoch"], ckpt["pos"]
@@ -107,10 +139,14 @@ def main(args):
                 print(json.dumps(rec), flush=True)
                 log.write(json.dumps(rec) + "\n")
                 log.flush()
+                if run:
+                    run.log(rec, step=step)
         if pos >= len(batches):
             epoch, pos = epoch + 1, 0
     save()
     print(f"done at step {step}", flush=True)
+    if run:
+        run.finish()
 
 
 if __name__ == "__main__":
@@ -131,4 +167,5 @@ if __name__ == "__main__":
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=0)
+    add_wandb_args(ap, artifact_default="teacher_corpus:latest")
     main(ap.parse_args())

@@ -38,6 +38,11 @@ fi
 # next to the repo, not in a small-quota $HOME.
 export APPTAINERENV_UV_CACHE_DIR="${UV_CACHE_DIR:-$ROOT_DIR/.cache/uv}"
 export APPTAINERENV_TRITON_CACHE_DIR="${TRITON_CACHE_DIR:-$ROOT_DIR/.cache/triton}"
+# Likewise W&B's run files and artifact staging/cache.
+export APPTAINERENV_WANDB_DIR="${WANDB_DIR:-$ROOT_DIR/.cache/wandb}"
+export APPTAINERENV_WANDB_CACHE_DIR="${WANDB_CACHE_DIR:-$ROOT_DIR/.cache/wandb/cache}"
+export APPTAINERENV_WANDB_DATA_DIR="${WANDB_DATA_DIR:-$ROOT_DIR/.cache/wandb/data}"
+mkdir -p "$APPTAINERENV_WANDB_DIR"
 # The image's own Python, so .venv never points at a host interpreter.
 export APPTAINERENV_UV_PYTHON_DOWNLOADS=never
 

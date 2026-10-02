@@ -17,21 +17,28 @@ Each shard holds, for its kept lines:
   texts    str     (lines,)
   bias     float32 (lines,)
   rejected int32   ()                 lines the teacher failed, for comparison
-meta.json beside the shards has the teacher's charset and normalization.
+meta.json beside the shards has the teacher's charset and normalization, and
+lines.txt is a copy of the line list, so the directory is self-contained.
+
+With --wandb-project, the job pushes the directory to the corpus artifact
+when it finishes (see scripts/corpus_artifact.py).
 
 Usage: python scripts/generate_teacher_corpus.py [--lines data/teacher_corpus/lines.txt]
            [--out-dir data/teacher_corpus] [--first-shard 0] [--num-shards 1]
            [--lines-per-shard 2048] [--batch 128] [--device cuda]
+           [--wandb-project P [--wandb-entity E] [--artifact teacher_corpus]]
 """
 import argparse
 import json
 import os
 import random
+import shutil
 import time
 
 import numpy as np
 import torch
 
+from corpus_artifact import add_wandb_args, push
 from teacher_model import CHECKPOINT, Teacher, default_checkpoint_dir
 from text_to_ink import clean_sample
 
@@ -69,11 +76,14 @@ def main(args):
     os.makedirs(args.out_dir, exist_ok=True)
     teacher = Teacher(args.checkpoint, args.device)
     lines = [ln for ln in open(args.lines).read().split("\n") if ln]
+    lines_copy = os.path.join(args.out_dir, "lines.txt")
+    if not os.path.exists(lines_copy):
+        shutil.copy(args.lines, lines_copy)
     meta_path = os.path.join(args.out_dir, "meta.json")
     if not os.path.exists(meta_path):
         with open(meta_path, "w") as f:
             json.dump({"charset": teacher.charset, "mu": teacher.mu.tolist(), "std": teacher.std.tolist(),
-                       "teacher": CHECKPOINT, "lines": os.path.abspath(args.lines),
+                       "teacher": CHECKPOINT, "lines": "lines.txt",
                        "bias_range": args.bias_range}, f, indent=1)
 
     for index in range(args.first_shard, args.first_shard + args.num_shards):
@@ -87,6 +97,8 @@ def main(args):
         os.replace(tmp, path)  # a killed job never leaves a half-written shard
         print(f"{path}: kept {len(shard['texts'])}, rejected {rejected}, "
               f"{len(shard['offsets'])} points, {time.time() - start:.0f} s", flush=True)
+    if args.wandb_project:
+        push(args.out_dir, args.wandb_entity, args.wandb_project, args.artifact)
 
 
 if __name__ == "__main__":
@@ -100,4 +112,5 @@ if __name__ == "__main__":
     ap.add_argument("--bias-range", type=float, nargs=2, default=[0.5, 1.5])
     ap.add_argument("--checkpoint", default=default_checkpoint_dir())
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    add_wandb_args(ap)
     main(ap.parse_args())
