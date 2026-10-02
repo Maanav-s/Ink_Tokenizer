@@ -111,12 +111,16 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - `scripts/legacy_v0/` — generators for the old hand-placed v0 pages,
     kept for reference; the current renderer does not read v0 layouts.
 - Ink format: **InkML**, with X/Y in mm and T in seconds.
+- Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
+  packages baked in. `run_in_apptainer.sh` syncs `.venv` to `uv.lock` inside
+  it. The `model` extra pins torch 2.9 and prebuilt CUDA 12 wheels of
+  mamba-ssm / causal-conv1d from GitHub releases; bump them together.
 
 Common commands:
 
 ```bash
-uv sync          # install/resolve dependencies
-uv run main.py   # run the entry point
+scripts/build_apptainer_image.sh                  # once: .apptainer/ink_tokenizer.sif
+scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
 ```
 
 Update this section as real structure lands (synthetic data pipeline,

@@ -11,3 +11,19 @@ render = [
     "hershey-fonts>=2.1.0",
     "pillow>=12.3.0",
 ]
+model = [
+    "torch==2.9.*",
+    "numpy>=2",
+    "mamba-ssm",
+    "causal-conv1d",
+]
+
+# PyPI only has source tarballs for these, which compile CUDA kernels at install
+# time. The prebuilt wheels must match the torch minor version and CUDA major
+# version above, so bump them together.
+[tool.uv.sources]
+mamba-ssm = { url = "https://github.com/state-spaces/mamba/releases/download/v2.3.2.post1/mamba_ssm-2.3.2.post1%2Bcu12torch2.9cxx11abiTRUE-cp313-cp313-linux_x86_64.whl" }
+causal-conv1d = { url = "https://github.com/Dao-AILab/causal-conv1d/releases/download/v1.7.0/causal_conv1d-1.7.0%2Bcu12torch2.9cxx11abiTRUE-cp313-cp313-linux_x86_64.whl" }
+
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64' and python_version == '3.13'"]
