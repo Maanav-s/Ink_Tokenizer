@@ -9,7 +9,8 @@ resumes, so a job that hits its wall time can be chained with another.
 With --wandb-project, the corpus is pulled from the W&B artifact into --corpus
 (only that version's shards are used, even if the directory has more) and
 metrics go to a W&B run that resumes with the run directory. A resumed run
-keeps the corpus version it started with.
+keeps the corpus version it started with. --artifact none logs to W&B but
+trains on the local --corpus directory as it is.
 
 Every --sample-every steps, held-out lines written by the teacher and by the
 student are drawn into <run-dir>/samples/step_<step>.png (and logged to W&B)
@@ -84,11 +85,12 @@ def main(args):
         if ckpt is not None:
             args.artifact = ckpt["args"].get("artifact", args.artifact)
         run = start_wandb_run(args)
-        artifact = pull(args.corpus, args.wandb_entity, args.wandb_project, args.artifact, run)
-        args.artifact = artifact.name  # pinned, e.g. teacher_corpus:v3, so chained jobs see the same data
-        run.config.update({"artifact": args.artifact}, allow_val_change=True)
-        names = shard_names(artifact)
-        print(f"corpus {artifact.name}", flush=True)
+        if args.artifact != "none":
+            artifact = pull(args.corpus, args.wandb_entity, args.wandb_project, args.artifact, run)
+            args.artifact = artifact.name  # pinned, e.g. teacher_corpus:v3, so chained jobs see the same data
+            run.config.update({"artifact": args.artifact}, allow_val_change=True)
+            names = shard_names(artifact)
+            print(f"corpus {artifact.name}", flush=True)
     train, val = Corpus.split(args.corpus, args.val_shards, names)
     print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
 
@@ -186,5 +188,6 @@ if __name__ == "__main__":
     ap.add_argument("--sample-every", type=int, default=2000)
     ap.add_argument("--sample-lines", type=int, default=8, help="held-out lines drawn per sample image")
     ap.add_argument("--seed", type=int, default=0)
-    add_wandb_args(ap, artifact_default="teacher_corpus:latest")
+    add_wandb_args(ap, artifact_default="teacher_corpus:latest",
+                   artifact_help="corpus artifact name, optionally :version; none uses --corpus as it is")
     main(ap.parse_args())

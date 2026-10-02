@@ -134,8 +134,9 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     writer = StudentWriter(args.checkpoint)
-    if args.eval and args.wandb_project:
-        pull(writer.corpus_dir, args.wandb_entity, args.wandb_project, args.artifact or writer.artifact)
+    artifact = args.artifact or writer.artifact
+    if args.eval and args.wandb_project and artifact != "none":
+        pull(writer.corpus_dir, args.wandb_entity, args.wandb_project, artifact)
     if args.eval:
         result = evaluate(writer, args.eval, args.bias, args.seed)
         preview(random.Random(args.seed).sample(result, min(20, len(result))), args.out)
