@@ -16,6 +16,7 @@ model = [
     "numpy>=2",
     "mamba-ssm",
     "causal-conv1d",
+    "wandb",
 ]
 
 # PyPI only has source tarballs for these, which compile CUDA kernels at install

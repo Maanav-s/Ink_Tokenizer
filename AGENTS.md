@@ -130,6 +130,11 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - [generate_teacher_corpus.py](scripts/generate_teacher_corpus.py) —
     teacher samples as `.npz` shards; resumable and splittable across jobs.
     About 20-25% of the teacher's attempts are rejected.
+  - [corpus_artifact.py](scripts/corpus_artifact.py) — keeps the shards in
+    a W&B dataset artifact (`push`/`pull`). Generation, training and eval
+    take `--wandb-entity`, `--wandb-project` and `--artifact`. Training
+    records which artifact version it used and trains on exactly those
+    shards.
   - [ink_corpus.py](scripts/ink_corpus.py) — model-agnostic shard loader and
     length-bucketed batching (reusable by other student architectures).
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
@@ -153,18 +158,27 @@ scripts/run_in_apptainer.sh cpu python scripts/fetch_teacher.py
 scripts/run_in_apptainer.sh cpu python scripts/text_to_ink.py "Hello world" --out hello.png
 scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
 
-# Student pipeline (generation and training belong on a cluster)
+# Student pipeline (generation and training belong on a cluster). W&B flags
+# are optional; without --wandb-project everything stays local.
+WB="--wandb-entity <entity> --wandb-project <project>"
 python3 scripts/make_corpus_lines.py              # host: data/teacher_corpus/lines.txt
-scripts/run_in_apptainer.sh 0 python scripts/generate_teacher_corpus.py --num-shards 64
-scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name>
+scripts/run_in_apptainer.sh 0 python scripts/generate_teacher_corpus.py --num-shards 64 $WB
+scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py push $WB   # e.g. after a race
+scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py pull $WB [--artifact teacher_corpus:v3]
+scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name> $WB
 scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
-    --checkpoint models/student/<name>/checkpoint.pt --eval 1000
+    --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
 ```
+
+Give each cluster or job its own `--first-shard` range; a shard index
+generated in two places has the same name, and the artifact keeps one copy.
+W&B credentials come from `WANDB_API_KEY` or `wandb login` (`~/.netrc`),
+which the container inherits. W&B's run files and cache go in `.cache/wandb`.
 
 On tacc, wrap the same commands in `scripts/submit_slurm.sh --module
 tacc-apptainer/1.4.1 --` (see docs/slurm.md), build the image and run one
 sync (`run_in_apptainer.sh cpu true`) on the login node first, and set
-`INK_NO_SYNC=1` for the jobs. Mamba2's Triton kernels compile on first use
+`INK_NO_SYNC=1` for the jobs. Compute nodes need outbound internet for W&B. Mamba2's Triton kernels compile on first use
 (about a minute) into `.cache/triton`.
 
 Update this section as real structure lands (synthetic data pipeline,

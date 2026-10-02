@@ -9,7 +9,8 @@ Eval:    python scripts/sample_student.py --checkpoint ... --eval 1000
   finishes with ink that text_to_ink.plausible() rejects. The teacher's
   rejection rate over the same line list is printed beside it. This is a
   proxy, not a quality measure: the teacher misspells often, and misspellings
-  pass both checks.
+  pass both checks. With --wandb-project, the corpus is pulled from W&B
+  first (by default the version the checkpoint was trained on).
 """
 import argparse
 import glob
@@ -19,6 +20,7 @@ import random
 import numpy as np
 import torch
 
+from corpus_artifact import add_wandb_args, pull
 from ink_corpus import char_tokens, encode_texts
 from student_model import load_student
 from text_to_ink import TEXT_HEIGHT, plausible, preview, to_line
@@ -34,6 +36,7 @@ class StudentWriter:
     def __init__(self, checkpoint, device="cuda"):
         self.model, ckpt = load_student(checkpoint, device)
         self.meta, self.corpus_dir = ckpt["meta"], ckpt["args"]["corpus"]
+        self.artifact = ckpt["args"].get("artifact", "teacher_corpus:latest")
         self.mu, self.std = np.array(self.meta["mu"]), np.array(self.meta["std"])
         self.token = char_tokens(ckpt["charset"])
         self.device = device
@@ -62,7 +65,7 @@ def teacher_rejection_rate(corpus_dir):
 
 
 def evaluate(writer, n, bias, seed):
-    lines = [ln for ln in open(writer.meta["lines"]).read().split("\n") if ln]
+    lines = [ln for ln in open(os.path.join(writer.corpus_dir, writer.meta["lines"])).read().split("\n") if ln]
     lines = sorted(random.Random(seed).sample(lines, n), key=len)
     result = writer.write(lines, bias, seed)
     buckets = [(1, 10), (11, 25), (26, 50)]
@@ -84,9 +87,13 @@ if __name__ == "__main__":
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--eval", type=int, default=0, help="number of random corpus lines to evaluate on")
     ap.add_argument("--out", default="student_preview.png")
+    add_wandb_args(ap, artifact_default=None,
+                   artifact_help="corpus artifact for --eval (default: the version the checkpoint was trained on)")
     args = ap.parse_args()
 
     writer = StudentWriter(args.checkpoint)
+    if args.eval and args.wandb_project:
+        pull(writer.corpus_dir, args.wandb_entity, args.wandb_project, args.artifact or writer.artifact)
     if args.eval:
         result = evaluate(writer, args.eval, args.bias, args.seed)
         preview(random.Random(args.seed).sample(result, min(20, len(result))), args.out)

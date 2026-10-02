@@ -46,9 +46,13 @@ class Corpus:
         self.starts = np.concatenate([[0], np.cumsum(self.lengths)[:-1]])
 
     @classmethod
-    def split(cls, corpus_dir, val_shards=1):
-        """The last val_shards shards (by name) are the validation set."""
-        shards = sorted(glob.glob(os.path.join(corpus_dir, "shard_*.npz")))
+    def split(cls, corpus_dir, val_shards=1, names=None):
+        """The last val_shards shards (by name) are the validation set. names
+        limits the corpus to those shard files, e.g. one artifact version's."""
+        if names is None:
+            shards = sorted(glob.glob(os.path.join(corpus_dir, "shard_*.npz")))
+        else:
+            shards = [os.path.join(corpus_dir, n) for n in sorted(names)]
         if len(shards) <= val_shards:
             raise ValueError(f"need more than {val_shards} shards in {corpus_dir}, found {len(shards)}")
         return cls(corpus_dir, shards[:-val_shards]), cls(corpus_dir, shards[-val_shards:])
