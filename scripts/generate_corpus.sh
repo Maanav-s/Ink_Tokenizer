@@ -63,5 +63,7 @@ fi
 # Finished shards are complete files even if a job failed, so push them anyway.
 if [[ " ${PUSH_ARGS[*]-} " == *" --wandb-project "* ]]; then
     INK_NO_SYNC=1 "$ROOT_DIR/scripts/run_in_apptainer.sh" cpu python scripts/corpus_artifact.py push "${PUSH_ARGS[@]}"
+else
+    echo "no --wandb-project given, so nothing was pushed to W&B"
 fi
 exit "$FAILED"
