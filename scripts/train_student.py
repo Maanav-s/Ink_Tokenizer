@@ -21,6 +21,7 @@ import math
 import os
 import random
 import time
+import uuid
 
 import torch
 import wandb
@@ -45,7 +46,7 @@ def start_wandb_run(args):
     if os.path.exists(id_path):
         run_id = open(id_path).read().strip()
     else:
-        run_id = wandb.util.generate_id()
+        run_id = uuid.uuid4().hex[:8]
         with open(id_path, "w") as f:
             f.write(run_id)
     return wandb.init(entity=args.wandb_entity, project=args.wandb_project, id=run_id, resume="allow",
