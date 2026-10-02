@@ -47,8 +47,8 @@ def write_student(model, token, meta, lines, bias=1.0, seed=0, batch=128):
     out = []
     for b in range(0, len(lines), batch):
         chunk = lines[b:b + batch]
-        text = encode_texts(chunk, token).to(device)
-        text_len = torch.tensor([len(t) for t in chunk], device=device)
+        text, text_len = encode_texts(chunk, token, meta.get("tokenizer", "char"))
+        text, text_len = text.to(device), text_len.to(device)
         line_bias = torch.from_numpy(bias[b:b + batch].copy()).to(device).view(-1, 1, 1)
         for line, (off, chars, finished) in zip(chunk, model.sample(text, text_len, line_bias, generator=gen)):
             off = off.numpy()

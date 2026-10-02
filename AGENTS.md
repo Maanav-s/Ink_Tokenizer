@@ -142,7 +142,10 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - [mathwriting_corpus.py](scripts/mathwriting_corpus.py) — converts the
     human inks of MathWriting (`data/mathwriting-2024`, real handwritten
     LaTeX) into the same shard format: `train/` becomes the training shards
-    and `valid/` the last shard (the held-out one). Inks are scale-normalized
+    and `valid/` the last shard (the held-out one). Labels use the `latex`
+    tokenizer from `ink_corpus.split_text`: `\frac`, `\alpha`, `\\` and
+    `\begin{matrix}` are one token each (meta.json `tokenizer`; `charset`
+    holds the tokens, and `MAX_TEXT` counts tokens). Inks are scale-normalized
     by median stroke size and resampled by arc length. There is no
     per-point alignment (`chars` = -1), so the index head only learns when
     to stop on this data, and `char_acc` measures that.

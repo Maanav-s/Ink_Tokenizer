@@ -1,15 +1,17 @@
-"""Convert MathWriting (data/mathwriting-2024) into student corpus shards, in
+r"""Convert MathWriting (data/mathwriting-2024) into student corpus shards, in
 the format of scripts/generate_teacher_corpus.py, so train_student.py can
 train on real handwritten math.
 
 Only human-written inks are used: train/ becomes the training shards and
 valid/ becomes the last shard, which Corpus.split holds out (keep
---val-shards 1). The text is the normalizedLabel; inks whose label is longer
-than MAX_TEXT or uses characters outside the train charset are skipped.
+--val-shards 1). The text is the normalizedLabel, split by --tokenizer
+(default "latex": \frac, \alpha and the like are one token each; see
+ink_corpus.split_text). Inks whose label is longer than MAX_TEXT tokens, or
+uses tokens that no training label has, are skipped.
 
-MathWriting has no per-point character alignment, so every chars entry is -1
+MathWriting has no per-point token alignment, so every chars entry is -1
 ("unknown"). The student then learns only when a line is finished, not
-which character each point draws.
+which token each point draws.
 
 Inks come from many devices, so each is normalized:
 - scale: divided by the median stroke size (the larger side of each stroke's
@@ -22,7 +24,7 @@ Offsets are (dx, dy, end_of_stroke) from the previous point, y down, the first
 point at the origin, then normalized with the train set's mean and std.
 
 Usage: python scripts/mathwriting_corpus.py [--source data/mathwriting-2024]
-           [--out-dir data/mathwriting_corpus] [--lines-per-shard 8192]
+           [--out-dir data/mathwriting_corpus] [--tokenizer latex] [--lines-per-shard 8192]
            [--wandb-project P [--wandb-entity E] [--artifact mathwriting_corpus]]
 """
 import argparse
@@ -35,7 +37,7 @@ from multiprocessing import Pool
 import numpy as np
 
 from corpus_artifact import add_wandb_args, push
-from ink_corpus import MAX_TEXT
+from ink_corpus import MAX_TEXT, split_text
 
 NS = "{http://www.w3.org/2003/InkML}"
 
@@ -82,9 +84,9 @@ def to_offsets(strokes, spacing):
 
 
 def convert(args):
-    path, spacing, max_points = args
+    path, spacing, max_points, tokenizer = args
     label, strokes = read_inkml(path)
-    if not label or len(label) > MAX_TEXT:
+    if not label or len(split_text(label, tokenizer)) > MAX_TEXT:
         return None
     offsets = to_offsets(strokes, spacing)
     if offsets is None or len(offsets) > max_points:
@@ -92,10 +94,10 @@ def convert(args):
     return label, offsets
 
 
-def load_split(source, split, spacing, max_points, workers):
+def load_split(source, split, spacing, max_points, tokenizer, workers):
     paths = sorted(glob.glob(os.path.join(source, split, "*.inkml")))
     with Pool(workers) as pool:
-        out = pool.map(convert, [(p, spacing, max_points) for p in paths], chunksize=256)
+        out = pool.map(convert, [(p, spacing, max_points, tokenizer) for p in paths], chunksize=256)
     kept = [o for o in out if o is not None]
     print(f"{split}: kept {len(kept)} of {len(paths)} inks", flush=True)
     return kept
@@ -116,12 +118,12 @@ def main(args):
     if glob.glob(os.path.join(args.out_dir, "shard_*.npz")):
         raise SystemExit(f"{args.out_dir} already has shards; remove them to convert again")
     os.makedirs(args.out_dir, exist_ok=True)
-    train = load_split(args.source, "train", args.spacing, args.max_points, args.workers)
-    valid = load_split(args.source, "valid", args.spacing, args.max_points, args.workers)
+    train = load_split(args.source, "train", args.spacing, args.max_points, args.tokenizer, args.workers)
+    valid = load_split(args.source, "valid", args.spacing, args.max_points, args.tokenizer, args.workers)
 
-    charset = sorted({ch for t, _ in train for ch in t})
+    charset = sorted({tok for t, _ in train for tok in split_text(t, args.tokenizer)})
     allowed = set(charset)
-    valid = [v for v in valid if set(v[0]) <= allowed]
+    valid = [v for v in valid if set(split_text(v[0], args.tokenizer)) <= allowed]
 
     xy = np.concatenate([o[:, :2] for _, o in train])
     mu = np.array([*xy.mean(axis=0), 0.0], dtype=np.float32)
@@ -143,8 +145,10 @@ def main(args):
         # text_height: ink units (after denormalizing) from descender to cap
         # line, for drawing previews at a whiteboard scale. A symbol is about
         # one unit, so this is a rough guess.
-        json.dump({"charset": charset, "mu": mu.tolist(), "std": std.tolist(), "source": "mathwriting-2024",
+        json.dump({"charset": charset, "tokenizer": args.tokenizer, "mu": mu.tolist(), "std": std.tolist(),
+                   "source": "mathwriting-2024",
                    "spacing": args.spacing, "text_height": 1.5, "lines": "lines.txt"}, f, indent=1)
+    print(f"{len(charset)} tokens", flush=True)
     print(f"wrote {n_train} train shards and 1 validation shard ({len(valid)} inks) to {args.out_dir}", flush=True)
     if args.wandb_project:
         push(args.out_dir, args.wandb_entity, args.wandb_project, args.artifact)
@@ -154,6 +158,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--source", default="data/mathwriting-2024")
     ap.add_argument("--out-dir", default="data/mathwriting_corpus")
+    ap.add_argument("--tokenizer", choices=["latex", "char"], default="latex")
     ap.add_argument("--spacing", type=float, default=0.1, help="resampling step, in symbol sizes")
     ap.add_argument("--max-points", type=int, default=2000, help="skip longer inks after resampling")
     ap.add_argument("--lines-per-shard", type=int, default=8192)
