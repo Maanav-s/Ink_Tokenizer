@@ -130,6 +130,16 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - [generate_teacher_corpus.py](scripts/generate_teacher_corpus.py) —
     teacher samples as `.npz` shards; resumable and splittable across jobs.
     About 20-25% of the teacher's attempts are rejected.
+  - [ink_corpus.py](scripts/ink_corpus.py) — model-agnostic shard loader and
+    length-bucketed batching (reusable by other student architectures).
+  - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
+    `[text, SEP, ink]`, no attention window: a mixture-density head for the
+    next point and a character-index head that labels points and decides
+    when the line is finished.
+  - [train_student.py](scripts/train_student.py) — training; resumes from
+    its run directory.
+  - [sample_student.py](scripts/sample_student.py) — preview, and a failure
+    rate by line length next to the teacher's rejection rate.
 - Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
   packages baked in. `run_in_apptainer.sh` syncs `.venv` to `uv.lock` inside
   it. The `model` extra pins torch 2.9 and prebuilt CUDA 12 wheels of
@@ -146,6 +156,9 @@ scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
 # Student pipeline (generation and training belong on a cluster)
 python3 scripts/make_corpus_lines.py              # host: data/teacher_corpus/lines.txt
 scripts/run_in_apptainer.sh 0 python scripts/generate_teacher_corpus.py --num-shards 64
+scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name>
+scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
+    --checkpoint models/student/<name>/checkpoint.pt --eval 1000
 ```
 
 On tacc, wrap the same commands in `scripts/submit_slurm.sh --module
