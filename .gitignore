@@ -48,3 +48,4 @@ artifacts/
 logs/
 .apptainer/
 .cache/
+data/

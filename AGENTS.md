@@ -122,6 +122,14 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     strokes interface (writing order, no timestamps). It rejects lines and
     priming that are clearly broken. It cannot detect misspelled words,
     which the teacher produces often.
+- Mamba text-to-ink student, distilled from the teacher (bootstrap until
+  IAM-OnDB access arrives; it inherits the teacher's misspellings):
+  - [make_corpus_lines.py](scripts/make_corpus_lines.py) — the line list
+    (dictionary prose + charset-limited notation + page strings). Stdlib
+    only; run it on the host, which has the word list.
+  - [generate_teacher_corpus.py](scripts/generate_teacher_corpus.py) —
+    teacher samples as `.npz` shards; resumable and splittable across jobs.
+    About 20-25% of the teacher's attempts are rejected.
 - Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
   packages baked in. `run_in_apptainer.sh` syncs `.venv` to `uv.lock` inside
   it. The `model` extra pins torch 2.9 and prebuilt CUDA 12 wheels of
@@ -134,7 +142,17 @@ scripts/build_apptainer_image.sh                  # once: .apptainer/ink_tokeniz
 scripts/run_in_apptainer.sh cpu python scripts/fetch_teacher.py
 scripts/run_in_apptainer.sh cpu python scripts/text_to_ink.py "Hello world" --out hello.png
 scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
+
+# Student pipeline (generation and training belong on a cluster)
+python3 scripts/make_corpus_lines.py              # host: data/teacher_corpus/lines.txt
+scripts/run_in_apptainer.sh 0 python scripts/generate_teacher_corpus.py --num-shards 64
 ```
+
+On tacc, wrap the same commands in `scripts/submit_slurm.sh --module
+tacc-apptainer/1.4.1 --` (see docs/slurm.md), build the image and run one
+sync (`run_in_apptainer.sh cpu true`) on the login node first, and set
+`INK_NO_SYNC=1` for the jobs. Mamba2's Triton kernels compile on first use
+(about a minute) into `.cache/triton`.
 
 Update this section as real structure lands (synthetic data pipeline,
 recognition model, suggestion model, evaluation harness).
