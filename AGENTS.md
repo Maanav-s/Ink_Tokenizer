@@ -139,6 +139,13 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     shards.
   - [ink_corpus.py](scripts/ink_corpus.py) — model-agnostic shard loader and
     length-bucketed batching (reusable by other student architectures).
+  - [mathwriting_corpus.py](scripts/mathwriting_corpus.py) — converts the
+    human inks of MathWriting (`data/mathwriting-2024`, real handwritten
+    LaTeX) into the same shard format: `train/` becomes the training shards
+    and `valid/` the last shard (the held-out one). Inks are scale-normalized
+    by median stroke size and resampled by arc length. There is no
+    per-point alignment (`chars` = -1), so the index head only learns when
+    to stop on this data, and `char_acc` measures that.
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
     `[text, SEP, ink]`, with residual cross-attention to positioned text
     embeddings before the mixture-density and character-index heads.
@@ -173,6 +180,10 @@ scripts/generate_corpus.sh 0,1,2,3 0 64 $WB          # shards 0-63 split over GP
 scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py push $WB   # e.g. after a race
 scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py pull $WB [--artifact teacher_corpus:v3]
 scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name> $WB
+# MathWriting student: convert once, push, train on the artifact.
+scripts/run_in_apptainer.sh cpu python scripts/mathwriting_corpus.py $WB   # data/mathwriting_corpus, artifact mathwriting_corpus
+scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name> \
+    --corpus data/mathwriting_corpus --artifact mathwriting_corpus:latest $WB
 scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
     --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
 ```

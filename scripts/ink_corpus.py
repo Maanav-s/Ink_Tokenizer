@@ -1,7 +1,9 @@
-"""Load teacher corpus shards (scripts/generate_teacher_corpus.py) for training.
+"""Load corpus shards (scripts/generate_teacher_corpus.py,
+scripts/mathwriting_corpus.py) for training.
 
 Model-agnostic: it yields padded batches of text and normalized offsets with
-per-point character alignment, and leaves sequence layout to the model.
+per-point character alignment (-1 where it is unknown), and leaves sequence
+layout to the model.
 """
 import glob
 import json

@@ -30,9 +30,17 @@ from text_to_ink import TEXT_HEIGHT, ink_extent, plausible, preview, render, to_
 TEACHER_TEXT_HEIGHT = 500.0
 
 
-def write_student(model, token, mu, std, lines, bias=1.0, seed=0, batch=128):
+def preview_scale(meta):
+    """mm per denormalized ink unit, for drawing a corpus's ink."""
+    return TEXT_HEIGHT / meta.get("text_height", TEACHER_TEXT_HEIGHT)
+
+
+def write_student(model, token, meta, lines, bias=1.0, seed=0, batch=128):
     """to_line() dicts for lines written by the student. bias is one value or
-    one per line."""
+    one per line. plausible() is tuned to the teacher's ink, so it is only
+    applied to students of a teacher corpus."""
+    mu, std = np.array(meta["mu"]), np.array(meta["std"])
+    scale, teacher = preview_scale(meta), "teacher" in meta
     device = next(model.parameters()).device
     bias = np.broadcast_to(np.asarray(bias, dtype=np.float32), (len(lines),))
     gen = torch.Generator(device=device).manual_seed(seed)
@@ -44,15 +52,16 @@ def write_student(model, token, mu, std, lines, bias=1.0, seed=0, batch=128):
         line_bias = torch.from_numpy(bias[b:b + batch].copy()).to(device).view(-1, 1, 1)
         for line, (off, chars, finished) in zip(chunk, model.sample(text, text_len, line_bias, generator=gen)):
             off = off.numpy()
-            ok = finished and plausible(line, off * std + mu)
-            out.append(to_line(line, off, chars.numpy(), mu, std, TEXT_HEIGHT / TEACHER_TEXT_HEIGHT, ok))
+            ok = finished and (not teacher or plausible(line, off * std + mu))
+            out.append(to_line(line, off, chars.numpy(), mu, std, scale, ok))
     return out
 
 
 @torch.no_grad()
 def teacher_vs_student(model, corpus, n=8, seed=0):
-    """An image whose rows alternate between the teacher's ink for a corpus
-    line and the student writing the same line at the same bias. The n lines
+    """An image whose rows alternate between the corpus ink for a line (the
+    teacher's, or real ink) and the student writing the same line at the
+    same bias. The n lines
     are spread over the corpus's line lengths. Dimmed student rows failed.
     Student ink far outside the teacher's extent is cut off."""
     order = np.argsort([len(t) for t in corpus.texts], kind="stable")
@@ -61,13 +70,13 @@ def teacher_vs_student(model, corpus, n=8, seed=0):
     mu, std = np.array(corpus.meta["mu"]), np.array(corpus.meta["std"])
     was_training = model.training
     model.eval()
-    student = write_student(model, corpus.token, mu, std, texts, corpus.bias[picks], seed)
+    student = write_student(model, corpus.token, corpus.meta, texts, corpus.bias[picks], seed)
     model.train(was_training)
     rows = []
     for i, text, s in zip(picks, texts, student):
         a, n_points = corpus.starts[i], corpus.lengths[i]
         rows.append(to_line(text, corpus.offsets[a:a + n_points], corpus.chars[a:a + n_points], mu, std,
-                            TEXT_HEIGHT / TEACHER_TEXT_HEIGHT))
+                            preview_scale(corpus.meta)))
         rows.append(s)
     teacher = [ink_extent(r) for r in rows[::2]]
     return render(rows, max_width=1.5 * max(e[0] for e in teacher),
@@ -81,12 +90,11 @@ class StudentWriter:
         self.model, ckpt = load_student(checkpoint, device)
         self.meta, self.corpus_dir = ckpt["meta"], ckpt["args"]["corpus"]
         self.artifact = ckpt["args"].get("artifact", "teacher_corpus:latest")
-        self.mu, self.std = np.array(self.meta["mu"]), np.array(self.meta["std"])
         self.token = char_tokens(ckpt["charset"])
         self.device = device
 
     def write(self, lines, bias=1.0, seed=0, batch=128):
-        return write_student(self.model, self.token, self.mu, self.std, lines, bias, seed, batch)
+        return write_student(self.model, self.token, self.meta, lines, bias, seed, batch)
 
 
 def teacher_rejection_rate(corpus_dir):
