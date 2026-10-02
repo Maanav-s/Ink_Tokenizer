@@ -1,33 +1,46 @@
-"""Load corpus shards (scripts/generate_teacher_corpus.py,
+r"""Load corpus shards (scripts/generate_teacher_corpus.py,
 scripts/mathwriting_corpus.py) for training.
 
 Model-agnostic: it yields padded batches of text and normalized offsets with
 per-point character alignment (-1 where it is unknown), and leaves sequence
 layout to the model.
+
+Text is split into tokens by the corpus's tokenizer (meta.json "tokenizer"):
+"char" (the default) makes every character a token; "latex" also keeps each
+LaTeX command (\frac, \alpha), control symbol (\\, \{) and environment
+marker (\begin{matrix}) whole. "charset" in meta.json is the token list.
 """
 import glob
 import json
 import os
+import re
 
 import numpy as np
 import torch
 
-PAD, SEP = 0, 1  # text token ids; character i of the charset is i + 2
-MAX_TEXT = 50    # matches make_corpus_lines.MAX_CHARS
+PAD, SEP = 0, 1  # text token ids; token i of the charset is i + 2
+MAX_TEXT = 50    # tokens; matches make_corpus_lines.MAX_CHARS
+LATEX_TOKEN = re.compile(r"\\(?:begin|end)\{[A-Za-z*]+\}|\\[A-Za-z]+|\\.|.", re.S)
+
+
+def split_text(text, tokenizer="char"):
+    return LATEX_TOKEN.findall(text) if tokenizer == "latex" else list(text)
 
 
 def char_tokens(charset):
     return {ch: i + 2 for i, ch in enumerate(charset)}
 
 
-def encode_texts(texts, token):
-    """Left-padded token ids (B, T): every row's last token is its last char."""
-    width = max(len(t) for t in texts)
+def encode_texts(texts, token, tokenizer="char"):
+    """Left-padded token ids (B, T), so every row's last id is its last token,
+    and each row's token count (B,)."""
+    pieces = [split_text(t, tokenizer) for t in texts]
+    width = max(len(p) for p in pieces)
     out = torch.full((len(texts), width), PAD, dtype=torch.long)
-    for b, t in enumerate(texts):
-        if t:
-            out[b, width - len(t):] = torch.tensor([token[ch] for ch in t])
-    return out
+    for b, p in enumerate(pieces):
+        if p:
+            out[b, width - len(p):] = torch.tensor([token[tok] for tok in p])
+    return out, torch.tensor([len(p) for p in pieces])
 
 
 class Corpus:
@@ -35,6 +48,7 @@ class Corpus:
         self.meta = json.load(open(os.path.join(corpus_dir, "meta.json")))
         self.charset = self.meta["charset"]
         self.token = char_tokens(self.charset)
+        self.tokenizer = self.meta.get("tokenizer", "char")
         offsets, chars, lengths, bias, self.texts = [], [], [], [], []
         for path in shards:
             d = np.load(path)
@@ -75,8 +89,8 @@ class Corpus:
             s, k = self.starts[i], self.lengths[i]
             offsets[b, :k] = torch.from_numpy(self.offsets[s:s + k])
             chars[b, :k] = torch.from_numpy(self.chars[s:s + k].astype(np.int64))
-        return {"text": encode_texts(texts, self.token), "text_len": torch.tensor([len(t) for t in texts]),
-                "offsets": offsets, "chars": chars, "ink_len": torch.from_numpy(self.lengths[indices].astype(np.int64))}
+        text, text_len = encode_texts(texts, self.token, self.tokenizer)
+        return {"text": text, "text_len": text_len, "offsets": offsets, "chars": chars, "ink_len": torch.from_numpy(self.lengths[indices].astype(np.int64))}
 
     def batches(self, max_points, rng, pool=64):
         """One epoch of index batches, each holding at most max_points padded
