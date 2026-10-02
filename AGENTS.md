@@ -130,6 +130,8 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - [generate_teacher_corpus.py](scripts/generate_teacher_corpus.py) —
     teacher samples as `.npz` shards; resumable and splittable across jobs.
     About 20-25% of the teacher's attempts are rejected.
+  - [generate_corpus.sh](scripts/generate_corpus.sh) — runs it on a list of
+    GPUs, one job per GPU over a split shard range, then pushes once.
   - [corpus_artifact.py](scripts/corpus_artifact.py) — keeps the shards in
     a W&B dataset artifact (`push`/`pull`). Generation, training and eval
     take `--wandb-entity`, `--wandb-project` and `--artifact`. Training
@@ -162,7 +164,7 @@ scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
 # are optional; without --wandb-project everything stays local.
 WB="--wandb-entity <entity> --wandb-project <project>"
 python3 scripts/make_corpus_lines.py              # host: data/teacher_corpus/lines.txt
-scripts/run_in_apptainer.sh 0 python scripts/generate_teacher_corpus.py --num-shards 64 $WB
+scripts/generate_corpus.sh 0,1,2,3 0 64 $WB          # shards 0-63 split over GPUs 0-3, one push at the end
 scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py push $WB   # e.g. after a race
 scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py pull $WB [--artifact teacher_corpus:v3]
 scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name> $WB
