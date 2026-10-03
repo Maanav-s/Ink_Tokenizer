@@ -62,6 +62,7 @@ class Corpus:
         self.lengths = np.concatenate(lengths)
         self.bias = np.concatenate(bias)
         self.starts = np.concatenate([[0], np.cumsum(self.lengths)[:-1]])
+        self.text_lengths = [len(split_text(text, self.tokenizer)) for text in self.texts]
 
     @classmethod
     def split(cls, corpus_dir, val_shards=1, names=None):
@@ -92,12 +93,28 @@ class Corpus:
         text, text_len = encode_texts(texts, self.token, self.tokenizer)
         return {"text": text, "text_len": text_len, "offsets": offsets, "chars": chars, "ink_len": torch.from_numpy(self.lengths[indices].astype(np.int64))}
 
-    def batches(self, max_points, rng, pool=64):
+    def batches(self, max_points, rng, pool=64, equal_text_lengths=False):
         """One epoch of index batches, each holding at most max_points padded
         ink points. Lines are sorted by length within pools of nearby
-        batches, so padding stays small but batches still mix lines."""
+        batches. Optionally group by text token count before ink bucketing."""
+        if equal_text_lengths:
+            by_length = {}
+            for index, length in enumerate(self.text_lengths):
+                by_length.setdefault(length, []).append(index)
+            out = []
+            for length in sorted(by_length):
+                order = by_length[length]
+                rng.shuffle(order)
+                out.extend(self.pack_batches(order, max_points, pool))
+            rng.shuffle(out)
+            return out
         order = list(range(len(self)))
         rng.shuffle(order)
+        out = self.pack_batches(order, max_points, pool)
+        rng.shuffle(out)
+        return out
+
+    def pack_batches(self, order, max_points, pool):
         out = []
         avg = int(self.lengths.mean())
         chunk = pool * max(1, max_points // avg)
@@ -112,6 +129,4 @@ class Corpus:
                 batch.append(i)
             if batch:
                 out.append(batch)
-        rng.shuffle(out)
         return out
-

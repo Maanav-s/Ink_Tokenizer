@@ -152,12 +152,19 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     [fetch_mathwriting.sh](scripts/fetch_mathwriting.sh) downloads the
     dataset and runs the conversion. Train on it with `--artifact none`.
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
-    `[text, SEP, ink]`, with residual cross-attention to positioned text
-    embeddings before the mixture-density and character-index heads.
-    Text keys/values are cached during sampling. New runs default to four
-    attention heads (`--cross-attention-heads 0` disables it); checkpoint
-    resumes preserve the saved architecture, including older models without
-    attention. Use a new run directory to train with attention.
+    `[text, SEP, ink]`, with residual cross-attention before the mixture-density
+    and character-index heads. New runs default to `--conditioning unpadded`:
+    equal-token-count batches and prefix trimming keep PAD out of Mamba.
+    `--conditioning transformer` encodes text into 32 learned contextual slots
+    for the Mamba prefix and cross-attention memory. Text conditioning is cached
+    during sampling. Four attention heads are the default (`--cross-attention-heads
+    0` disables it). Checkpoint resumes preserve the saved architecture; older
+    checkpoints retain `legacy` left-padding. Use a fresh run directory for a
+    new architecture.
+  - [train_conditioning.sh](scripts/train_conditioning.sh) — cluster entry point
+    for `unpadded` and `transformer` variants on `teacher` or `mathwriting` data,
+    with separate run directories. See [docs/text_conditioning.md](docs/text_conditioning.md)
+    for architecture details, training commands, and evaluation limitations.
   - [train_student.py](scripts/train_student.py) — training; resumes from
     its run directory. Every `--sample-every` steps it draws held-out lines
     as written by the teacher and by the student, alternating rows, into
