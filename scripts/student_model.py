@@ -1,12 +1,15 @@
 """Mamba text-to-ink student.
 
-One causal sequence per line: the text, left-padded, then a separator, then
-the ink:
+The unpadded variant groups lines by token count, strips leading PAD, then
+runs one causal sequence per line:
 
-    [PAD .. PAD, c1 .. cU, SEP, p1 .. pN]
+    [c1 .. cU, SEP, p1 .. pN]
 
 After Mamba, a residual cross-attention layer reads the positioned text
-embeddings (including SEP, excluding padding). From the SEP position
+embeddings (including SEP). The transformer variant encodes the text with
+bidirectional attention, pools it into a fixed number of learned slots, and
+uses [slots, SEP, ink] for Mamba and slots for cross-attention. Legacy
+checkpoints retain the original left-padded sequence. From the SEP position
 onwards, each position predicts:
 
 - the next point, as the teacher does: a mixture of bivariate Gaussians for
@@ -57,13 +60,16 @@ class TextAttention(nn.Module):
     def split_heads(self, x):
         return x.reshape(x.shape[0], x.shape[1], self.heads, -1).transpose(1, 2)
 
-    def prepare(self, prefix, text_len):
+    def prepare(self, prefix, text_len=None):
         text = self.text_norm(prefix)
         key = self.split_heads(self.key(text))
         value = self.split_heads(self.value(text))
-        # SEP remains visible, including for an empty string, so no row is fully masked.
         positions = torch.arange(prefix.shape[1], device=prefix.device)
-        visible = positions.unsqueeze(0) >= (prefix.shape[1] - 1 - text_len).unsqueeze(1)
+        if text_len is None:
+            visible = torch.ones(prefix.shape[:2], dtype=torch.bool, device=prefix.device)
+        else:
+            # SEP remains visible, including for an empty string, so no row is fully masked.
+            visible = positions.unsqueeze(0) >= (prefix.shape[1] - 1 - text_len).unsqueeze(1)
         return key, value, visible[:, None, None, :]
 
     def forward(self, h, memory):
@@ -74,12 +80,41 @@ class TextAttention(nn.Module):
         return h + self.out(context)
 
 
+class TransformerPrefix(nn.Module):
+    def __init__(self, d_model, layers, heads, slots):
+        super().__init__()
+        if layers < 1 or slots < 1 or heads < 1 or d_model % heads:
+            raise ValueError("transformer needs positive layers/slots and heads dividing d_model")
+        layer = nn.TransformerEncoderLayer(d_model, heads, dim_feedforward=4 * d_model,
+                                           dropout=0.0, activation="gelu", batch_first=True,
+                                           norm_first=True)
+        self.encoder = nn.TransformerEncoder(layer, layers, norm=nn.LayerNorm(d_model),
+                                              enable_nested_tensor=False)
+        self.queries = nn.Parameter(torch.randn(slots, d_model) / math.sqrt(d_model))
+        self.pool = nn.TransformerDecoderLayer(d_model, heads, dim_feedforward=4 * d_model,
+                                               dropout=0.0, activation="gelu", batch_first=True,
+                                               norm_first=True)
+        self.norm = nn.LayerNorm(d_model)
+
+    def forward(self, prefix, text_len):
+        positions = torch.arange(prefix.shape[1], device=prefix.device)
+        padding = positions.unsqueeze(0) < (prefix.shape[1] - 1 - text_len).unsqueeze(1)
+        encoded = self.encoder(prefix, src_key_padding_mask=padding)
+        queries = self.queries.unsqueeze(0).expand(prefix.shape[0], -1, -1)
+        return self.norm(self.pool(queries, encoded, memory_key_padding_mask=padding))
+
+
 class Student(nn.Module):
     def __init__(self, vocab_size, d_model=256, n_layers=6, d_state=64, headdim=32, mixtures=20,
-                 cross_attention_heads=4):
+                 cross_attention_heads=4, conditioning="unpadded", text_encoder_layers=2,
+                 text_encoder_heads=4, prefix_slots=32):
         super().__init__()
+        if conditioning not in ("legacy", "unpadded", "transformer"):
+            raise ValueError("conditioning must be legacy, unpadded, or transformer")
         self.config = dict(vocab_size=vocab_size, d_model=d_model, n_layers=n_layers, d_state=d_state,
-                           headdim=headdim, mixtures=mixtures, cross_attention_heads=cross_attention_heads)
+                           headdim=headdim, mixtures=mixtures, cross_attention_heads=cross_attention_heads,
+                           conditioning=conditioning, text_encoder_layers=text_encoder_layers,
+                           text_encoder_heads=text_encoder_heads, prefix_slots=prefix_slots)
         self.mixtures = mixtures
         self.char_embed = nn.Embedding(vocab_size, d_model, padding_idx=PAD)
         self.text_pos = nn.Embedding(MAX_TEXT + 1, d_model)
@@ -87,6 +122,8 @@ class Student(nn.Module):
         self.blocks = nn.ModuleList(Block(d_model, i, d_state, headdim) for i in range(n_layers))
         self.norm = nn.RMSNorm(d_model)
         self.text_attention = TextAttention(d_model, cross_attention_heads) if cross_attention_heads else None
+        self.text_encoder = (TransformerPrefix(d_model, text_encoder_layers, text_encoder_heads, prefix_slots)
+                             if conditioning == "transformer" else None)
         # pi, mu (2), sd (2), rho, eos
         self.mdn = nn.Linear(d_model, 6 * mixtures + 1)
         self.char_head = nn.Linear(d_model, MAX_TEXT + 1)
@@ -106,14 +143,37 @@ class Student(nn.Module):
             x = block(x, inference_params)
         return self.norm(x)
 
+    def conditioning_prefix(self, text, text_len):
+        prefix = self.embed_text(text, text_len)
+        if self.text_encoder is not None:
+            slots = self.text_encoder(prefix, text_len)
+            # SEP marks the start of drawing; cross-attention reads only the fixed slots.
+            return torch.cat([slots, prefix[:, -1:]], dim=1), slots, None
+        return prefix, prefix, text_len
+
+    def text_groups(self, text, text_len):
+        for length in text_len.unique(sorted=True).tolist():
+            indices = (text_len == length).nonzero(as_tuple=True)[0]
+            yield indices, text.index_select(0, indices)[:, text.shape[1] - length:]
+
     def forward(self, text, text_len, offsets):
         """Hidden states at SEP and every ink point: (B, N + 1, d). Position
         j predicts point j + 1 (or "finished" at j = N)."""
-        prefix = self.embed_text(text, text_len)
+        if self.config["conditioning"] == "unpadded":
+            groups, indices = [], []
+            for index, tokens in self.text_groups(text, text_len):
+                groups.append(self.forward_sequence(tokens, text_len[index], offsets[index]))
+                indices.append(index)
+            order = torch.cat(indices).argsort()
+            return torch.cat(groups).index_select(0, order)
+        return self.forward_sequence(text, text_len, offsets)
+
+    def forward_sequence(self, text, text_len, offsets):
+        prefix, memory_text, memory_len = self.conditioning_prefix(text, text_len)
         h = self.run(torch.cat([prefix, self.point_in(offsets)], dim=1))
         h = h[:, prefix.shape[1] - 1:]
         if self.text_attention is not None:
-            h = self.text_attention(h, self.text_attention.prepare(prefix, text_len))
+            h = self.text_attention(h, self.text_attention.prepare(memory_text, memory_len))
         return h
 
     def heads(self, h, bias=0.0):
@@ -177,12 +237,25 @@ class Student(nn.Module):
         when the index head's most likely class is "finished"; points are
         labelled with the most likely real character.
         """
+        if self.config["conditioning"] == "unpadded":
+            results = [None] * text.shape[0]
+            for index, tokens in self.text_groups(text, text_len):
+                group_bias = bias
+                if torch.is_tensor(bias) and bias.ndim and bias.shape[0] == text.shape[0]:
+                    group_bias = bias[index]
+                group = self.sample_sequence(tokens, text_len[index], group_bias, max_steps_per_char, generator)
+                for row, result in zip(index.tolist(), group):
+                    results[row] = result
+            return results
+        return self.sample_sequence(text, text_len, bias, max_steps_per_char, generator)
+
+    def sample_sequence(self, text, text_len, bias, max_steps_per_char, generator):
         B = text.shape[0]
         device = text.device
         steps = max_steps_per_char * int(text_len.max()) + 100
-        ip = InferenceParams(max_seqlen=text.shape[1] + 1 + steps, max_batch_size=B)
-        prefix = self.embed_text(text, text_len)
-        memory = self.text_attention.prepare(prefix, text_len) if self.text_attention is not None else None
+        prefix, memory_text, memory_len = self.conditioning_prefix(text, text_len)
+        ip = InferenceParams(max_seqlen=prefix.shape[1] + steps, max_batch_size=B)
+        memory = self.text_attention.prepare(memory_text, memory_len) if self.text_attention is not None else None
         h = self.run(prefix, ip)[:, -1:]
         ip.seqlen_offset += prefix.shape[1]
 
@@ -243,4 +316,5 @@ def load_student(path, device="cuda"):
 def checkpoint_config(ckpt):
     config = dict(ckpt["config"])
     config.setdefault("cross_attention_heads", 0)
+    config.setdefault("conditioning", "legacy")
     return config

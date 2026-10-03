@@ -64,7 +64,8 @@ def start_wandb_run(args):
 def evaluate(model, corpus, max_points, device, limit=200):
     model.eval()
     totals = [0.0, 0.0, 0.0]
-    batches = corpus.batches(max_points, random.Random(0))[:limit]
+    batches = corpus.batches(max_points, random.Random(0),
+                             equal_text_lengths=model.config["conditioning"] != "legacy")[:limit]
     for idx in batches:
         with torch.autocast("cuda", dtype=torch.bfloat16):
             for i, v in enumerate(model.loss(to_device(corpus.batch(idx), device))):
@@ -95,9 +96,13 @@ def main(args):
     print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
 
     config = dict(vocab_size=len(train.charset) + 2, d_model=args.d_model, n_layers=args.n_layers,
-                  d_state=args.d_state, headdim=args.headdim, cross_attention_heads=args.cross_attention_heads)
+                  d_state=args.d_state, headdim=args.headdim, cross_attention_heads=args.cross_attention_heads,
+                  conditioning=args.conditioning, text_encoder_layers=args.text_encoder_layers,
+                  text_encoder_heads=args.text_encoder_heads, prefix_slots=args.prefix_slots)
     if ckpt is not None:
         config = checkpoint_config(ckpt)
+    if run:
+        run.config.update({"model_config": config}, allow_val_change=True)
     model = Student(**config).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
     step, epoch, pos = 0, 0, 0
@@ -106,7 +111,7 @@ def main(args):
         opt.load_state_dict(ckpt["opt"])
         step, epoch, pos = ckpt["step"], ckpt["epoch"], ckpt["pos"]
         print(f"resumed at step {step}", flush=True)
-    print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters", flush=True)
+    print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
     def save():
         tmp = ckpt_path + ".tmp"
@@ -121,7 +126,8 @@ def main(args):
     while step < args.steps:
         # Each epoch's batch order depends only on the seed and epoch, so a
         # resumed run continues where it stopped instead of replaying data.
-        batches = train.batches(args.max_points, random.Random(args.seed * 1000 + epoch))
+        batches = train.batches(args.max_points, random.Random(args.seed * 1000 + epoch),
+                                equal_text_lengths=model.config["conditioning"] != "legacy")
         while pos < len(batches) and step < args.steps:
             idx = batches[pos]
             for g in opt.param_groups:
@@ -183,6 +189,11 @@ if __name__ == "__main__":
     ap.add_argument("--headdim", type=int, default=32)
     ap.add_argument("--cross-attention-heads", type=int, default=4,
                     help="text attention heads for new runs; 0 disables attention; resumes use checkpoint config")
+    ap.add_argument("--conditioning", choices=("unpadded", "transformer", "legacy"), default="unpadded",
+                    help="new-run architecture; resumes always use the saved checkpoint configuration")
+    ap.add_argument("--text-encoder-layers", type=int, default=2)
+    ap.add_argument("--text-encoder-heads", type=int, default=4)
+    ap.add_argument("--prefix-slots", type=int, default=32)
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
     ap.add_argument("--sample-every", type=int, default=2000)
