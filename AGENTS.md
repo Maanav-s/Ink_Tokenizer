@@ -164,6 +164,10 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     `<run-dir>/samples/` and W&B.
   - [sample_student.py](scripts/sample_student.py) — preview, and a failure
     rate by line length next to the teacher's rejection rate.
+  - [checkpoint_artifact.py](scripts/checkpoint_artifact.py) — keeps a run
+    directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
+    (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
+    be pulled onto the workstation (`push`/`pull`).
 - Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
   packages baked in. `run_in_apptainer.sh` syncs `.venv` to `uv.lock` inside
   it. The `model` extra pins torch 2.9 and prebuilt CUDA 12 wheels of
@@ -192,6 +196,9 @@ scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/s
     --corpus data/mathwriting_corpus --artifact none $WB
 scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
     --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
+# Checkpoints: push on the cluster, pull here (latest, :v3 or :step-20000).
+scripts/run_in_apptainer.sh cpu python scripts/checkpoint_artifact.py push --run-dir models/student/<name> $WB
+scripts/run_in_apptainer.sh cpu python scripts/checkpoint_artifact.py pull --run-dir models/student/<name> $WB
 ```
 
 Give each cluster or job its own `--first-shard` range; a shard index
