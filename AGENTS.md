@@ -171,6 +171,13 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     `<run-dir>/samples/` and W&B.
   - [sample_student.py](scripts/sample_student.py) — preview, and a failure
     rate by line length next to the teacher's rejection rate.
+  - [flow_model.py](scripts/flow_model.py) — flow-matching alternative to
+    the Mamba student: a transformer that generates a whole line at once as
+    absolute positions plus a pen channel, with the point count predicted
+    from the text. [train_flow.py](scripts/train_flow.py) trains it with the
+    same run directory, corpus and W&B conventions as `train_student.py`;
+    `sample_student.py` loads either kind of checkpoint. Its losses are not
+    comparable with the Mamba student's `ink_nll`.
   - [checkpoint_artifact.py](scripts/checkpoint_artifact.py) — keeps a run
     directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
     (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
