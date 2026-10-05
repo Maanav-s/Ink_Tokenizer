@@ -21,6 +21,7 @@ import numpy as np
 import torch
 
 from corpus_artifact import add_wandb_args, pull
+from flow_model import FlowStudent
 from ink_corpus import char_tokens, encode_texts
 from student_model import load_student
 from text_to_ink import TEXT_HEIGHT, ink_extent, plausible, preview, render, to_line
@@ -83,11 +84,22 @@ def teacher_vs_student(model, corpus, n=8, seed=0):
                   max_height=1.5 * max(max(-e[1], e[2]) for e in teacher))
 
 
+def load_model(path, device="cuda"):
+    """The Mamba or flow-matching student a checkpoint holds, and the checkpoint."""
+    ckpt = torch.load(path, map_location=device, weights_only=False)
+    if ckpt.get("architecture") != "flow":
+        return load_student(path, device)
+    model = FlowStudent(**ckpt["config"]).to(device)
+    model.load_state_dict(ckpt["model"])
+    model.eval()
+    return model, ckpt
+
+
 class StudentWriter:
     """Same output as text_to_ink.Writer.write(), from the student."""
 
     def __init__(self, checkpoint, device="cuda"):
-        self.model, ckpt = load_student(checkpoint, device)
+        self.model, ckpt = load_model(checkpoint, device)
         self.meta, self.corpus_dir = ckpt["meta"], ckpt["args"]["corpus"]
         self.artifact = ckpt["args"].get("artifact", "teacher_corpus:latest")
         self.token = char_tokens(ckpt["charset"])
