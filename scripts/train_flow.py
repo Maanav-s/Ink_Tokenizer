@@ -7,7 +7,13 @@ cross-entropy. The flow loss is not a likelihood, so it cannot be compared
 with the Mamba student's ink_nll; compare the sample images instead.
 
 The run directory, resuming, the W&B corpus artifact and the sample images
-work as in scripts/train_student.py.
+work as in scripts/train_student.py. Two things differ:
+
+- inks whose coordinates exceed --max-coordinate are left out of training and
+  evaluation. They are mis-scaled, and their loss is hundreds of times a
+  normal ink's;
+- training stops when the validation flow loss rises to DIVERGED times its
+  best value, without saving, so checkpoint.pt stays the last good one.
 
 Usage: python scripts/train_flow.py --run-dir models/student/<name>
            [--corpus data/teacher_corpus] [--steps 50000] [--max-points 65536]
@@ -15,6 +21,7 @@ Usage: python scripts/train_flow.py --run-dir models/student/<name>
 """
 import argparse
 import json
+import math
 import os
 import random
 import time
@@ -23,12 +30,13 @@ import torch
 import wandb
 
 from corpus_artifact import add_wandb_args, pull, shard_names
-from flow_model import FlowStudent, coordinate_std
+from flow_model import FlowStudent, coordinate_std, peak_coordinate
 from ink_corpus import Corpus
 from sample_student import teacher_vs_student
 from train_student import lr_at, start_wandb_run, to_device
 
 LOSSES = ("flow", "smooth", "length", "char_ce", "char_acc")
+DIVERGED = 1.5  # times the best validation flow loss
 
 
 def total_loss(losses, args):
@@ -36,11 +44,16 @@ def total_loss(losses, args):
             + args.char_weight * losses["char_ce"])
 
 
+def kept_batches(corpus, keep, max_points, rng):
+    batches = [[i for i in batch if keep[i]] for batch in corpus.batches(max_points, rng)]
+    return [batch for batch in batches if batch]
+
+
 @torch.no_grad()
-def evaluate(model, corpus, max_points, device, limit=200):
+def evaluate(model, corpus, keep, max_points, device, limit=200):
     model.eval()
     totals = dict.fromkeys(LOSSES, 0.0)
-    batches = corpus.batches(max_points, random.Random(0))[:limit]
+    batches = kept_batches(corpus, keep, max_points, random.Random(0))[:limit]
     # The loss draws noise and flow times; fixing them makes evaluations comparable.
     generator = torch.Generator(device=device).manual_seed(0)
     for idx in batches:
@@ -81,20 +94,24 @@ def main(args):
                       heads=args.heads, text_layers=args.text_layers, text_dropout=args.text_dropout)
     if run:
         run.config.update({"model_config": config}, allow_val_change=True)
+    keep = peak_coordinate(train, config["coord_std"]) <= args.max_coordinate
+    val_keep = peak_coordinate(val, config["coord_std"]) <= args.max_coordinate
+    print(f"left out {(~keep).sum()} train and {(~val_keep).sum()} val inks beyond "
+          f"--max-coordinate {args.max_coordinate}", flush=True)
     model = FlowStudent(**config).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
-    step, epoch, pos = 0, 0, 0
+    step, epoch, pos, best_val = 0, 0, 0, math.inf
     if ckpt is not None:
         model.load_state_dict(ckpt["model"])
         opt.load_state_dict(ckpt["opt"])
-        step, epoch, pos = ckpt["step"], ckpt["epoch"], ckpt["pos"]
+        step, epoch, pos, best_val = ckpt["step"], ckpt["epoch"], ckpt["pos"], ckpt["best_val"]
         print(f"resumed at step {step}", flush=True)
     print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
     def save():
         tmp = ckpt_path + ".tmp"
         torch.save({"architecture": "flow", "model": model.state_dict(), "opt": opt.state_dict(), "step": step,
-                    "epoch": epoch, "pos": pos, "config": model.config, "charset": train.charset,
+                    "epoch": epoch, "pos": pos, "best_val": best_val, "config": model.config, "charset": train.charset,
                     "meta": train.meta, "args": vars(args)}, tmp)
         os.replace(tmp, ckpt_path)
 
@@ -104,7 +121,7 @@ def main(args):
     while step < args.steps:
         # Each epoch's batch order depends only on the seed and epoch, so a
         # resumed run continues where it stopped instead of replaying data.
-        batches = train.batches(args.max_points, random.Random(args.seed * 1000 + epoch))
+        batches = kept_batches(train, keep, args.max_points, random.Random(args.seed * 1000 + epoch))
         while pos < len(batches) and step < args.steps:
             idx = batches[pos]
             for g in opt.param_groups:
@@ -115,8 +132,8 @@ def main(args):
             opt.zero_grad(set_to_none=True)
             loss.backward()
             grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
-            if not torch.isfinite(loss):
-                raise RuntimeError(f"non-finite loss at step {step}")
+            if not torch.isfinite(loss) or not torch.isfinite(grad_norm):
+                raise RuntimeError(f"non-finite loss or gradient at step {step}")
             opt.step()
             step += 1
             pos += 1
@@ -125,14 +142,22 @@ def main(args):
                 rec = {"step": step, "epoch": epoch, **{k: losses[k].item() for k in LOSSES},
                        "grad_norm": grad_norm.item(), "lr": opt.param_groups[0]["lr"],
                        "elapsed_s": round(time.time() - start)}
+                diverged = False
                 if step % args.eval_every == 0:
-                    rec.update({f"val_{k}": v for k, v in evaluate(model, val, args.max_points, device).items()})
-                    save()
+                    v = evaluate(model, val, val_keep, args.max_points, device)
+                    rec.update({f"val_{k}": x for k, x in v.items()})
+                    diverged = v["flow"] > DIVERGED * best_val
+                    if not diverged:
+                        best_val = min(best_val, v["flow"])
+                        save()
                 print(json.dumps(rec), flush=True)
                 log.write(json.dumps(rec) + "\n")
                 log.flush()
                 if run:
                     run.log(rec, step=step)
+                if diverged:
+                    raise RuntimeError(f"diverged at step {step}: val flow {v['flow']:.3f}, best {best_val:.3f}; "
+                                       f"checkpoint.pt is from the evaluation before")
             if step % args.sample_every == 0:
                 os.makedirs(os.path.join(args.run_dir, "samples"), exist_ok=True)
                 img = teacher_vs_student(model, val, args.sample_lines)
@@ -155,9 +180,11 @@ if __name__ == "__main__":
     ap.add_argument("--val-shards", type=int, default=1)
     ap.add_argument("--steps", type=int, default=50000)
     ap.add_argument("--max-points", type=int, default=65536, help="padded ink points per batch")
-    ap.add_argument("--lr", type=float, default=3e-4)
+    ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--warmup", type=int, default=1000)
     ap.add_argument("--clip", type=float, default=1.0)
+    ap.add_argument("--max-coordinate", type=float, default=8.0,
+                    help="leave out inks reaching beyond this many coordinate stds from their centre")
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)

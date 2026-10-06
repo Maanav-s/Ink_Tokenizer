@@ -58,6 +58,19 @@ def coordinate_std(corpus, lines=4096):
     return np.concatenate(centred).std(axis=0).tolist()
 
 
+def peak_coordinate(corpus, coord_std):
+    """Each ink's largest |coordinate| in the flow's units, where typical
+    inks stay within a few. An ink far beyond that is mis-scaled: MathWriting
+    inks are scaled by their median stroke, which is a dot in some of them."""
+    mu, std = corpus.meta["mu"][:2], corpus.meta["std"][:2]
+    peak = np.empty(len(corpus))
+    for i in range(len(corpus)):
+        s, k = corpus.starts[i], corpus.lengths[i]
+        xy = (corpus.offsets[s:s + k, :2] * std + mu).cumsum(axis=0)
+        peak[i] = np.abs((xy - xy.mean(axis=0)) / coord_std).max()
+    return peak
+
+
 class TimeNorm(nn.Module):
     """LayerNorm whose scale and shift come from the flow time."""
 
