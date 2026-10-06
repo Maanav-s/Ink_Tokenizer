@@ -13,22 +13,32 @@ class FlowStudentTests(unittest.TestCase):
     def setUp(self):
         torch.manual_seed(3)
         self.model = FlowStudent(vocab_size=8, offset_mu=[0.1, -0.2, 0.0], offset_std=[0.5, 0.3, 1.0],
-                                 coord_std=[2.0, 1.0], d_model=16, n_layers=2, heads=2, text_layers=1)
+                                 coord_std=[2.0, 0.5], typical_height=3.0, d_model=16, n_layers=2, heads=2, text_layers=1)
         offsets = torch.randn(2, 5, 3)
         offsets[..., 2] = torch.tensor([[0, 1, 0, 1, 0], [0, 0, 1, 0, 1]])
         self.batch = {"text": torch.tensor([[0, 2, 3], [4, 5, 6]]), "text_len": torch.tensor([2, 3]),
                       "offsets": offsets, "chars": torch.tensor([[0, 0, 1, 1, 0], [0, 1, 1, 2, 2]]),
                       "ink_len": torch.tensor([4, 5])}
 
-    def test_positions_round_trip_to_offsets(self):
-        offsets, ink_len = self.batch["offsets"], self.batch["ink_len"]
-        x = self.model.to_positions(offsets, ink_len)
+    def test_positions_are_centred_and_one_ink_height_tall(self):
+        x = self.model.to_positions(self.batch["offsets"], self.batch["ink_len"])
         self.assertTrue((x[0, 4] == 0).all())
         torch.testing.assert_close(x[1, :, :2].mean(dim=0), torch.zeros(2), atol=1e-6, rtol=0)
-        back = self.model.to_offsets(x)
-        # The first offset only says where the ink starts, which centring drops.
-        torch.testing.assert_close(back[1, 1:], offsets[1, 1:], atol=1e-5, rtol=0)
-        torch.testing.assert_close(back[0, 1:4], offsets[0, 1:4], atol=1e-5, rtol=0)
+        for b, n in enumerate(self.batch["ink_len"]):
+            y = x[b, :n, 1] * self.model.coord_std[1]
+            self.assertAlmostEqual((y.max() - y.min()).item(), 1.0, places=5)
+
+    def test_offsets_come_back_at_the_typical_height(self):
+        offsets, ink_len = self.batch["offsets"], self.batch["ink_len"]
+        mu, std = self.model.offset_mu, self.model.offset_std
+        back = self.model.to_offsets(self.model.to_positions(offsets, ink_len))
+        for b, n in enumerate(ink_len):
+            y = (offsets[b, :n, 1] * std[1] + mu[1]).cumsum(dim=0)
+            scale = self.model.typical_height / (y.max() - y.min())
+            # The first offset only says where the ink starts, which centring drops.
+            torch.testing.assert_close(back[b, 1:n, :2] * std + mu, (offsets[b, 1:n, :2] * std + mu) * scale,
+                                       atol=1e-5, rtol=0)
+            torch.testing.assert_close(back[b, :n, 2], offsets[b, :n, 2])
 
     def test_padding_does_not_change_the_velocity(self):
         longer = dict(self.batch)
