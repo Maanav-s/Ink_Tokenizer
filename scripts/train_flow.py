@@ -7,16 +7,17 @@ cross-entropy. The flow loss is not a likelihood, so it cannot be compared
 with the Mamba student's ink_nll; compare the sample images instead.
 
 The run directory, resuming, the W&B corpus artifact and the sample images
-work as in scripts/train_student.py. Two things differ:
+work as in scripts/train_student.py. Unlike it, training stops when the
+validation flow loss rises to DIVERGED times its best value, without saving,
+so checkpoint.pt stays the last good one.
 
-- inks whose coordinates exceed --max-coordinate are left out of training and
-  evaluation. They are mis-scaled, and their loss is hundreds of times a
-  normal ink's;
-- training stops when the validation flow loss rises to DIVERGED times its
-  best value, without saving, so checkpoint.pt stays the last good one.
+--init-from starts a new run from another flow checkpoint's weights, with a
+fresh optimizer and this corpus's ink statistics. Its architecture and
+vocabulary must match.
 
 Usage: python scripts/train_flow.py --run-dir models/student/<name>
            [--corpus data/teacher_corpus] [--steps 50000] [--max-points 65536]
+           [--init-from models/student/<other>/checkpoint.pt]
            [--wandb-project P [--wandb-entity E] [--artifact teacher_corpus:latest]]
 """
 import argparse
@@ -30,7 +31,7 @@ import torch
 import wandb
 
 from corpus_artifact import add_wandb_args, pull, shard_names
-from flow_model import FlowStudent, coordinate_std, peak_coordinate
+from flow_model import FlowStudent, ink_statistics
 from ink_corpus import Corpus
 from sample_student import teacher_vs_student
 from train_student import lr_at, start_wandb_run, to_device
@@ -44,16 +45,11 @@ def total_loss(losses, args):
             + args.char_weight * losses["char_ce"])
 
 
-def kept_batches(corpus, keep, max_points, rng):
-    batches = [[i for i in batch if keep[i]] for batch in corpus.batches(max_points, rng)]
-    return [batch for batch in batches if batch]
-
-
 @torch.no_grad()
-def evaluate(model, corpus, keep, max_points, device, limit=200):
+def evaluate(model, corpus, max_points, device, limit=200):
     model.eval()
     totals = dict.fromkeys(LOSSES, 0.0)
-    batches = kept_batches(corpus, keep, max_points, random.Random(0))[:limit]
+    batches = corpus.batches(max_points, random.Random(0))[:limit]
     # The loss draws noise and flow times; fixing them makes evaluations comparable.
     generator = torch.Generator(device=device).manual_seed(0)
     for idx in batches:
@@ -89,15 +85,13 @@ def main(args):
     if ckpt is not None:
         config = ckpt["config"]
     else:
+        coord_std, typical_height = ink_statistics(train)
         config = dict(vocab_size=len(train.charset) + 2, offset_mu=train.meta["mu"], offset_std=train.meta["std"],
-                      coord_std=coordinate_std(train), d_model=args.d_model, n_layers=args.n_layers,
-                      heads=args.heads, text_layers=args.text_layers, text_dropout=args.text_dropout)
+                      coord_std=coord_std, typical_height=typical_height, d_model=args.d_model,
+                      n_layers=args.n_layers, heads=args.heads, text_layers=args.text_layers,
+                      text_dropout=args.text_dropout)
     if run:
         run.config.update({"model_config": config}, allow_val_change=True)
-    keep = peak_coordinate(train, config["coord_std"]) <= args.max_coordinate
-    val_keep = peak_coordinate(val, config["coord_std"]) <= args.max_coordinate
-    print(f"left out {(~keep).sum()} train and {(~val_keep).sum()} val inks beyond "
-          f"--max-coordinate {args.max_coordinate}", flush=True)
     model = FlowStudent(**config).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
     step, epoch, pos, best_val = 0, 0, 0, math.inf
@@ -106,6 +100,11 @@ def main(args):
         opt.load_state_dict(ckpt["opt"])
         step, epoch, pos, best_val = ckpt["step"], ckpt["epoch"], ckpt["pos"], ckpt["best_val"]
         print(f"resumed at step {step}", flush=True)
+    elif args.init_from:
+        init = torch.load(args.init_from, map_location=device, weights_only=False)
+        # The buffers hold the ink statistics, which are this run's, not the checkpoint's.
+        model.load_state_dict({**init["model"], **dict(model.named_buffers())})
+        print(f"initialized from {args.init_from} at step {init['step']}", flush=True)
     print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
     def save():
@@ -121,7 +120,7 @@ def main(args):
     while step < args.steps:
         # Each epoch's batch order depends only on the seed and epoch, so a
         # resumed run continues where it stopped instead of replaying data.
-        batches = kept_batches(train, keep, args.max_points, random.Random(args.seed * 1000 + epoch))
+        batches = train.batches(args.max_points, random.Random(args.seed * 1000 + epoch))
         while pos < len(batches) and step < args.steps:
             idx = batches[pos]
             for g in opt.param_groups:
@@ -144,7 +143,7 @@ def main(args):
                        "elapsed_s": round(time.time() - start)}
                 diverged = False
                 if step % args.eval_every == 0:
-                    v = evaluate(model, val, val_keep, args.max_points, device)
+                    v = evaluate(model, val, args.max_points, device)
                     rec.update({f"val_{k}": x for k, x in v.items()})
                     diverged = v["flow"] > DIVERGED * best_val
                     if not diverged:
@@ -183,8 +182,7 @@ if __name__ == "__main__":
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--warmup", type=int, default=1000)
     ap.add_argument("--clip", type=float, default=1.0)
-    ap.add_argument("--max-coordinate", type=float, default=8.0,
-                    help="leave out inks reaching beyond this many coordinate stds from their centre")
+    ap.add_argument("--init-from", help="flow checkpoint whose weights start a new run")
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)

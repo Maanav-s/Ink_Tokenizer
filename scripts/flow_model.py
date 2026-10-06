@@ -11,10 +11,16 @@ a time, this model generates a whole line at once:
   straight path (x_t = (1 - t) noise + t ink, velocity = ink - noise).
 
 The ink is generated as absolute positions, not offsets: (x, y) centred per
-ink and divided by the corpus's coordinate std, plus a pen channel that is +1
-on the last point of a stroke and -1 elsewhere. White noise on positions
-leaves the layout (where a denominator or superscript sits) visible longest;
-white noise on offsets would be a random walk that destroys it first.
+ink and divided by the ink's height (its highest minus its lowest y), plus a
+pen channel that is +1 on the last point of a stroke and -1 elsewhere. White
+noise on positions leaves the layout (where a denominator or superscript
+sits) visible longest; white noise on offsets would be a random walk that
+destroys it first.
+
+Every ink is therefore one unit tall, whatever it says: the model does not
+decide how large to write. Whoever places a sample chooses the height of its
+box. coord_std is a corpus-wide constant that only brings the coordinates to
+the unit variance of the noise.
 
 A second head labels every point with the text token it draws. It is trained
 where the corpus has an alignment (chars >= 0) and read from one extra pass
@@ -37,6 +43,7 @@ LENGTH_BINS = 300   # up to 2400 points; both corpora stop below that
 # The Graves bias has no exact counterpart here. It lowers the temperature of
 # the starting noise instead, which also gives neater, more average writing.
 BIAS_TEMPERATURE = 0.25
+MIN_HEIGHT = 1e-6   # denormalized offset units; keeps a perfectly flat ink finite
 
 
 def sinusoid(x, dim):
@@ -46,29 +53,19 @@ def sinusoid(x, dim):
     return torch.cat([angles.sin(), angles.cos()], dim=-1)
 
 
-def coordinate_std(corpus, lines=4096):
-    """Per-axis std of centred absolute positions over the corpus's first
-    `lines` inks, in denormalized offset units."""
+def ink_statistics(corpus, lines=4096):
+    """Over the corpus's first `lines` inks: the per-axis std of centred
+    positions measured in ink heights, and the median ink height in
+    denormalized offset units."""
     mu, std = corpus.meta["mu"][:2], corpus.meta["std"][:2]
-    centred = []
+    scaled, heights = [], []
     for i in range(min(lines, len(corpus))):
         s, k = corpus.starts[i], corpus.lengths[i]
         xy = (corpus.offsets[s:s + k, :2] * std + mu).cumsum(axis=0)
-        centred.append(xy - xy.mean(axis=0))
-    return np.concatenate(centred).std(axis=0).tolist()
-
-
-def peak_coordinate(corpus, coord_std):
-    """Each ink's largest |coordinate| in the flow's units, where typical
-    inks stay within a few. An ink far beyond that is mis-scaled: MathWriting
-    inks are scaled by their median stroke, which is a dot in some of them."""
-    mu, std = corpus.meta["mu"][:2], corpus.meta["std"][:2]
-    peak = np.empty(len(corpus))
-    for i in range(len(corpus)):
-        s, k = corpus.starts[i], corpus.lengths[i]
-        xy = (corpus.offsets[s:s + k, :2] * std + mu).cumsum(axis=0)
-        peak[i] = np.abs((xy - xy.mean(axis=0)) / coord_std).max()
-    return peak
+        height = max(xy[:, 1].max() - xy[:, 1].min(), MIN_HEIGHT)
+        scaled.append((xy - xy.mean(axis=0)) / height)
+        heights.append(height)
+    return np.concatenate(scaled).std(axis=0).tolist(), float(np.median(heights))
 
 
 class TimeNorm(nn.Module):
@@ -105,12 +102,13 @@ class Block(nn.Module):
 
 
 class FlowStudent(nn.Module):
-    def __init__(self, vocab_size, offset_mu, offset_std, coord_std, d_model=384, n_layers=8, heads=6,
-                 text_layers=3, text_dropout=0.1):
+    def __init__(self, vocab_size, offset_mu, offset_std, coord_std, typical_height, d_model=384, n_layers=8,
+                 heads=6, text_layers=3, text_dropout=0.1):
         super().__init__()
         self.config = dict(vocab_size=vocab_size, offset_mu=list(offset_mu), offset_std=list(offset_std),
-                           coord_std=list(coord_std), d_model=d_model, n_layers=n_layers, heads=heads,
-                           text_layers=text_layers, text_dropout=text_dropout)
+                           coord_std=list(coord_std), typical_height=typical_height, d_model=d_model,
+                           n_layers=n_layers, heads=heads, text_layers=text_layers, text_dropout=text_dropout)
+        self.typical_height = typical_height
         self.d_model = d_model
         self.text_dropout = text_dropout
         self.register_buffer("offset_mu", torch.tensor(offset_mu[:2], dtype=torch.float32))
@@ -137,17 +135,21 @@ class FlowStudent(nn.Module):
         self.char_head = nn.Linear(d_model, MAX_TEXT)
 
     def to_positions(self, offsets, ink_len):
-        """Normalized offsets (B, N, 3) -> the flow's ink (B, N, 3): centred,
-        scaled absolute (x, y) and a +-1 pen channel, zero on padding."""
+        """Normalized offsets (B, N, 3) -> the flow's ink (B, N, 3): absolute
+        (x, y), centred and in units of the ink's own height, and a +-1 pen
+        channel, zero on padding."""
         mask = (torch.arange(offsets.shape[1], device=offsets.device) < ink_len.unsqueeze(1)).unsqueeze(-1)
         xy = torch.cumsum((offsets[..., :2] * self.offset_std + self.offset_mu) * mask, dim=1)
         centre = (xy * mask).sum(dim=1, keepdim=True) / ink_len.view(-1, 1, 1)
-        xy = (xy - centre) / self.coord_std
+        y = xy[..., 1:]
+        height = y.masked_fill(~mask, -torch.inf).amax(dim=1) - y.masked_fill(~mask, torch.inf).amin(dim=1)
+        xy = (xy - centre) / height.clamp(min=MIN_HEIGHT).unsqueeze(1) / self.coord_std
         return torch.cat([xy, offsets[..., 2:] * 2 - 1], dim=-1) * mask
 
     def to_offsets(self, x):
-        """The inverse of to_positions, up to where the ink starts."""
-        xy = x[..., :2] * self.coord_std
+        """The inverse of to_positions, up to where the ink starts and how
+        tall it is: every ink comes back at the corpus's typical height."""
+        xy = x[..., :2] * self.coord_std * self.typical_height
         raw = torch.diff(xy, dim=1, prepend=xy[:, :1])
         return torch.cat([(raw - self.offset_mu) / self.offset_std, (x[..., 2:] > 0).float()], dim=-1)
 

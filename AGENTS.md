@@ -174,7 +174,8 @@ the optional `render` extra (Hershey-Fonts, Pillow).
   - [flow_model.py](scripts/flow_model.py) — flow-matching alternative to
     the Mamba student: a transformer that generates a whole line at once as
     absolute positions plus a pen channel, with the point count predicted
-    from the text. [train_flow.py](scripts/train_flow.py) trains it with the
+    from the text. Each ink is scaled to unit height, so the model does not
+    choose a size: whoever places a sample supplies its box. [train_flow.py](scripts/train_flow.py) trains it with the
     same run directory, corpus and W&B conventions as `train_student.py`;
     `sample_student.py` loads either kind of checkpoint. Its losses are not
     comparable with the Mamba student's `ink_nll`.
