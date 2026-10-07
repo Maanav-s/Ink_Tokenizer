@@ -58,12 +58,13 @@ def sinusoid(x, dim):
 
 
 def ink_statistics(corpus, lines=4096):
-    """Over the corpus's first `lines` inks: the per-axis std of centred
+    """Over `lines` inks spread evenly through the corpus (a merged corpus
+    keeps its sources in separate shards): the per-axis std of centred
     positions measured in ink heights, and the median ink height in
     denormalized offset units."""
     mu, std = corpus.meta["mu"][:2], corpus.meta["std"][:2]
     scaled, heights = [], []
-    for i in range(min(lines, len(corpus))):
+    for i in np.linspace(0, len(corpus) - 1, min(lines, len(corpus))).astype(int):
         s, k = corpus.starts[i], corpus.lengths[i]
         xy = (corpus.offsets[s:s + k, :2] * std + mu).cumsum(axis=0)
         height = max(xy[:, 1].max() - xy[:, 1].min(), MIN_HEIGHT)

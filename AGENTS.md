@@ -151,6 +151,14 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     to stop on this data, and `char_acc` measures that.
     [fetch_mathwriting.sh](scripts/fetch_mathwriting.sh) downloads the
     dataset and runs the conversion. Train on it with `--artifact none`.
+  - [mixed_corpus.py](scripts/mixed_corpus.py) — merges the MathWriting and
+    teacher corpora into `data/mixed_corpus`, so one model writes formulas and
+    plain text. A teacher line becomes `\text{...}` (MathWriting has no
+    `\text`, so the wrapper selects the teacher's hand), and its ink is
+    rescaled, resampled and normalized as MathWriting's is. The vocabulary is
+    MathWriting's with the new tokens appended, so a flow checkpoint trained
+    on MathWriting can continue on it (`train_flow.py --init-from`). The last
+    shard holds both validation sets. Train on it with `--artifact none`.
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
     `[text, SEP, ink]`, with residual cross-attention before the mixture-density
     and character-index heads. New runs default to `--conditioning unpadded`:
@@ -215,6 +223,10 @@ scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/s
     --corpus data/mathwriting_corpus --artifact none $WB
 scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
     --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
+# Formulas and plain text in one flow student, continuing from a MathWriting one.
+scripts/run_in_apptainer.sh cpu python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
+scripts/run_in_apptainer.sh 0 python scripts/train_flow.py --run-dir models/student/<name> \
+    --corpus data/mixed_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
 scripts/run_in_apptainer.sh 0 python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB
