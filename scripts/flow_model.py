@@ -26,6 +26,10 @@ A second head labels every point with the text token it draws. It is trained
 where the corpus has an alignment (chars >= 0) and read from one extra pass
 over the finished ink.
 
+How many Euler steps and how much classifier-free guidance a model is sampled
+with are part of its config, because a reflowed model
+(scripts/train_reflow.py) needs fewer steps and no guidance.
+
 sample() returns what Student.sample() returns, normalized offsets included,
 so scripts/sample_student.py and the page renderer work with either model.
 """
@@ -103,11 +107,14 @@ class Block(nn.Module):
 
 class FlowStudent(nn.Module):
     def __init__(self, vocab_size, offset_mu, offset_std, coord_std, typical_height, d_model=384, n_layers=8,
-                 heads=6, text_layers=3, text_dropout=0.1):
+                 heads=6, text_layers=3, text_dropout=0.1, sample_steps=32, sample_guidance=2.0):
         super().__init__()
         self.config = dict(vocab_size=vocab_size, offset_mu=list(offset_mu), offset_std=list(offset_std),
                            coord_std=list(coord_std), typical_height=typical_height, d_model=d_model,
-                           n_layers=n_layers, heads=heads, text_layers=text_layers, text_dropout=text_dropout)
+                           n_layers=n_layers, heads=heads, text_layers=text_layers, text_dropout=text_dropout,
+                           sample_steps=sample_steps, sample_guidance=sample_guidance)
+        self.sample_steps = sample_steps
+        self.sample_guidance = sample_guidance
         self.typical_height = typical_height
         self.d_model = d_model
         self.text_dropout = text_dropout
@@ -189,16 +196,22 @@ class FlowStudent(nn.Module):
         h = self.out_norm(h, time)
         return self.velocity(h).float(), self.char_head(h).float()
 
-    def loss(self, batch, generator=None):
+    def loss(self, batch, generator=None, pair=None):
         """A dict of losses, each a mean over real (unpadded) positions:
         flow (velocity error), smooth (error in the velocity's change between
-        neighbouring points), length, char_ce and char_acc."""
+        neighbouring points), length, char_ce and char_acc.
+
+        pair is (noise, ink), both (B, N, 3), to train on instead of the
+        batch's ink and fresh noise."""
         text, text_len, offsets, chars, ink_len = (batch[k] for k in ("text", "text_len", "offsets", "chars", "ink_len"))
         B, N, _ = offsets.shape
         device = offsets.device
         mask = torch.arange(N, device=device).unsqueeze(0) < ink_len.unsqueeze(1)
-        x1 = self.to_positions(offsets, ink_len)
-        x0 = torch.randn(x1.shape, generator=generator, device=device)
+        if pair is None:
+            x1 = self.to_positions(offsets, ink_len)
+            x0 = torch.randn(x1.shape, generator=generator, device=device)
+        else:
+            x0, x1 = pair
         # Logit-normal times: most steps train mid-path, where layout is decided.
         t = torch.sigmoid(torch.randn(B, generator=generator, device=device))
         xt = (1 - t.view(B, 1, 1)) * x0 + t.view(B, 1, 1) * x1
@@ -229,22 +242,15 @@ class FlowStudent(nn.Module):
         return {"flow": flow, "smooth": smooth, "length": length, "char_ce": char_ce, "char_acc": char_acc}
 
     @torch.no_grad()
-    def sample(self, text, text_len, bias=0.0, steps=32, guidance=2.0, generator=None):
-        """Write a batch of lines. text: (B, T) left-padded tokens.
-
-        Returns per line (offsets (n, 3), chars (n,), finished), as
-        Student.sample() does. finished is always True: the length is drawn
-        before the ink. guidance is the classifier-free guidance scale (1
-        turns it off).
-        """
-        B, device = text.shape[0], text.device
-        bias = torch.as_tensor(bias, dtype=torch.float32, device=device).reshape(-1).expand(B)
-        memory, memory_pad, length_logit = self.encode_text(text, text_len)
-        length_p = F.softmax(length_logit * (1 + bias).unsqueeze(1), dim=-1)
-        ink_len = torch.multinomial(length_p, 1, generator=generator).squeeze(1) * LENGTH_BIN + LENGTH_BIN // 2
-
-        x = torch.randn((B, int(ink_len.max()), 3), generator=generator, device=device)
-        x = x * torch.exp(-BIAS_TEMPERATURE * bias).view(B, 1, 1)
+    def transport(self, x, text, text_len, ink_len, steps=None, guidance=None):
+        """Carry noise x (B, N, 3) to ink with Euler steps. Returns the ink
+        and the index of the text token each point draws (B, N). guidance is
+        the classifier-free guidance scale (1 turns it off); steps and
+        guidance default to the model's own."""
+        steps = self.sample_steps if steps is None else steps
+        guidance = self.sample_guidance if guidance is None else guidance
+        B, device = x.shape[0], x.device
+        memory, memory_pad, _ = self.encode_text(text, text_len)
         if guidance != 1:
             everything = torch.ones(B, dtype=torch.bool, device=device)
             null_memory, null_pad, _ = self.encode_text(text, text_len, everything)
@@ -258,7 +264,26 @@ class FlowStudent(nn.Module):
 
         _, char_logit = self.denoise(x, torch.ones(B, device=device), ink_len, memory, memory_pad)
         valid = torch.arange(MAX_TEXT, device=device).unsqueeze(0) < text_len.unsqueeze(1)
-        labels = char_logit.masked_fill(~valid.unsqueeze(1), -torch.inf).argmax(-1).cpu()
+        return x, char_logit.masked_fill(~valid.unsqueeze(1), -torch.inf).argmax(-1)
+
+    @torch.no_grad()
+    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None):
+        """Write a batch of lines. text: (B, T) left-padded tokens.
+
+        Returns per line (offsets (n, 3), chars (n,), finished), as
+        Student.sample() does. finished is always True: the length is drawn
+        before the ink. steps and guidance are as in transport().
+        """
+        B, device = text.shape[0], text.device
+        bias = torch.as_tensor(bias, dtype=torch.float32, device=device).reshape(-1).expand(B)
+        _, _, length_logit = self.encode_text(text, text_len)
+        length_p = F.softmax(length_logit * (1 + bias).unsqueeze(1), dim=-1)
+        ink_len = torch.multinomial(length_p, 1, generator=generator).squeeze(1) * LENGTH_BIN + LENGTH_BIN // 2
+
+        x = torch.randn((B, int(ink_len.max()), 3), generator=generator, device=device)
+        x = x * torch.exp(-BIAS_TEMPERATURE * bias).view(B, 1, 1)
+        x, labels = self.transport(x, text, text_len, ink_len, steps, guidance)
+        labels = labels.cpu()
         offsets = self.to_offsets(x).cpu()
         out = []
         for b in range(B):
