@@ -179,6 +179,10 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     same run directory, corpus and W&B conventions as `train_student.py`;
     `sample_student.py` loads either kind of checkpoint. Its losses are not
     comparable with the Mamba student's `ink_nll`.
+  - [train_reflow.py](scripts/train_reflow.py) — reflows a flow checkpoint
+    into one that writes in a few Euler steps without guidance, by training
+    on (noise, ink) pairs the checkpoint itself generates. The step count
+    and guidance a flow model is sampled with are stored in its config.
   - [checkpoint_artifact.py](scripts/checkpoint_artifact.py) — keeps a run
     directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
     (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
@@ -211,6 +215,9 @@ scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/s
     --corpus data/mathwriting_corpus --artifact none $WB
 scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
     --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
+# Reflow a flow student to sample in --student-steps Euler steps (default 4).
+scripts/run_in_apptainer.sh 0 python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
+    --teacher models/student/<name>/checkpoint.pt $WB
 # Checkpoints: push on the cluster, pull here (latest, :v3 or :step-20000).
 scripts/run_in_apptainer.sh cpu python scripts/checkpoint_artifact.py push --run-dir models/student/<name> $WB
 scripts/run_in_apptainer.sh cpu python scripts/checkpoint_artifact.py pull --run-dir models/student/<name> $WB
