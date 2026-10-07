@@ -12,12 +12,16 @@ validation flow loss rises to DIVERGED times its best value, without saving,
 so checkpoint.pt stays the last good one.
 
 --init-from starts a new run from another flow checkpoint's weights, with a
-fresh optimizer and this corpus's ink statistics. Its architecture and
-vocabulary must match.
+fresh optimizer. The ink statistics are this corpus's, unless it is in the
+checkpoint's ink units (same offset mean and std, as a corpus merged by
+scripts/mixed_corpus.py is): then the checkpoint's are kept, so that it
+carries on from what it learned. Its architecture must match, and this
+corpus's vocabulary must start with the checkpoint's: tokens added after it
+start from fresh embeddings.
 
 Usage: python scripts/train_flow.py --run-dir models/student/<name>
            [--corpus data/teacher_corpus] [--steps 50000] [--max-points 65536]
-           [--init-from models/student/<other>/checkpoint.pt]
+           [--init-from models/student/<other>/checkpoint.pt] [--sample-steps 8]
            [--wandb-project P [--wandb-entity E] [--artifact teacher_corpus:latest]]
 """
 import argparse
@@ -82,14 +86,22 @@ def main(args):
     train, val = Corpus.split(args.corpus, args.val_shards, names)
     print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
 
+    init = None
     if ckpt is not None:
         config = ckpt["config"]
     else:
         coord_std, typical_height = ink_statistics(train)
+        if args.init_from:
+            init = torch.load(args.init_from, map_location=device, weights_only=False)
+            trained = init["config"]
+            if (trained["offset_mu"], trained["offset_std"]) == (train.meta["mu"], train.meta["std"]):
+                # Same ink units, so the checkpoint's scale still fits and the
+                # ink it already writes reaches it unchanged.
+                coord_std, typical_height = trained["coord_std"], trained["typical_height"]
         config = dict(vocab_size=len(train.charset) + 2, offset_mu=train.meta["mu"], offset_std=train.meta["std"],
                       coord_std=coord_std, typical_height=typical_height, d_model=args.d_model,
                       n_layers=args.n_layers, heads=args.heads, text_layers=args.text_layers,
-                      text_dropout=args.text_dropout)
+                      text_dropout=args.text_dropout, sample_steps=args.sample_steps)
     if run:
         run.config.update({"model_config": config}, allow_val_change=True)
     model = FlowStudent(**config).to(device)
@@ -100,10 +112,16 @@ def main(args):
         opt.load_state_dict(ckpt["opt"])
         step, epoch, pos, best_val = ckpt["step"], ckpt["epoch"], ckpt["pos"], ckpt["best_val"]
         print(f"resumed at step {step}", flush=True)
-    elif args.init_from:
-        init = torch.load(args.init_from, map_location=device, weights_only=False)
-        # The buffers hold the ink statistics, which are this run's, not the checkpoint's.
-        model.load_state_dict({**init["model"], **dict(model.named_buffers())})
+    elif init is not None:
+        known = len(init["charset"])
+        if train.charset[:known] != init["charset"]:
+            raise ValueError(f"{args.init_from} was trained on a vocabulary this corpus's does not start with")
+        # The buffers hold the ink statistics, which are this run's config's.
+        state = {**init["model"], **dict(model.named_buffers())}
+        # Tokens the checkpoint never saw keep their fresh embeddings.
+        state["char_embed.weight"] = torch.cat([init["model"]["char_embed.weight"],
+                                                model.char_embed.weight[known + 2:].detach()])
+        model.load_state_dict(state)
         print(f"initialized from {args.init_from} at step {init['step']}", flush=True)
     print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
@@ -192,6 +210,8 @@ if __name__ == "__main__":
     ap.add_argument("--text-layers", type=int, default=3)
     ap.add_argument("--text-dropout", type=float, default=0.1,
                     help="fraction of lines trained without their text, for classifier-free guidance")
+    ap.add_argument("--sample-steps", type=int, default=8,
+                    help="Euler steps the model is sampled with, here and wherever its checkpoint is loaded")
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
     ap.add_argument("--sample-every", type=int, default=2000)
