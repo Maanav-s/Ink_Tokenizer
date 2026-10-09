@@ -191,6 +191,15 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     into one that writes in a few Euler steps without guidance, by training
     on (noise, ink) pairs the checkpoint itself generates. The step count
     and guidance a flow model is sampled with are stored in its config.
+  - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
+    at the flow student's width, depth and text encoder (about 32M
+    parameters each), to compare writing point by point with flow matching
+    at equal size. It has the Mamba student's heads and loss, so their
+    `ink_nll` values are comparable. Every block attends to the text and to
+    summaries of the strokes finished so far, and each point's input
+    includes the pen's position. [train_hybrid.py](scripts/train_hybrid.py)
+    trains it, with `--init-from` as in `train_flow.py`; `sample_student.py`
+    loads its checkpoints.
   - [checkpoint_artifact.py](scripts/checkpoint_artifact.py) — keeps a run
     directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
     (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
@@ -227,6 +236,9 @@ scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
 scripts/run_in_apptainer.sh cpu python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
 scripts/run_in_apptainer.sh 0 python scripts/train_flow.py --run-dir models/student/<name> \
     --corpus data/mixed_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
+# The hybrid student on the mixed corpus, from scratch (--init-from also works, as above).
+scripts/run_in_apptainer.sh 0 python scripts/train_hybrid.py --run-dir models/student/mixed_hybrid \
+    --corpus data/mixed_corpus --artifact none $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
 scripts/run_in_apptainer.sh 0 python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB
