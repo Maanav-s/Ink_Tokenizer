@@ -22,6 +22,7 @@ import torch
 
 from corpus_artifact import add_wandb_args, pull
 from flow_model import FlowStudent
+from hybrid_model import HybridStudent
 from ink_corpus import char_tokens, encode_texts
 from student_model import load_student
 from text_to_ink import TEXT_HEIGHT, ink_extent, plausible, preview, render, to_line
@@ -85,11 +86,12 @@ def teacher_vs_student(model, corpus, n=8, seed=0):
 
 
 def load_model(path, device="cuda"):
-    """The Mamba or flow-matching student a checkpoint holds, and the checkpoint."""
+    """The Mamba, hybrid or flow-matching student a checkpoint holds, and the checkpoint."""
     ckpt = torch.load(path, map_location=device, weights_only=False)
-    if ckpt.get("architecture") != "flow":
+    architecture = {"flow": FlowStudent, "hybrid": HybridStudent}.get(ckpt.get("architecture"))
+    if architecture is None:
         return load_student(path, device)
-    model = FlowStudent(**ckpt["config"]).to(device)
+    model = architecture(**ckpt["config"]).to(device)
     model.load_state_dict(ckpt["model"])
     model.eval()
     return model, ckpt
