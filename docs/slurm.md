@@ -11,7 +11,7 @@ Set up the environment on the login node, not inside the job:
 
 ```bash
 git clone <this repo> && cd Ink_Tokenizer
-uv sync --extra <whatever the job needs>
+uv sync --all-extras
 ```
 
 Keep the checkout and `UV_CACHE_DIR` off a small-quota `$HOME`, because the
@@ -56,6 +56,4 @@ Everything after `--` is the command, passed through exactly as typed.
   `--sbatch-option=--mail-type=END --sbatch-option=--mail-user=<you>`.
   `--sbatch-option=--dependency=afterok:<jobid>` chains a resumed run behind
   one that is about to hit the wall-time limit.
-- **Modules** are opt-in and repeatable (`--module cuda/12.2`). A container
-  works the same way:
-  `--module tacc-apptainer/1.4.1 -- apptainer exec --nv <image.sif> python ...`.
+- **Modules** are opt-in and repeatable (`--module cuda/12.2`).

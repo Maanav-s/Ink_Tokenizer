@@ -1,2 +1,17 @@
 WB="--wandb-entity maanavsikaria-university-of-texas-at-austin --wandb-project inkTokensMamba"
 nohup scripts/generate_corpus.sh 4,5,6,7 0 64 $WB > logs/generate.log 2>&1 &
+
+CUDA_VISIBLE_DEVICES=4 uv run python scripts/train_student.py \
+  --run-dir models/student/cross_attention \
+  --wandb-entity maanavsikaria-university-of-texas-at-austin \
+  --wandb-project inkTokensMamba
+
+  CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/mathwriting_flow_height_reflow \
+    --teacher models/student/mathwriting_flow_height/checkpoint.pt $WB
+
+
+uv run python scripts/corpus_artifact.py pull $WB   # teacher shards, if not already there
+uv run python scripts/mixed_corpus.py               # writes data/mixed_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/mixed_flow \
+    --corpus data/mixed_corpus --artifact none \
+    --init-from models/student/mathwriting_flow_height/checkpoint.pt $WB

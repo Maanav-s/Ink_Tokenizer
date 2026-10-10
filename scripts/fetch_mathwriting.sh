@@ -30,5 +30,5 @@ else
     # A partial conversion has shards but no meta.json; start it over.
     rm -rf "$DATA/mathwriting_corpus"
     cd "$ROOT_DIR"
-    scripts/run_in_apptainer.sh cpu python scripts/mathwriting_corpus.py "$@"
+    uv run --all-extras python scripts/mathwriting_corpus.py "$@"
 fi

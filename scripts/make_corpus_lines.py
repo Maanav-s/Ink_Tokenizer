@@ -10,10 +10,9 @@ so whiteboard math can't be written as-is. The mix is:
 - page text: strings from artifacts/*/content.json that fit the charset.
 
 For distillation the line only needs to exercise the teacher's character
-transitions, not to make sense. The word list is a host file (default
+transitions, not to make sense. The word list is a system file (default
 /usr/share/dict/words), so run this where one exists and copy the output
-along with the corpus. It needs only the standard library, so it runs on the
-host (the container can't see the host's word list).
+along with the corpus. It needs only the standard library.
 
 Usage: python3 scripts/make_corpus_lines.py --out data/teacher_corpus/lines.txt
            [--count 200000] [--words /usr/share/dict/words] [--seed 0]

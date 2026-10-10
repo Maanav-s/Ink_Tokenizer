@@ -46,6 +46,6 @@ Thumbs.db
 models/
 artifacts/
 logs/
-.apptainer/
+wandb/
 .cache/
 data/
