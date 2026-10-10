@@ -83,7 +83,7 @@ the optional `render` extra (Hershey-Fonts, Pillow).
 - [artifacts/](artifacts/README.md) — sample synthetic pages: content,
   layouts, clean and handwriting-like InkML renders. `artifacts/` is
   gitignored, so new pages need `git add -f`.
-- Synthetic page pipeline (in `scripts/`; needs `uv sync --extra render`):
+- Synthetic page pipeline (in `scripts/`; needs the `render` extra):
   - [docs/content_prompt.md](docs/content_prompt.md) — prompt and schema for
     LLM-written `content.json` (content only, no coordinates).
   - [validate_page.py](scripts/validate_page.py) — content checks (truth
@@ -204,59 +204,74 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
     (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
     be pulled onto the workstation (`push`/`pull`).
-- Environment: an Apptainer image (Python 3.13 + uv + gcc) with no Python
-  packages baked in. `run_in_apptainer.sh` syncs `.venv` to `uv.lock` inside
-  it. The `model` extra pins torch 2.9 and prebuilt CUDA 12 wheels of
-  mamba-ssm / causal-conv1d from GitHub releases; bump them together.
+- Environment: uv on the host, with `.venv` synced to `uv.lock` (uv fetches
+  Python 3.13 itself). The host needs a C compiler, because Triton builds its
+  kernel launchers at runtime. The `model` extra pins torch 2.9 and prebuilt
+  CUDA 12 wheels of mamba-ssm / causal-conv1d from GitHub releases; bump them
+  together.
 
 Common commands:
 
 ```bash
-scripts/build_apptainer_image.sh                  # once: .apptainer/ink_tokenizer.sif
-scripts/run_in_apptainer.sh cpu python scripts/fetch_teacher.py
-scripts/run_in_apptainer.sh cpu python scripts/text_to_ink.py "Hello world" --out hello.png
-scripts/run_in_apptainer.sh 0 <command>           # with GPU 0
+uv sync --all-extras                              # once, and after uv.lock changes
+uv run python scripts/fetch_teacher.py
+uv run python scripts/text_to_ink.py "Hello world" --out hello.png
+CUDA_VISIBLE_DEVICES=0 uv run <command>           # on GPU 0
 
 # Student pipeline (generation and training belong on a cluster). W&B flags
 # are optional; without --wandb-project everything stays local.
 WB="--wandb-entity <entity> --wandb-project <project>"
-python3 scripts/make_corpus_lines.py              # host: data/teacher_corpus/lines.txt
+python3 scripts/make_corpus_lines.py              # data/teacher_corpus/lines.txt
 scripts/generate_corpus.sh 0,1,2,3 0 64 $WB          # shards 0-63 split over GPUs 0-3, one push at the end
-scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py push $WB   # e.g. after a race
-scripts/run_in_apptainer.sh cpu python scripts/corpus_artifact.py pull $WB [--artifact teacher_corpus:v3]
-scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name> $WB
+uv run python scripts/corpus_artifact.py push $WB   # e.g. after a race
+uv run python scripts/corpus_artifact.py pull $WB [--artifact teacher_corpus:v3]
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_student.py --run-dir models/student/<name> $WB
 # MathWriting student: download and convert on each cluster (no artifact),
 # W&B for metrics only.
 scripts/fetch_mathwriting.sh                      # data/mathwriting-2024 -> data/mathwriting_corpus
-scripts/run_in_apptainer.sh 0 python scripts/train_student.py --run-dir models/student/<name> \
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_student.py --run-dir models/student/<name> \
     --corpus data/mathwriting_corpus --artifact none $WB
-scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/sample_student.py \
     --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
 # Formulas and plain text in one flow student, continuing from a MathWriting one.
-scripts/run_in_apptainer.sh cpu python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
-scripts/run_in_apptainer.sh 0 python scripts/train_flow.py --run-dir models/student/<name> \
+uv run python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
     --corpus data/mixed_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
 # The hybrid student on the mixed corpus, from scratch (--init-from also works, as above).
-scripts/run_in_apptainer.sh 0 python scripts/train_hybrid.py --run-dir models/student/mixed_hybrid \
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mixed_hybrid \
     --corpus data/mixed_corpus --artifact none $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
-scripts/run_in_apptainer.sh 0 python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB
 # Checkpoints: push on the cluster, pull here (latest, :v3 or :step-20000).
-scripts/run_in_apptainer.sh cpu python scripts/checkpoint_artifact.py push --run-dir models/student/<name> $WB
-scripts/run_in_apptainer.sh cpu python scripts/checkpoint_artifact.py pull --run-dir models/student/<name> $WB
+uv run python scripts/checkpoint_artifact.py push --run-dir models/student/<name> $WB
+uv run python scripts/checkpoint_artifact.py pull --run-dir models/student/<name> $WB
 ```
 
 Give each cluster or job its own `--first-shard` range; a shard index
 generated in two places has the same name, and the artifact keeps one copy.
-W&B credentials come from `WANDB_API_KEY` or `wandb login` (`~/.netrc`),
-which the container inherits. W&B's run files and cache go in `.cache/wandb`.
+W&B credentials come from `WANDB_API_KEY` or `wandb login` (`~/.netrc`).
+W&B's run files go in `wandb/` unless `WANDB_DIR` is set.
 
-On tacc, wrap the same commands in `scripts/submit_slurm.sh --module
-tacc-apptainer/1.4.1 --` (see docs/slurm.md), build the image and run one
-sync (`run_in_apptainer.sh cpu true`) on the login node first, and set
-`INK_NO_SYNC=1` for the jobs. Compute nodes need outbound internet for W&B. Mamba2's Triton kernels compile on first use
-(about a minute) into `.cache/triton`.
+`uv sync --extra <one>` uninstalls the other extra, so always sync with
+`--all-extras`. `uv run` only adds what is missing. Jobs that start together
+must not sync the same `.venv` at once: sync once beforehand and give them
+`uv run --no-sync` (or `UV_NO_SYNC=1`).
+
+Where `$HOME` has a small quota (tacc), point the caches at the checkout
+before syncing or running anything:
+
+```bash
+export UV_CACHE_DIR=$PWD/.cache/uv UV_PYTHON_INSTALL_DIR=$PWD/.cache/uv-python
+export TRITON_CACHE_DIR=$PWD/.cache/triton
+export WANDB_DIR=$PWD/.cache/wandb WANDB_CACHE_DIR=$PWD/.cache/wandb/cache WANDB_DATA_DIR=$PWD/.cache/wandb/data
+mkdir -p "$WANDB_DIR"
+```
+
+On tacc, sync on the login node, then wrap the same commands in
+`scripts/submit_slurm.sh -- ` with `uv run --no-sync` (see docs/slurm.md).
+Compute nodes need outbound internet for W&B. Mamba2's Triton kernels compile
+on first use (about a minute).
 
 Update this section as real structure lands (synthetic data pipeline,
 recognition model, suggestion model, evaluation harness).

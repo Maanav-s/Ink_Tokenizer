@@ -20,7 +20,8 @@ case "$CORPUS" in
 esac
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
-exec scripts/run_in_apptainer.sh "${INK_TRAIN_GPU:-0}" python scripts/train_student.py \
+export CUDA_VISIBLE_DEVICES="${INK_TRAIN_GPU:-0}"
+exec uv run --all-extras python scripts/train_student.py \
     --run-dir "models/student/${CORPUS}_${VARIANT}" \
     --conditioning "$VARIANT" --text-encoder-layers 2 --text-encoder-heads 4 --prefix-slots 32 \
     "${CORPUS_ARGS[@]}" "$@"

@@ -35,7 +35,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Sync .venv once, so the parallel jobs don't race over it.
-"$ROOT_DIR/scripts/run_in_apptainer.sh" cpu true
+cd "$ROOT_DIR"
+uv sync --quiet --all-extras
 
 mkdir -p "$ROOT_DIR/logs"
 CHUNK=$(( (TOTAL + ${#GPUS[@]} - 1) / ${#GPUS[@]} ))
@@ -47,7 +48,7 @@ for i in "${!GPUS[@]}"; do
     gpu="${GPUS[$i]}"
     log="$ROOT_DIR/logs/generate_gpu${gpu}.log"
     echo "GPU $gpu: shards $start-$(( start + count - 1 )), log $log"
-    INK_NO_SYNC=1 "$ROOT_DIR/scripts/run_in_apptainer.sh" "$gpu" python scripts/generate_teacher_corpus.py \
+    CUDA_VISIBLE_DEVICES="$gpu" uv run --no-sync python scripts/generate_teacher_corpus.py \
         --first-shard "$start" --num-shards "$count" ${GEN_ARGS[@]+"${GEN_ARGS[@]}"} > "$log" 2>&1 &
     PIDS+=($!)
 done
@@ -62,7 +63,7 @@ fi
 
 # Finished shards are complete files even if a job failed, so push them anyway.
 if [[ " ${PUSH_ARGS[*]-} " == *" --wandb-project "* ]]; then
-    INK_NO_SYNC=1 "$ROOT_DIR/scripts/run_in_apptainer.sh" cpu python scripts/corpus_artifact.py push "${PUSH_ARGS[@]}"
+    uv run --no-sync python scripts/corpus_artifact.py push "${PUSH_ARGS[@]}"
 else
     echo "no --wandb-project given, so nothing was pushed to W&B"
 fi

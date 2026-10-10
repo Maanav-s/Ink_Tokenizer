@@ -178,7 +178,7 @@ same file.
 ## Commands
 
 ```bash
-uv sync --extra render
+uv sync --all-extras   # --extra render alone would uninstall the model packages
 uv run --extra render python scripts/layout_engine.py artifacts/page_0001 [--seed N]
 uv run --extra render python scripts/validate_page.py artifacts/page_0001 [--layout FILE]
 uv run --extra render python scripts/render_inkml.py artifacts/page_0001 [--layout FILE] \

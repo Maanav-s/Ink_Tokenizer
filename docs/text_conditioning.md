@@ -67,7 +67,7 @@ version to train both on the same immutable data. MathWriting jobs use the local
 `data/mathwriting_corpus` and log metrics without pulling an artifact. If that
 corpus is absent, prepare it with the existing `scripts/fetch_mathwriting.sh`
 on the cluster. For simultaneous jobs, sync the environment once with
-`scripts/run_in_apptainer.sh cpu true`, then use `INK_NO_SYNC=1`.
+`uv sync --all-extras`, then use `UV_NO_SYNC=1`.
 
 Extra arguments override helper defaults, e.g.:
 
@@ -76,8 +76,8 @@ scripts/train_conditioning.sh transformer mathwriting --prefix-slots 50 \
   --run-dir models/student/mathwriting_transformer_50
 ```
 
-On TACC, wrap a command using `scripts/submit_slurm.sh` with your partition and
-`--module tacc-apptainer/1.4.1 --`; see [slurm.md](slurm.md).
+On TACC, wrap a command using `scripts/submit_slurm.sh` with your partition;
+see [slurm.md](slurm.md).
 
 ## Checkpoints and evaluation
 
@@ -90,10 +90,10 @@ Do not use an old run directory to start either experiment.
 Sampling automatically selects the checkpoint architecture:
 
 ```bash
-scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/sample_student.py \
   --checkpoint models/student/teacher_unpadded/checkpoint.pt \
   "pine" "recognizable refrigerated direr moleskin plantain." --out artifacts/teacher_unpadded.png
-scripts/run_in_apptainer.sh 0 python scripts/sample_student.py \
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/sample_student.py \
   --checkpoint models/student/mathwriting_transformer/checkpoint.pt \
   'F' '\frac{x_1}{x_2}' --out artifacts/mathwriting_transformer.png
 ```
