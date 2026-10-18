@@ -159,6 +159,15 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     MathWriting's with the new tokens appended, so a flow checkpoint trained
     on MathWriting can continue on it (`train_flow.py --init-from`). The last
     shard holds both validation sets. Train on it with `--artifact none`.
+  - [font_corpus.py](scripts/font_corpus.py) — renders every unique
+    MathWriting train label in single-stroke fonts (default EMSReadability
+    and EMSTech, clean strokes) with the page pipeline's typesetter, and adds
+    the inks to a base corpus (MathWriting's or the mixed one) as
+    `\typeset{label}`, so a model learns exact layouts and tokens while
+    writing in the human hand when the wrapper is left out. Rendered points
+    are aligned to their tokens, so `char_ce` trains on them. The base's
+    validation shard stays last, so validation is on human ink only. Train on
+    it with `--artifact none`.
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
     `[text, SEP, ink]`, with residual cross-attention before the mixture-density
     and character-index heads. New runs default to `--conditioning unpadded`:
@@ -237,6 +246,10 @@ CUDA_VISIBLE_DEVICES=0 uv run python scripts/sample_student.py \
 uv run python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
     --corpus data/mixed_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
+# Font-rendered labels added to MathWriting (or --base data/mixed_corpus), continuing a MathWriting flow student.
+uv run python scripts/font_corpus.py   # needs data/mathwriting-2024 and the base corpus; writes data/font_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
+    --corpus data/font_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
 # The hybrid student on the mixed corpus, from scratch (--init-from also works, as above).
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mixed_hybrid \
     --corpus data/mixed_corpus --artifact none $WB
