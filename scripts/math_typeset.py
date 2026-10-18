@@ -15,15 +15,21 @@ equation's left edge, y up from its baseline:
   brace_left/right, integral, sum, prod, box). The renderer adds the noise.
 
 Supported subset: {} groups; ^ and _ (single token or group, nested,
-stacked when both); \\frac \\dfrac \\tfrac; \\sqrt[n]{x}; \\int, \\sum, \\prod
-with limits; \\left \\right with ( ) [ ] | . \\{ \\}; \\boxed, \\overline,
-\\underline, \\bar, \\vec, \\hat, \\dot; \\mathrm \\text \\textrm
-\\operatorname (and \\mathbf \\mathit \\mathsf, drawn plain); function names
-(\\sin, \\lim, ...); Greek letters; the relation, operator and misc symbols
-in SYMBOLS; spacing \\, \\: \\; \\! \\quad \\qquad \\  and ~. Spacing between
-atoms follows TeX's atom classes (relations, binary operators, unary minus,
+stacked when both); \\frac \\dfrac \\tfrac; \\sqrt[n]{x}; the big operators
+in BIG_OPS with limits; \\left \\right with ( ) [ ] | \\| . \\{ \\} \\langle
+\\rangle \\lfloor \\rfloor \\lceil \\rceil; \\begin{matrix} ... & ... \\\\ ...
+\\end{matrix}; \\boxed, \\overline, \\underline, \\bar, \\vec, \\hat, \\dot,
+\\tilde; \\not; \\mathbb (capitals); \\mathrm \\text \\textrm \\operatorname
+(and \\mathbf \\mathit \\mathsf, drawn plain); function names (\\sin, \\lim,
+...); Greek letters; the relation, operator and misc symbols in SYMBOLS;
+spacing \\, \\: \\; \\! \\quad \\qquad \\  and ~. Spacing between atoms
+follows TeX's atom classes (relations, binary operators, unary minus,
 punctuation). Anything else, and any character the font lacks, raises
 ValueError, so this doubles as the validator for generated LaTeX.
+
+Plain delimiters (no \\left/\\right) around a fraction, matrix, big operator
+or radical of one are drawn as tall as what they enclose, as people write
+them; MathWriting's labels never use \\left and \\right.
 
 Options: frac_order "num_bar_den" (default) or "bar_num_den"; radical_bar
 "joined" (default: the radical sign and its overbar are one stroke written
@@ -46,43 +52,68 @@ GREEK_NAMES = {
     "varrho": "ρ", "sigma": "σ", "tau": "τ", "upsilon": "υ", "phi": "φ", "varphi": "φ",
     "chi": "χ", "psi": "ψ", "omega": "ω", "Gamma": "Γ", "Delta": "Δ", "Theta": "Θ",
     "Lambda": "Λ", "Xi": "Ξ", "Pi": "Π", "Sigma": "Σ", "Upsilon": "Υ", "Phi": "Φ", "Psi": "Ψ",
-    "Omega": "Ω"}
+    "Omega": "Ω", "varpi": "ϖ", "varsigma": "ς"}
 SYMBOLS = {
     "cdot": "·", "times": "×", "pm": "±", "le": "≤", "leq": "≤", "ge": "≥", "geq": "≥",
     "ne": "≠", "neq": "≠", "approx": "≈", "infty": "∞", "to": "→", "rightarrow": "→",
     "leftarrow": "←", "gets": "←", "Rightarrow": "⇒", "implies": "⇒", "leftrightarrow": "↔",
     "oplus": "⊕", "in": "∈", "partial": "∂", "circ": "°", "degree": "°", "%": "%", "{": "{",
     "}": "}", "#": "#", "&": "&", "$": "$", "_": "_", "sim": "~", "ast": "*", "prime": "'",
-    "colon": ":", "mid": "|", "vert": "|", "lt": "<", "gt": ">", "neg": "¬", "lnot": "¬"}
+    "colon": ":", "mid": "|", "vert": "|", "lt": "<", "gt": ">", "neg": "¬", "lnot": "¬",
+    "equiv": "≡", "notin": "∉", "ni": "∋", "subset": "⊂", "supset": "⊃", "subseteq": "⊆",
+    "supseteq": "⊇", "subsetneq": "⊊", "sqsubseteq": "⊑", "mapsto": "↦", "longrightarrow": "⟶",
+    "Leftrightarrow": "⇔", "iff": "⟺", "hookrightarrow": "↪", "rightleftharpoons": "⇌",
+    "cong": "≅", "simeq": "≃", "triangleq": "≜", "propto": "∝", "perp": "⊥", "top": "⊤",
+    "vdash": "⊢", "Vdash": "⊩", "models": "⊨", "ll": "≪", "gg": "≫", "otimes": "⊗", "odot": "⊙",
+    "ominus": "⊖", "wedge": "∧", "land": "∧", "vee": "∨", "lor": "∨", "cap": "∩", "cup": "∪",
+    "mp": "∓", "div": "÷", "bullet": "∙", "dagger": "†", "triangleleft": "◁", "triangle": "△",
+    "bigcirc": "◯", "angle": "∠", "nabla": "∇", "forall": "∀", "exists": "∃", "emptyset": "∅",
+    "varnothing": "∅", "aleph": "ℵ", "hbar": "ℏ", "vdots": "⋮", "backslash": "\\", "|": "‖",
+    "Vert": "‖", "langle": "⟨", "rangle": "⟩", "lfloor": "⌊", "rfloor": "⌋", "lceil": "⌈",
+    "rceil": "⌉"}
 DOTS = {"ldots": ".", "dots": ".", "cdots": "·"}
+BIG_OPS = {"int": "integral", "oint": "oint", "iint": "iint", "sum": "sum", "prod": "prod",
+           "bigcup": "bigcup", "bigcap": "bigcap", "bigoplus": "bigoplus", "bigwedge": "bigwedge",
+           "bigvee": "bigvee"}
+INTEGRALS = {"integral", "oint", "iint"}  # limits at the side by default
+MATHBB = {c: {"C": "ℂ", "H": "ℍ", "N": "ℕ", "P": "ℙ", "Q": "ℚ", "R": "ℝ", "Z": "ℤ"}.get(c, chr(0x1D538 + i))
+          for i, c in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZ")}
 SPACES = {",": 3 / 18, ":": 4 / 18, ";": 5 / 18, "!": -3 / 18, " ": 1 / 3, "quad": 1.0, "qquad": 2.0}
 FUNCTIONS = {"sin", "cos", "tan", "cot", "sec", "csc", "sinh", "cosh", "tanh", "arcsin", "arccos",
              "arctan", "log", "ln", "lg", "exp", "arg", "det", "deg", "dim", "ker", "gcd", "Pr"}
 LIMIT_FUNCTIONS = {"lim", "max", "min", "sup", "inf"}
 ACCENTS = {"overline": "overline", "bar": "overline", "underline": "underline", "vec": "vec_arrow",
-           "overrightarrow": "vec_arrow", "hat": "hat", "widehat": "hat", "dot": "dot"}
+           "overrightarrow": "vec_arrow", "hat": "hat", "widehat": "hat", "dot": "dot", "tilde": "tilde",
+           "widetilde": "tilde"}
 TEXT_CMDS = {"text", "textrm", "mbox"}
 ROMAN_CMDS = {"mathrm", "mathbf", "mathit", "mathsf", "boldsymbol", "operatorname"}
 NOOPS = {"displaystyle", "textstyle", "limits", "nolimits"}  # handled where they matter
 UNICODE = {"−": "-", "⋅": "·", "∙": "·", "µ": "μ", "Ω": "Ω", "∆": "Δ", "…": "...", "⋯": "···",
            " ": " "}
 DELIMS = {"(": "paren", ")": "paren", "[": "bracket", "]": "bracket", "|": "vbar", "{": "brace",
-          "}": "brace", ".": None}
+          "}": "brace", "‖": "dvbar", "⟨": "angle", "⟩": "angle", "⌊": "floor", "⌋": "floor",
+          "⌈": "ceil", "⌉": "ceil", ".": None}
+PAIRS = {"(": ")", "[": "]", "{": "}", "⟨": "⟩", "⌊": "⌋", "⌈": "⌉", "|": "|", "‖": "‖"}
 
-REL = set("=<>≤≥≠≈→←⇒↔∈~:")
-BIN = set("+-±×·⊕*")
-OPEN, CLOSE, PUNCT_CH = set("([{"), set(")]}!"), set(",;")
+REL = set("=<>≤≥≠≈→←⇒↔∈~:≡∉∋⊂⊃⊆⊇⊊⊑↦⟶⇔⟺↪⇌≅≃≜∝⊥⊢⊩⊨≪≫")
+BIN = set("+-±×·⊕*⊗⊙⊖∧∨∩∪∓÷∙◁")
+OPEN, CLOSE, PUNCT_CH = set("([{⟨⌊⌈"), set(")]}!⟩⌋⌉"), set(",;")
 # Vertical extents by character class (x size): the ink of every pool font
 # stays within these, plus a little noise.
 NO_DESC = set("!\"%&'*+-.0123456789:<=>?ABCDEFIMOPSTVW^`abcehilmnorstuvw~αδεθικλνοπστυω"
-              "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ⊕→≤≥≠±·×∞√≈∑∂∆°←↔⇒∈¬")
+              "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ⊕→≤≥≠±·×∞√≈∑∂∆°←↔⇒∈¬"
+              "≡∉∋⊂⊃⊆⊇⊊⊑↦⟶⇔⟺↪⇌≅≃≜∝⊥⊤⊢⊩⊨≪≫⊗⊙⊖∧∨∩∪∓÷∙◁△◯∠∇∀∃ℵ⋮ϖ") | set(MATHBB.values())
 DEEP = set("fgjpqyzGJYZ")
 X_LOW = set("acegmnopqrsuvwxyz")
-GREEK_LOW = set("αγεηικμνοπρστυφχω")
-TALL = set("()[]{}|/\\#$")
-ASCENDER = set("bdfhklβδζθλξψ\"*^`")
+GREEK_LOW = set("αγεηικμνοπρστυφχως")
+TALL = set("()[]{}|/\\#$‖⟨⟩⌊⌋⌈⌉")
+ASCENDER = set("bdfhklβδζθλξψ\"*^`ℏ")
 MID = {"+": 0.68, "±": 0.72, "-": 0.6, "=": 0.6, "~": 0.6, "≈": 0.6, "·": 0.5, "×": 0.6, "→": 0.6,
-       "←": 0.6, "↔": 0.6, "⇒": 0.62, ":": 0.6, ";": 0.6, ",": 0.22, ".": 0.22, "_": 0.1, "¬": 0.6}
+       "←": 0.6, "↔": 0.6, "⇒": 0.62, ":": 0.6, ";": 0.6, ",": 0.22, ".": 0.22, "_": 0.1, "¬": 0.6,
+       "≡": 0.6, "∉": 0.72, "∋": 0.6, "⊂": 0.6, "⊃": 0.6, "⊆": 0.62, "⊇": 0.62, "⊊": 0.62, "⊑": 0.62,
+       "↦": 0.6, "⟶": 0.6, "⇔": 0.62, "⟺": 0.62, "↪": 0.62, "⇌": 0.62, "≅": 0.62, "≃": 0.6,
+       "≜": 0.75, "∝": 0.6, "≪": 0.6, "≫": 0.6, "∧": 0.62, "∨": 0.62, "∩": 0.62, "∪": 0.62,
+       "∓": 0.6, "÷": 0.6, "∙": 0.5, "◁": 0.62, "ϖ": 0.62}
 
 
 class Equation:
@@ -140,22 +171,28 @@ class _Parser:
             raise self.error(f"unexpected {self.s[self.i]!r}")
         return nodes
 
+    def at_command(self, name):
+        n = len(name) + 1
+        return self.s.startswith("\\" + name, self.i) and not self.s[self.i + n:self.i + n + 1].isalpha()
+
     def list(self, end):
-        """Nodes up to `end`: '}', ']', 'right' or None (end of input)."""
+        """Nodes up to `end`: '}', ']', 'right', 'matrix' (the end of a matrix
+        cell: '&', '\\\\' or '\\end') or None (end of input)."""
         nodes = []
         while True:
             c = self.peek()
             if c is None:
                 if end is not None:
-                    raise self.error(f"missing {'\\right' if end == 'right' else end!r}")
-                return nodes
+                    raise self.error(f"missing {({'right': '\\right', 'matrix': '\\end{matrix}'}).get(end, repr(end))}")
+                return _tall_delims(nodes)
             if c == end:
-                return nodes
+                return _tall_delims(nodes)
             if c == "}":
                 raise self.error("unbalanced '}'")
-            if end == "right" and self.s.startswith("\\right", self.i) and \
-                    not self.s[self.i + 6:self.i + 7].isalpha():
-                return nodes
+            if end == "right" and self.at_command("right"):
+                return _tall_delims(nodes)
+            if end == "matrix" and (c == "&" or self.s.startswith("\\\\", self.i) or self.at_command("end")):
+                return _tall_delims(nodes)
             if c in "^_":
                 base = nodes.pop() if nodes and nodes[-1][0] != "space" else ("group", [])
                 nodes.append(self.scripts(base))
@@ -243,9 +280,9 @@ class _Parser:
                 index = ("group", self.list("]"))
                 self.i += 1
             return ("sqrt", self.arg(), index, at)
-        if name in ("int", "sum", "prod"):
-            kind = {"int": "integral", "sum": "sum", "prod": "prod"}[name]
-            limits = kind != "integral"
+        if name in BIG_OPS:
+            kind = BIG_OPS[name]
+            limits = kind not in INTEGRALS
             while self.s.startswith("\\limits", self.i) or self.s.startswith("\\nolimits", self.i):
                 limits = self.command() == "limits"
                 self.skip()
@@ -260,8 +297,14 @@ class _Parser:
         if name == "operatorname":
             body = self.arg()
             return ("opname", [(n[1], n[2]) for n in _flatten_chars(body, self)], False)
+        if name == "mathbb":
+            return ("group", [("char", MATHBB.get(n[1], n[1]), n[2]) for n in _flatten_chars(self.arg(), self)])
         if name in ROMAN_CMDS:
             return ("group", [self.arg()])
+        if name == "not":
+            return ("not", self.arg(), at)
+        if name == "begin":
+            return self.matrix(at)
         if name in TEXT_CMDS:
             return ("text", self.text_arg())
         if name in ACCENTS:
@@ -286,8 +329,9 @@ class _Parser:
             raise self.error("missing delimiter")
         if c == "\\":
             name = self.command()
-            ch = {"{": "{", "}": "}", "|": "|", "vert": "|", "lbrace": "{", "rbrace": "}",
-                  "lbrack": "[", "rbrack": "]"}.get(name)
+            ch = {"{": "{", "}": "}", "|": "‖", "Vert": "‖", "vert": "|", "lbrace": "{", "rbrace": "}",
+                  "lbrack": "[", "rbrack": "]", "langle": "⟨", "rangle": "⟩", "lfloor": "⌊",
+                  "rfloor": "⌋", "lceil": "⌈", "rceil": "⌉"}.get(name)
             if ch is None:
                 raise self.error(f"unsupported delimiter \\{name}", at)
             return ch, at
@@ -295,6 +339,40 @@ class _Parser:
         if c not in DELIMS or c in "{}":
             raise self.error(f"unsupported delimiter {c!r}", at)
         return c, at
+
+    def env_name(self):
+        if self.peek() != "{":
+            raise self.error("missing environment name")
+        j = self.s.find("}", self.i)
+        if j < 0:
+            raise self.error("unterminated environment name")
+        name, self.i = self.s[self.i + 1:j], j + 1
+        return name
+
+    def matrix(self, at):
+        """\\begin{matrix} (already read up to \\begin) through \\end{matrix}:
+        ("matrix", rows of cell groups, src)."""
+        name = self.env_name()
+        if name != "matrix":
+            raise self.error(f"unsupported environment {name}", at)
+        rows, row = [], []
+        while True:
+            row.append(("group", self.list("matrix")))
+            if self.s.startswith("&", self.i):
+                self.i += 1
+                continue
+            rows.append(row)
+            row = []
+            if self.s.startswith("\\\\", self.i):
+                self.i += 2
+                continue
+            self.command()  # \end
+            if self.env_name() != "matrix":
+                raise self.error("\\begin{matrix} ended by another environment", at)
+            break
+        if len(rows) > 1 and rows[-1] == [("group", [])]:  # a trailing \\
+            rows.pop()
+        return ("matrix", rows, at)
 
     def text_arg(self):
         """Raw characters of a {...} text argument, spaces kept."""
@@ -335,7 +413,49 @@ def _flatten_chars(node, parser):
         return [c for n in node[1] for c in _flatten_chars(n, parser)]
     if node[0] == "space":
         return []
-    raise parser.error("\\operatorname takes plain characters")
+    raise parser.error("\\operatorname and \\mathbb take plain characters")
+
+
+def _tall(node):
+    """Whether a node is drawn taller than a line of text."""
+    kind = node[0]
+    if kind in ("frac", "bigop"):
+        return True
+    if kind == "matrix":
+        return len(node[1]) > 1
+    if kind == "group":
+        return any(_tall(n) for n in node[1])
+    if kind in ("scripts", "sqrt", "not", "boxed"):
+        return _tall(node[1])
+    if kind == "accent":
+        return _tall(node[2])
+    if kind == "leftright":
+        return _tall(node[3])
+    return False
+
+
+def _tall_delims(nodes):
+    """Pair plain delimiters in one list, and turn each pair that encloses
+    something tall into a \\left ... \\right node. A closing delimiter may
+    carry scripts, as in (\\frac{a}{b})^{2}."""
+    out, stack = [], []  # stack: (index in out, opening character)
+    for n in nodes:
+        closer = n if n[0] == "char" else n[1] if n[0] == "scripts" and n[1][0] == "char" else None
+        opened = None
+        if closer is not None:
+            opened = next((k for k in reversed(range(len(stack))) if PAIRS[stack[k][1]] == closer[1]), None)
+        if opened is not None:
+            j, ch = stack[opened]
+            del stack[opened:]
+            body = out[j + 1:]
+            if any(_tall(b) for b in body):
+                pair = ("leftright", ch, out[j][2], ("group", body), closer[1], closer[2])
+                out[j:] = [pair if n is closer else ("scripts", pair) + n[2:]]
+                continue
+        elif n[0] == "char" and n[1] in PAIRS:
+            stack.append((len(out), n[1]))
+        out.append(n)
+    return out
 
 
 # ----------------------------------------------------------------- boxes
@@ -374,6 +494,10 @@ def _bezier(p0, p1, p2, n=10):
 def _cubic(p0, p1, p2, p3, n=10):
     return [tuple((1 - t) ** 3 * a + 3 * (1 - t) ** 2 * t * b + 3 * (1 - t) * t * t * c + t ** 3 * d
                   for a, b, c, d in zip(p0, p1, p2, p3)) for t in (i / n for i in range(n + 1))]
+
+
+def _circle(cx, cy, r, n=24):
+    return [(cx - r * math.sin(2 * math.pi * i / n), cy + r * math.cos(2 * math.pi * i / n)) for i in range(n + 1)]
 
 
 def _spacing(left, right):
@@ -550,6 +674,10 @@ class _Typesetter:
             return self.accent(n, s, script, in_frac)
         if kind == "boxed":
             return self.boxed(n, s, script, in_frac)
+        if kind == "matrix":
+            return self.matrix(n, s, script, in_frac)
+        if kind == "not":
+            return self.negated(n, s, script, in_frac)
         raise ValueError(f"internal: unknown node {kind!r}")
 
     # ---- scripts and limits
@@ -678,7 +806,7 @@ class _Typesetter:
     def bigop(self, n, s):
         kind, src = n[1], n[2]
         ax = self.font.axis * s
-        if kind == "integral":
+        if kind in INTEGRALS:
             H, r = 2.0 * s, 0.13 * s
             top, bot = ax + H / 2, ax - H / 2
             xb = 2 * r + 0.06 * s          # stem bottom; the lower hook ends left of it
@@ -688,8 +816,14 @@ class _Typesetter:
             k = 1.2 * r
             pts = (_cubic((xa + 2 * r, top - 0.8 * r), (xa + 2 * r, top + 0.1 * r), (A[0] - k * ux, A[1] - k * uy), A)
                    + _cubic(B, (B[0] + k * ux, B[1] + k * uy), (xb - 2 * r, bot - 0.1 * r), (xb - 2 * r, bot + 0.8 * r))[1:])
-            right = xa + 2 * r
-            box = Box(right + 0.06 * s, top + 0.03 * s, -bot + 0.03 * s, [_strokes("integral", [pts], src)],
+            strokes, right = [pts], xa + 2 * r
+            if kind == "iint":
+                gap = 0.4 * s
+                strokes.append([(x + gap, y) for x, y in pts])
+                right, xb = right + gap, xb + gap
+            elif kind == "oint":
+                strokes.append(_circle((xa + xb) / 2, ax, 0.24 * s))
+            box = Box(right + 0.06 * s, top + 0.03 * s, -bot + 0.03 * s, [_strokes(kind, strokes, src)],
                       "op", limits="under" if n[3] else "side")
             box.ext, box.lower_x = (top, bot, right), xb + 0.16 * s
             return box
@@ -699,9 +833,20 @@ class _Typesetter:
         if kind == "sum":
             strokes = [[(m + W, top - 0.06 * s), (m + W, top), (m, top), (m + 0.48 * W, ax), (m, bot),
                         (m + W, bot), (m + W, bot + 0.06 * s)]]
-        else:
+        elif kind == "prod":
             strokes = [[(m, top), (m + W, top)], [(m + 0.18 * W, top), (m + 0.18 * W, bot)],
                        [(m + 0.82 * W, top), (m + 0.82 * W, bot)]]
+        elif kind in ("bigcup", "bigcap"):
+            r, cx = 0.42 * W, m + W / 2
+            cup = [(cx - r, top)] + [(cx - r * math.cos(t), bot + r - r * math.sin(t))
+                                     for t in (math.pi * i / 12 for i in range(13))] + [(cx + r, top)]
+            strokes = [cup if kind == "bigcup" else [(x, top + bot - y) for x, y in cup]]
+        elif kind == "bigoplus":
+            r, cx = W / 2, m + W / 2
+            strokes = [_circle(cx, ax, r), [(cx - r, ax), (cx + r, ax)], [(cx, ax + r), (cx, ax - r)]]
+        else:  # bigwedge, bigvee
+            wedge = [(m, bot), (m + W / 2, top), (m + W, bot)]
+            strokes = [wedge if kind == "bigwedge" else [(x, top + bot - y) for x, y in wedge]]
         limits = "under" if n[3] else "side"
         box = Box(W + 2 * m, top, -bot, [_strokes(kind, strokes, src)], "op", limits=limits)
         box.ext, box.lower_x = (top, bot, W + m), W + 2 * m
@@ -741,9 +886,21 @@ class _Typesetter:
             w = arm + 2 * pad
             xa, xb = (w - pad, pad) if side == "left" else (pad, w - pad)
             strokes = [[(xa, top), (xb, top), (xb, bot), (xa, bot)]]
+        elif kind in ("floor", "ceil"):
+            arm = 0.18 * s
+            w = arm + 2 * pad
+            xa, xb = (w - pad, pad) if side == "left" else (pad, w - pad)
+            strokes = [[(xb, top), (xb, bot), (xa, bot)] if kind == "floor" else [(xa, top), (xb, top), (xb, bot)]]
+        elif kind == "angle":
+            w = 0.16 * s + 0.08 * H + 2 * pad
+            xa, xb = (w - pad, pad) if side == "left" else (pad, w - pad)
+            strokes = [[(xa, top), (xb, (top + bot) / 2), (xa, bot)]]
         elif kind == "vbar":
             w = 0.1 * s + 2 * pad
             strokes = [[(w / 2, top), (w / 2, bot)]]
+        elif kind == "dvbar":
+            w = 0.22 * s + 2 * pad
+            strokes = [[(x, top), (x, bot)] for x in (w / 2 - 0.07 * s, w / 2 + 0.07 * s)]
         else:  # brace
             dep = 0.22 * s
             w = dep + 2 * pad
@@ -788,6 +945,11 @@ class _Typesetter:
             hw = min(max(w, 0.3 * s), 1.2 * s) / 2
             strokes = [[(cx - hw, y), (cx, y + 0.14 * s), (cx + hw, y)]]
             a = y + 0.14 * s
+        elif kind == "tilde":
+            hw = min(max(w, 0.3 * s), 1.2 * s) / 2
+            y += 0.06 * s
+            strokes = [[(cx - hw + 2 * hw * i / 8, y + 0.05 * s * math.sin(2 * math.pi * i / 8)) for i in range(9)]]
+            a = y + 0.06 * s
         else:  # dot
             r = 0.035 * s
             cy = y + r + 0.02 * s
@@ -798,6 +960,38 @@ class _Typesetter:
         x0 = min(0.0, min(x for st in strokes for x, _ in st))
         atoms = _moved(body.atoms + [_strokes(kind, strokes, src)], -x0, 0.0)
         return Box(w_box - x0, a, d, atoms, body.cls if body.cls != "inner" else "ord")
+
+    def negated(self, n, s, script, in_frac):
+        """\\not: the symbol with a slash through it."""
+        _, body_n, src = n
+        body = self.node(body_n, s, script, in_frac)
+        cx, cy = body.w / 2, self.font.axis * s
+        slash = _strokes("not", [[(cx + 0.14 * s, cy + 0.34 * s), (cx - 0.14 * s, cy - 0.34 * s)]], src)
+        return Box(body.w, max(body.a, cy + 0.34 * s), max(body.d, 0.0), body.atoms + [slash], body.cls)
+
+    def matrix(self, n, s, script, in_frac):
+        """Cells centred in their columns, rows written top to bottom, the
+        whole block centred on the math axis."""
+        rows = n[1]
+        cells = [[self.node(c, s, script, in_frac) for c in row] for row in rows]
+        ncol = max(len(row) for row in cells)
+        colw = [max(row[k].w for row in cells if k < len(row)) for k in range(ncol)]
+        sep, margin = 0.9 * s, 0.12 * s
+        # Each row is at least as tall as a line of text (TeX's strut).
+        asc = [max([0.9 * s] + [c.a for c in row]) for row in cells]
+        desc = [max([0.35 * s] + [c.d for c in row]) for row in cells]
+        base = [0.0]
+        for k in range(1, len(cells)):
+            base.append(base[-1] - (desc[k - 1] + 0.1 * s + asc[k]))
+        dy = self.font.axis * s - (asc[0] + base[-1] - desc[-1]) / 2
+        atoms = []
+        for row, y in zip(cells, base):
+            x = margin
+            for k, c in enumerate(row):
+                atoms += _moved(c.atoms, x + (colw[k] - c.w) / 2, y + dy)
+                x += colw[k] + sep
+        w = 2 * margin + sum(colw) + sep * (ncol - 1)
+        return Box(w, asc[0] + dy, desc[-1] - base[-1] - dy, atoms, "ord")
 
     def boxed(self, n, s, script, in_frac):
         _, body_n, src = n
