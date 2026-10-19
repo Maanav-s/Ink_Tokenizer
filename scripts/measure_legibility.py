@@ -15,7 +15,7 @@ With --wandb-project, everything also goes to a new W&B run (job type
 
 Usage: python scripts/measure_legibility.py --student models/student/<run>/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt [--corpus DIR] [--lines 1000]
-           [--samples 1] [--steps S] [--guidance G] [--bias 0] [--out PATH]
+           [--samples 1] [--steps S] [--guidance G] [--bias 0] [--batch 16] [--out PATH]
            [--wandb-project P [--wandb-entity E]]
 """
 import argparse
@@ -112,8 +112,8 @@ def main(args):
     samples = []  # per sample round: list of (scored, ink, ink_len) per label
     for _ in range(args.samples):
         offsets = []
-        for b in range(0, len(labels), BATCH):
-            chunk = labels[b:b + BATCH]
+        for b in range(0, len(labels), args.batch):
+            chunk = labels[b:b + args.batch]
             text, text_len = encode_texts(chunk, student_token, tokenizer)
             bias = torch.full((len(chunk), 1, 1), args.bias, device=device)
             offsets += [off for off, _, _ in student.sample(text.to(device), text_len.to(device), bias, generator=gen)]
@@ -198,6 +198,8 @@ if __name__ == "__main__":
     ap.add_argument("--guidance", type=float, help="guidance scale (flow students; default: the checkpoint's)")
     ap.add_argument("--bias", type=float, default=0.0, help="sampling bias; MathWriting corpora are written at 0")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--batch", type=int, default=16,
+                    help="labels the student writes at once; its attention over ~2000 points grows with the square")
     ap.add_argument("--n", type=int, default=24, help="worst-read samples drawn")
     ap.add_argument("--top", type=int, default=25, help="mistakes listed")
     ap.add_argument("--out", help="image path (default: artifacts/recognizer/<student run>_legibility.png)")
