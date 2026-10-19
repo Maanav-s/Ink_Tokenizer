@@ -6,8 +6,12 @@ tokens it drops, tokens it adds), and draws --n misread inks, one per row,
 with the label and the reading under each. --all draws inks whether or not
 they were misread.
 
+With --wandb-project, the image, the two rates and tables of every mistake
+and every misread ink go to a new W&B run (job type "inspect").
+
 Usage: python scripts/inspect_recognizer.py --checkpoint models/recognizer/<run>/checkpoint.pt
            [--corpus DIR] [--pool 2000] [--n 24] [--all] [--out PATH]
+           [--wandb-project P [--wandb-entity E]]
 """
 import argparse
 import glob
@@ -103,7 +107,7 @@ def main(args):
     std = torch.tensor(val.meta["std"], dtype=torch.float32, device=device)
 
     picks = np.linspace(0, len(val) - 1, min(args.pool, len(val))).astype(int)
-    mistakes, rows = Counter(), []
+    mistakes, rows, misreads = Counter(), [], []
     errors = tokens = exact = 0
     for b in range(0, len(picks), 64):
         batch = to_device(val.batch(picks[b:b + 64]), device)
@@ -115,24 +119,43 @@ def main(args):
             read = [val.charset[t - 2] for t in ids]
             ops = edit_ops(read, target)
             mistakes.update(ops)
+            if ops:
+                misreads.append((" ".join(target), " ".join(read), len(ops)))
             errors, tokens, exact = errors + len(ops), tokens + len(target), exact + (not ops)
             if (ops or args.all) and len(rows) < args.n:
                 rows.append((ink[k].float().cpu().numpy(), int(ink_len[k]), " ".join(target), " ".join(read)))
 
-    print(f"{len(picks)} inks from {corpus_dir}: token error rate {errors / tokens:.3f}, "
-          f"read exactly {exact / len(picks):.1%}")
+    rates = {"token_error_rate": errors / tokens, "exact": exact / len(picks)}
+    print(f"{len(picks)} inks from {corpus_dir}: token error rate {rates['token_error_rate']:.3f}, "
+          f"read exactly {rates['exact']:.1%}")
     print("most common mistakes (sub: label -> read; drop: in the label, not read; add: read, not in the label):")
     for op, count in mistakes.most_common(args.top):
         print(f"  {count:5d}  {op[0]:4s} " + " -> ".join(op[1:]))
-    if not rows:
-        print("nothing to draw")
-        return
-    out = args.out or os.path.join("artifacts", "recognizer",
-                                   os.path.basename(os.path.dirname(os.path.abspath(args.checkpoint))) + "_reads.png")
-    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-    draw(rows).save(out)
-    print(f"drew {len(rows)} inks: {out}")
+    run_name = os.path.basename(os.path.dirname(os.path.abspath(args.checkpoint)))
+    image = None
+    if rows:
+        out = args.out or os.path.join("artifacts", "recognizer", run_name + "_reads.png")
+        os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+        image = draw(rows)
+        image.save(out)
+        print(f"drew {len(rows)} inks: {out}")
 
+    if args.wandb_project:
+        import wandb
+
+        run = wandb.init(entity=args.wandb_entity, project=args.wandb_project, job_type="inspect",
+                         name=f"{run_name}-reads",
+                         config={**vars(args), "checkpoint_step": ckpt["step"], "corpus": corpus_dir})
+        mistake_rows = [[op[0], op[1], op[2] if op[0] == "sub" else "", count] if op[0] != "add"
+                        else [op[0], "", op[1], count] for op, count in mistakes.most_common()]
+        record = {**rates,
+                  "mistakes": wandb.Table(columns=["kind", "label token", "read token", "count"], data=mistake_rows),
+                  "misreads": wandb.Table(columns=["label", "read", "token errors"], data=misreads)}
+        if image is not None:
+            record["reads"] = wandb.Image(image, caption=f"{run_name} step {ckpt['step']}: label green, read below")
+        run.log(record)
+        run.summary.update(rates)
+        run.finish()
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -143,4 +166,6 @@ if __name__ == "__main__":
     ap.add_argument("--all", action="store_true", help="draw inks whether or not they were misread")
     ap.add_argument("--top", type=int, default=25, help="mistakes listed")
     ap.add_argument("--out", help="image path (default: artifacts/recognizer/<run>_reads.png)")
+    ap.add_argument("--wandb-entity", default=None, help="W&B user or team (default: your W&B default entity)")
+    ap.add_argument("--wandb-project", default=None, help="W&B project; W&B is not used without it")
     main(ap.parse_args())
