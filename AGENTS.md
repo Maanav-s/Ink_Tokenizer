@@ -259,6 +259,12 @@ CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/stud
 # The hybrid student on MathWriting (--init-from then continues it on the mixed corpus, as above).
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mathwriting_hybrid \
     --corpus data/mathwriting_corpus --artifact none $WB
+# Recognizer on human math, font renders and teacher text: pull the teacher
+# shards and fetch MathWriting first. Validation logs math (val_*) and text (val_text_*) apart.
+uv run python scripts/mixed_corpus.py
+uv run python scripts/font_corpus.py --base data/mixed_corpus --out-dir data/font_mixed_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
+    --corpus data/font_mixed_corpus --artifact none $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB

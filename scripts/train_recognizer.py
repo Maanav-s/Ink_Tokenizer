@@ -3,6 +3,13 @@ MathWriting corpus (scripts/mathwriting_corpus.py, or font_corpus.py's, whose
 rendered inks it reads like any other: `\typeset{label}` is trained on
 `label`).
 
+On a font corpus built over the mixed corpus (font_corpus.py --base
+data/mixed_corpus), it also reads the teacher's plain text. Those lines keep
+their `\text{...}` wrapper as the label, since that is what a student is asked
+to write, and it keeps prose apart from math that looks the same. Validation
+is then reported separately: human math as `val_*`, teacher text as
+`val_text_*`.
+
 Loss = token cross-entropy + --ctc-weight x CTC. Inks get a random affine
 transform and point jitter, so it reads the shape rather than one writer's
 proportions. Every --eval-every steps it also reads --read-lines held-out
@@ -13,7 +20,7 @@ far it can be trusted as a judge of generated ink.
 The run directory, resuming and W&B work as in scripts/train_flow.py.
 
 Usage: python scripts/train_recognizer.py --run-dir models/recognizer/<name>
-           [--corpus data/font_corpus] [--steps 100000] [--max-points 65536]
+           [--corpus data/font_corpus | data/font_mixed_corpus] [--steps 100000] [--max-points 65536]
            [--wandb-project P [--wandb-entity E] [--artifact none]]
 """
 import argparse
@@ -33,6 +40,7 @@ from recognizer_model import Recognizer, ink_positions
 from train_student import lr_at, start_wandb_run, to_device
 
 LOSSES = ("ce", "ctc", "token_acc")
+TEXT_PREFIX = "\\text{"  # mixed_corpus.py's wrapper for teacher lines
 
 
 def unwrap(text):
@@ -69,11 +77,26 @@ def inputs(batch, mu, std):
     return ink_positions(batch["offsets"], batch["ink_len"], mu, std), batch["ink_len"]
 
 
+def validation_groups(corpus):
+    """Validation line indices by metric prefix: human math under `val_`, as
+    before the teacher's text was added, and teacher text under `val_text_`.
+    Empty groups are left out."""
+    groups = {"val_": [], "val_text_": []}
+    for i, text in enumerate(corpus.texts):
+        groups["val_text_" if text.startswith(TEXT_PREFIX) else "val_"].append(i)
+    return {k: v for k, v in groups.items() if v}
+
+
 @torch.no_grad()
-def evaluate(model, corpus, args, mu, std, device, limit=200):
+def evaluate(model, corpus, indices, args, mu, std, device, limit=200):
     model.eval()
     totals = dict.fromkeys(LOSSES, 0.0)
-    batches = corpus.batches(args.max_points, random.Random(0))[:limit]
+    rng = random.Random(0)
+    order = list(indices)
+    rng.shuffle(order)
+    batches = corpus.pack_batches(order, args.max_points, pool=64)
+    rng.shuffle(batches)
+    batches = batches[:limit]
     for idx in batches:
         batch = to_device(corpus.batch(idx), device)
         with torch.autocast("cuda", dtype=torch.bfloat16):
@@ -82,7 +105,8 @@ def evaluate(model, corpus, args, mu, std, device, limit=200):
             totals[k] += losses[k].item()
     out = {k: v / len(batches) for k, v in totals.items()}
 
-    picks = np.linspace(0, len(corpus) - 1, min(args.read_lines, len(corpus))).astype(int)
+    indices = np.asarray(indices)
+    picks = indices[np.linspace(0, len(indices) - 1, min(args.read_lines, len(indices))).astype(int)]
     errors = tokens = exact = 0
     examples = []
     for b in range(0, len(picks), 64):
@@ -122,7 +146,9 @@ def main(args):
         raise SystemExit(f"{args.corpus} does not use the latex tokenizer")
     for corpus in (train, val):
         corpus.texts = [unwrap(t) for t in corpus.texts]
-    print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
+    val_groups = validation_groups(val)
+    print(f"train {len(train)} lines, val {len(val)} lines "
+          f"({', '.join(f'{k}: {len(v)}' for k, v in val_groups.items())})", flush=True)
     mu = torch.tensor(train.meta["mu"], dtype=torch.float32, device=device)
     std = torch.tensor(train.meta["std"], dtype=torch.float32, device=device)
 
@@ -177,12 +203,13 @@ def main(args):
                        "grad_norm": grad_norm.item(), "lr": opt.param_groups[0]["lr"],
                        "elapsed_s": round(time.time() - start)}
                 if step % args.eval_every == 0:
-                    v, examples = evaluate(model, val, args, mu, std, device)
-                    rec.update({f"val_{k}": x for k, x in v.items()})
-                    best_val = min(best_val, v["ce"])
+                    for prefix, indices in val_groups.items():
+                        v, examples = evaluate(model, val, indices, args, mu, std, device)
+                        rec.update({f"{prefix}{k}": x for k, x in v.items()})
+                        for target, read in examples:
+                            print(f"  label {target!r}\n  read  {read!r}", flush=True)
+                    best_val = min(best_val, rec.get("val_ce", math.inf))
                     save()
-                    for target, read in examples:
-                        print(f"  label {target!r}\n  read  {read!r}", flush=True)
                 print(json.dumps(rec), flush=True)
                 log.write(json.dumps(rec) + "\n")
                 log.flush()

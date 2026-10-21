@@ -62,6 +62,15 @@ quoting it, since those are what apply to generated ink.
 Not done yet: training on partly denoised ink, which the loss below needs,
 and a second recognizer (other seed and stride) kept for evaluation only.
 
+Next (`planned`): the same recognizer on `data/font_mixed_corpus`
+(`font_corpus.py --base data/mixed_corpus`): human MathWriting, font
+renders, and the teacher's plain text as `\text{...}`, so it can judge
+mixed-corpus students' text lines too (`transformer_v1` has no `\text`
+token, so the legibility loss and measurement skip those lines). Validation
+logs human math as `val_*` and teacher text as `val_text_*`. Check that
+`val_` holds up against `transformer_v1`'s, since the text lines take
+training steps from the math.
+
 [visualize_flow.py](../scripts/visualize_flow.py) (`283df41`) renders a flow
 checkpoint's sample grid at a chosen number of Euler steps and guidance, as
 its own W&B run; it was used for a steps and guidance sweep.
