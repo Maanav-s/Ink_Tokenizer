@@ -26,11 +26,12 @@ last, so validation is on human ink only. The vocabulary is the base's with
 
 MathWriting's `valid` labels are rendered too, into font_valid.npz rather than
 a shard, so that only the recognizer (scripts/train_recognizer.py) validates
-on them.
+on them. --valid-only writes just that file into an existing --out-dir (built
+with the same --base).
 
 Usage: python scripts/font_corpus.py [--base data/mathwriting_corpus]
            [--source data/mathwriting-2024] [--splits train]
-           [--fonts EMSReadability EMSTech] [--out-dir data/font_corpus]
+           [--fonts EMSReadability EMSTech] [--out-dir data/font_corpus] [--valid-only]
 """
 import argparse
 import glob
@@ -144,7 +145,19 @@ def render_splits(splits, args, meta):
     return kept
 
 
+def write_valid(args, meta):
+    held_out = render_splits(["valid"], args, meta)
+    write_shard(os.path.join(args.out_dir, VALID_FILE), held_out,
+                np.array(meta["mu"], dtype=np.float32), np.array(meta["std"], dtype=np.float32))
+    print(f"wrote {len(held_out)} rendered valid labels to {VALID_FILE}", flush=True)
+
+
 def main(args):
+    if args.valid_only:
+        if not glob.glob(os.path.join(args.out_dir, "shard_*.npz")):
+            raise SystemExit(f"{args.out_dir} has no shards; build it without --valid-only")
+        write_valid(args, json.load(open(os.path.join(args.base, "meta.json"))))
+        return
     if glob.glob(os.path.join(args.out_dir, "shard_*.npz")):
         raise SystemExit(f"{args.out_dir} already has shards; remove them to build it again")
     if {"valid", "test"} & set(args.splits):
@@ -179,9 +192,7 @@ def main(args):
         count += 1
     os.symlink(os.path.relpath(base_shards[-1], args.out_dir), shard_path(count))
 
-    held_out = render_splits(["valid"], args, meta)
-    write_shard(os.path.join(args.out_dir, VALID_FILE), held_out, mu, std)
-    print(f"wrote {len(held_out)} rendered valid labels to {VALID_FILE}", flush=True)
+    write_valid(args, meta)
 
     base_lines = open(os.path.join(args.base, meta["lines"])).read()
     with open(os.path.join(args.out_dir, "lines.txt"), "w") as f:
@@ -209,4 +220,6 @@ if __name__ == "__main__":
     ap.add_argument("--max-labels", type=int, help="render only the first N labels, for a quick test")
     ap.add_argument("--lines-per-shard", type=int, default=8192)
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--valid-only", action="store_true",
+                    help=f"only write {VALID_FILE}, into a corpus built before it was added")
     main(ap.parse_args())
