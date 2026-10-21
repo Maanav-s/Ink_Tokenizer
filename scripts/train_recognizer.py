@@ -6,16 +6,20 @@ rendered inks it reads like any other: `\typeset{label}` is trained on
 On a font corpus built over the mixed corpus (font_corpus.py --base
 data/mixed_corpus), it also reads the teacher's plain text. Those lines keep
 their `\text{...}` wrapper as the label, since that is what a student is asked
-to write, and it keeps prose apart from math that looks the same. Validation
-is then reported separately: human math as `val_*`, teacher text as
-`val_text_*`.
+to write, and it keeps prose apart from math that looks the same.
 
 Loss = token cross-entropy + --ctc-weight x CTC. Inks get a random affine
 transform and point jitter, so it reads the shape rather than one writer's
-proportions. Every --eval-every steps it also reads --read-lines held-out
-inks greedily and reports the token error rate (edit distance / label
-tokens) and the fraction read exactly. That rate on human `valid` ink is how
-far it can be trusted as a judge of generated ink.
+proportions.
+
+Every --eval-every steps each validation source is evaluated on its own:
+human math (`val_*`), teacher text (`val_text_*`) and font renders of
+MathWriting's valid labels (`val_font_*`, from font_corpus.py's
+font_valid.npz). Each gets the losses, then --read-lines inks read greedily
+for the token error rate (edit distance / label tokens) and the fraction read
+exactly, and its --worst worst reads are drawn into <run-dir>/reads/ and W&B.
+The rate on human math is how far it can be trusted as a judge of generated
+ink.
 
 The run directory, resuming and W&B work as in scripts/train_flow.py.
 
@@ -41,10 +45,13 @@ from train_student import lr_at, start_wandb_run, to_device
 
 LOSSES = ("ce", "ctc", "token_acc")
 TEXT_PREFIX = "\\text{"  # mixed_corpus.py's wrapper for teacher lines
+TYPESET_PREFIX = "\\typeset{"  # font_corpus.WRAPPER; importing it would need the fonts
+FONT_VALID = "font_valid.npz"  # font_corpus.VALID_FILE
+SOURCES = {"val_": "human math", "val_text_": "teacher text", "val_font_": "font renders"}
 
 
 def unwrap(text):
-    prefix = "\\typeset{"  # font_corpus.WRAPPER; importing it would need the fonts
+    prefix = TYPESET_PREFIX
     return text[len(prefix):-1] if text.startswith(prefix) and text.endswith("}") else text
 
 
@@ -77,18 +84,37 @@ def inputs(batch, mu, std):
     return ink_positions(batch["offsets"], batch["ink_len"], mu, std), batch["ink_len"]
 
 
-def validation_groups(corpus):
-    """Validation line indices by metric prefix: human math under `val_`, as
-    before the teacher's text was added, and teacher text under `val_text_`.
+def validation_groups(texts):
+    """Validation line indices by metric prefix, from the labels before
+    unwrap(): human math under `val_` (its name before the other sources were
+    added), teacher text under `val_text_`, font renders under `val_font_`.
     Empty groups are left out."""
-    groups = {"val_": [], "val_text_": []}
-    for i, text in enumerate(corpus.texts):
-        groups["val_text_" if text.startswith(TEXT_PREFIX) else "val_"].append(i)
+    groups = {prefix: [] for prefix in SOURCES}
+    for i, text in enumerate(texts):
+        if text.startswith(TYPESET_PREFIX):
+            groups["val_font_"].append(i)
+        elif text.startswith(TEXT_PREFIX):
+            groups["val_text_"].append(i)
+        else:
+            groups["val_"].append(i)
     return {k: v for k, v in groups.items() if v}
+
+
+def draw_worst(rows, path):
+    # Imported here: inspect_recognizer imports this module, and draw needs Pillow.
+    from inspect_recognizer import draw
+
+    image = draw(rows)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    image.save(path)
+    return image
 
 
 @torch.no_grad()
 def evaluate(model, corpus, indices, args, mu, std, device, limit=200):
+    """Losses over up to `limit` batches of the indexed lines, the greedy read
+    rates over --read-lines of them, and the --worst worst-read inks (most
+    token errors first) as inspect_recognizer.draw rows."""
     model.eval()
     totals = dict.fromkeys(LOSSES, 0.0)
     rng = random.Random(0)
@@ -108,20 +134,24 @@ def evaluate(model, corpus, indices, args, mu, std, device, limit=200):
     indices = np.asarray(indices)
     picks = indices[np.linspace(0, len(indices) - 1, min(args.read_lines, len(indices))).astype(int)]
     errors = tokens = exact = 0
-    examples = []
+    misreads = []
     for b in range(0, len(picks), 64):
         batch = to_device(corpus.batch(picks[b:b + 64]), device)
+        ink, ink_len = inputs(batch, mu, std)
         with torch.autocast("cuda", dtype=torch.bfloat16):
-            read = model.read(*inputs(batch, mu, std))
-        for i, ids in zip(picks[b:b + 64], read):
-            target = [corpus.token[t] for t in split_text(corpus.texts[i], "latex")]
+            read = model.read(ink, ink_len)
+        for k, (i, ids) in enumerate(zip(picks[b:b + 64], read)):
+            label = split_text(corpus.texts[i], "latex")
+            target = [corpus.token[t] for t in label]
             d = edit_distance(ids, target)
             errors, tokens, exact = errors + d, tokens + len(target), exact + (d == 0)
-            if len(examples) < 4 and d:
-                examples.append((corpus.texts[i], " ".join(corpus.charset[t - 2] for t in ids)))
+            if d:
+                misreads.append((d, d / len(target), ink[k].float().cpu().numpy(), int(ink_len[k]),
+                                 " ".join(label), " ".join(corpus.charset[t - 2] for t in ids)))
     model.train()
     out.update(token_error_rate=errors / tokens, exact=exact / len(picks))
-    return out, examples
+    misreads.sort(key=lambda m: (m[0], m[1]), reverse=True)
+    return out, [m[2:] for m in misreads[:args.worst]]
 
 
 def main(args):
@@ -144,9 +174,15 @@ def main(args):
     train, val = Corpus.split(args.corpus, args.val_shards, names)
     if train.tokenizer != "latex":
         raise SystemExit(f"{args.corpus} does not use the latex tokenizer")
+    font_valid = os.path.join(args.corpus, FONT_VALID)
+    if os.path.exists(font_valid):
+        val = Corpus(args.corpus, val.shards + [font_valid])
+    elif any(t.startswith(TYPESET_PREFIX) for t in train.texts):
+        print(f"no {font_valid}: font renders are trained on but not validated "
+              "(font_corpus.py writes it)", flush=True)
+    val_groups = validation_groups(val.texts)
     for corpus in (train, val):
         corpus.texts = [unwrap(t) for t in corpus.texts]
-    val_groups = validation_groups(val)
     print(f"train {len(train)} lines, val {len(val)} lines "
           f"({', '.join(f'{k}: {len(v)}' for k, v in val_groups.items())})", flush=True)
     mu = torch.tensor(train.meta["mu"], dtype=torch.float32, device=device)
@@ -202,19 +238,29 @@ def main(args):
                 rec = {"step": step, "epoch": epoch, **{k: losses[k].item() for k in LOSSES},
                        "grad_norm": grad_norm.item(), "lr": opt.param_groups[0]["lr"],
                        "elapsed_s": round(time.time() - start)}
+                images = {}
                 if step % args.eval_every == 0:
                     for prefix, indices in val_groups.items():
-                        v, examples = evaluate(model, val, indices, args, mu, std, device)
+                        v, worst = evaluate(model, val, indices, args, mu, std, device)
                         rec.update({f"{prefix}{k}": x for k, x in v.items()})
-                        for target, read in examples:
-                            print(f"  label {target!r}\n  read  {read!r}", flush=True)
+                        for _, _, label, read in worst[:3]:
+                            print(f"  {SOURCES[prefix]}\n  label {label!r}\n  read  {read!r}", flush=True)
+                        if worst:
+                            name = f"{prefix}worst"
+                            path = os.path.join(args.run_dir, "reads", f"step_{step:07d}_{name}.png")
+                            images[name] = (draw_worst(worst, path),
+                                            f"{SOURCES[prefix]}, step {step}: {len(worst)} worst reads, "
+                                            "label green, read below")
                     best_val = min(best_val, rec.get("val_ce", math.inf))
                     save()
                 print(json.dumps(rec), flush=True)
                 log.write(json.dumps(rec) + "\n")
                 log.flush()
                 if run:
-                    run.log(rec, step=step)
+                    import wandb
+
+                    run.log({**rec, **{k: wandb.Image(image, caption=caption)
+                                       for k, (image, caption) in images.items()}}, step=step)
         if pos >= len(batches):
             epoch, pos = epoch + 1, 0
     save()
@@ -240,7 +286,9 @@ if __name__ == "__main__":
     ap.add_argument("--decoder-layers", type=int, default=3)
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=2000)
-    ap.add_argument("--read-lines", type=int, default=512, help="held-out inks read greedily at each evaluation")
+    ap.add_argument("--read-lines", type=int, default=512,
+                    help="held-out inks per source read greedily at each evaluation")
+    ap.add_argument("--worst", type=int, default=10, help="worst-read inks drawn per source at each evaluation")
     ap.add_argument("--seed", type=int, default=0)
     add_wandb_args(ap, artifact_default="none",
                    artifact_help="corpus artifact name, optionally :version; none uses --corpus as it is")

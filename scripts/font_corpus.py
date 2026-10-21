@@ -24,6 +24,10 @@ shards, then the rendered shards, then its validation shard. That one stays
 last, so validation is on human ink only. The vocabulary is the base's with
 \typeset appended.
 
+MathWriting's `valid` labels are rendered too, into font_valid.npz rather than
+a shard, so that only the recognizer (scripts/train_recognizer.py) validates
+on them.
+
 Usage: python scripts/font_corpus.py [--base data/mathwriting_corpus]
            [--source data/mathwriting-2024] [--splits train]
            [--fonts EMSReadability EMSTech] [--out-dir data/font_corpus]
@@ -44,6 +48,7 @@ from mixed_corpus import SHARD_KEYS, resample
 
 WRAPPER = "\\typeset"
 LABEL_SHIFT = 2  # \typeset and {
+VALID_FILE = "font_valid.npz"  # not shard_*, so flow students' validation stays human ink
 
 _renderers = {}
 
@@ -116,6 +121,29 @@ def write_shard(path, lines, mu, std):
              rejected=np.int32(0))
 
 
+def render_splits(splits, args, meta):
+    """Every unique label of the MathWriting splits that the base vocabulary
+    covers, rendered in each of args.fonts, as (text, offsets, labels)."""
+    paths = sorted(p for split in splits for p in glob.glob(os.path.join(args.source, split, "*.inkml")))
+    with Pool(args.workers) as pool:
+        labels = sorted(set(pool.map(read_label, paths, chunksize=256)))
+    allowed = set(meta["charset"])
+    labels = [t for t in labels if t and len(split_text(t, "latex")) + 3 <= MAX_TEXT
+              and set(split_text(t, "latex")) <= allowed]
+    if args.max_labels:
+        labels = labels[:args.max_labels]
+    print(f"{len(labels)} unique labels from {len(paths)} inks in {splits}", flush=True)
+
+    jobs = [(t, font, meta["spacing"], args.max_points) for t in labels for font in args.fonts]
+    with Pool(args.workers) as pool:
+        out = pool.map(convert, jobs, chunksize=64)
+    kept = [o for o in out if not isinstance(o, str)]
+    print(f"rendered {len(kept)} of {len(jobs)} (label, font) pairs; "
+          f"{out.count('unsupported')} unsupported by the typesetter, {out.count('too long')} over "
+          f"{args.max_points} points", flush=True)
+    return kept
+
+
 def main(args):
     if glob.glob(os.path.join(args.out_dir, "shard_*.npz")):
         raise SystemExit(f"{args.out_dir} already has shards; remove them to build it again")
@@ -130,23 +158,7 @@ def main(args):
     for font in args.fonts:
         fonts.TextRenderer(font)  # fail now on a misspelled font, not in every worker
 
-    paths = sorted(p for split in args.splits for p in glob.glob(os.path.join(args.source, split, "*.inkml")))
-    with Pool(args.workers) as pool:
-        labels = sorted(set(pool.map(read_label, paths, chunksize=256)))
-    allowed = set(meta["charset"])
-    labels = [t for t in labels if t and len(split_text(t, "latex")) + 3 <= MAX_TEXT
-              and set(split_text(t, "latex")) <= allowed]
-    if args.max_labels:
-        labels = labels[:args.max_labels]
-    print(f"{len(labels)} unique labels from {len(paths)} inks in {args.splits}", flush=True)
-
-    jobs = [(t, font, meta["spacing"], args.max_points) for t in labels for font in args.fonts]
-    with Pool(args.workers) as pool:
-        out = pool.map(convert, jobs, chunksize=64)
-    kept = [o for o in out if not isinstance(o, str)]
-    print(f"rendered {len(kept)} of {len(jobs)} (label, font) pairs; "
-          f"{out.count('unsupported')} unsupported by the typesetter, {out.count('too long')} over "
-          f"{args.max_points} points", flush=True)
+    kept = render_splits(args.splits, args, meta)
     lengths = np.array([len(o) for _, o, _ in kept])
     print(f"points per ink p50/p90/p99: {np.percentile(lengths, [50, 90, 99]).round().tolist()}", flush=True)
 
@@ -166,6 +178,10 @@ def main(args):
         write_shard(shard_path(count), kept[k:k + args.lines_per_shard], mu, std)
         count += 1
     os.symlink(os.path.relpath(base_shards[-1], args.out_dir), shard_path(count))
+
+    held_out = render_splits(["valid"], args, meta)
+    write_shard(os.path.join(args.out_dir, VALID_FILE), held_out, mu, std)
+    print(f"wrote {len(held_out)} rendered valid labels to {VALID_FILE}", flush=True)
 
     base_lines = open(os.path.join(args.base, meta["lines"])).read()
     with open(os.path.join(args.out_dir, "lines.txt"), "w") as f:

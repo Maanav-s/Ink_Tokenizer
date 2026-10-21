@@ -49,6 +49,7 @@ class Corpus:
         self.charset = self.meta["charset"]
         self.token = char_tokens(self.charset)
         self.tokenizer = self.meta.get("tokenizer", "char")
+        self.shards = list(shards)
         offsets, chars, lengths, bias, self.texts = [], [], [], [], []
         for path in shards:
             d = np.load(path)

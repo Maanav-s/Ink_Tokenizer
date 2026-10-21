@@ -168,7 +168,8 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     writing in the human hand when the wrapper is left out. Rendered points
     are aligned to their tokens, so `char_ce` trains on them. The base's
     validation shard stays last, so validation is on human ink only. Train on
-    it with `--artifact none`.
+    it with `--artifact none`. MathWriting's `valid` labels are rendered into
+    `font_valid.npz` (not a shard), which only the recognizer validates on.
   - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
     `[text, SEP, ink]`, with residual cross-attention before the mixture-density
     and character-index heads. New runs default to `--conditioning unpadded`:
@@ -260,7 +261,8 @@ CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/stud
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mathwriting_hybrid \
     --corpus data/mathwriting_corpus --artifact none $WB
 # Recognizer on human math, font renders and teacher text: pull the teacher
-# shards and fetch MathWriting first. Validation logs math (val_*) and text (val_text_*) apart.
+# shards and fetch MathWriting first. Each eval scores human math (val_*), teacher text (val_text_*)
+# and font renders of valid labels (val_font_*) apart, and draws each one's 10 worst reads.
 uv run python scripts/mixed_corpus.py
 uv run python scripts/font_corpus.py --base data/mixed_corpus --out-dir data/font_mixed_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \

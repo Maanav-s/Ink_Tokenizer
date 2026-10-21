@@ -67,7 +67,9 @@ Next (`planned`): the same recognizer on `data/font_mixed_corpus`
 renders, and the teacher's plain text as `\text{...}`, so it can judge
 mixed-corpus students' text lines too (`transformer_v1` has no `\text`
 token, so the legibility loss and measurement skip those lines). Validation
-logs human math as `val_*` and teacher text as `val_text_*`. Check that
+scores human math (`val_*`), teacher text (`val_text_*`) and font
+renders of the valid labels (`val_font_*`) separately, and draws each
+source's 10 worst reads to `<run-dir>/reads/` and W&B. Check that
 `val_` holds up against `transformer_v1`'s, since the text lines take
 training steps from the math.
 
