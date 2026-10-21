@@ -80,6 +80,7 @@ the optional `render` extra (Hershey-Fonts, Pillow).
 - [docs/synthetic_data.md](docs/synthetic_data.md) — synthetic training data
   plan
 - [docs/slurm.md](docs/slurm.md) — running jobs on Slurm
+- [docs/experiments.md](docs/experiments.md) — past and planned experiments
 - [artifacts/](artifacts/README.md) — sample synthetic pages: content,
   layouts, clean and handwriting-like InkML renders. `artifacts/` is
   gitignored, so new pages need `git add -f`.
@@ -200,6 +201,11 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     into one that writes in a few Euler steps without guidance, by training
     on (noise, ink) pairs the checkpoint itself generates. The step count
     and guidance a flow model is sampled with are stored in its config.
+  - [train_flow_legibility.py](scripts/train_flow_legibility.py) — fine-tunes
+    a flow checkpoint with an added loss: the frozen recognizer's
+    cross-entropy on the one-step estimate of the finished ink. That term
+    only uses flow times in `[--legibility-t-min, 1]`, where the ink is
+    nearly finished; the flow losses are unchanged.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
@@ -250,9 +256,9 @@ CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/stud
 uv run python scripts/font_corpus.py   # needs data/mathwriting-2024 and the base corpus; writes data/font_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
     --corpus data/font_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
-# The hybrid student on the mixed corpus, from scratch (--init-from also works, as above).
-CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mixed_hybrid \
-    --corpus data/mixed_corpus --artifact none $WB
+# The hybrid student on MathWriting (--init-from then continues it on the mixed corpus, as above).
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mathwriting_hybrid \
+    --corpus data/mathwriting_corpus --artifact none $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB
