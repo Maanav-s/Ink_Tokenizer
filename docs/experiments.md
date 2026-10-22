@@ -132,8 +132,9 @@ In order of cost:
    student cannot win by writing ink only the recognizer can read, and judge
    with the second recognizer. Needs the recognizer trained on partly
    denoised ink first. Code: [train_flow_legibility.py](../scripts/train_flow_legibility.py),
-   which applies the term only at t in [0.8, 1] by default, in a second
-   pass separate from the flow loss's times. Not yet run.
+   which weights the term by t³ (t drawn from [0.5, 1] by default, set by
+   `--legibility-t-min`), in a second pass separate from the flow loss's
+   times. Not yet run.
 4. CFGRL with the recognizer as the optimality label: tag samples read
    correctly vs not, train with that tag as a condition, and guide towards
    "read correctly" (see the next section for the guidance form). No

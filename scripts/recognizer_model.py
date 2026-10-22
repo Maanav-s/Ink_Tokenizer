@@ -98,7 +98,8 @@ class Recognizer(nn.Module):
 
     def loss(self, ink, ink_len, text, text_len):
         """Token cross-entropy (with SEP as end of text), the CTC loss and
-        teacher-forced token accuracy. text is left-padded."""
+        teacher-forced token accuracy. ce_rows is the cross-entropy per ink.
+        text is left-padded."""
         B = text.shape[0]
         target = right_padded(text, text_len)
         target = torch.cat([target, torch.full((B, 1), PAD, dtype=target.dtype, device=target.device)], dim=1)
@@ -110,12 +111,14 @@ class Recognizer(nn.Module):
         logits = self.decode(tokens, memory, memory_pad)
         ce = F.cross_entropy(logits.transpose(1, 2), target, ignore_index=PAD)
         known = target != PAD
+        ce_rows = F.cross_entropy(logits.transpose(1, 2), target, ignore_index=PAD, reduction="none").sum(1) \
+            / known.sum(1)
         acc = ((logits.argmax(-1) == target) & known).sum() / known.sum()
 
         log_probs = F.log_softmax(self.ctc_head(memory).float(), dim=-1).transpose(0, 1)
         ctc = F.ctc_loss(log_probs, right_padded(text, text_len), memory_len, text_len, blank=PAD,
                          zero_infinity=True)
-        return {"ce": ce, "ctc": ctc, "token_acc": acc}
+        return {"ce": ce, "ce_rows": ce_rows, "ctc": ctc, "token_acc": acc}
 
     @torch.no_grad()
     def read(self, ink, ink_len):

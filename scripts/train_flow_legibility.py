@@ -5,10 +5,11 @@ asked to write.
 Loss = train_flow.py's losses, unchanged, + --legibility-weight x the
 recognizer's token cross-entropy on the student's one-step estimate of the
 finished ink, x̂1 = xt + (1 - t) v. That term is computed in a second pass
-whose flow times are drawn uniformly from [--legibility-t-min, 1], so it only
-applies once the ink is near its final form: earlier, x̂1 is a blur the
-recognizer was never trained on, and reading it would push the student
-towards whatever the recognizer happens to accept there. The flow pass keeps
+whose flow times are drawn uniformly from [--legibility-t-min, 1] and whose
+rows are weighted by t³, so the term counts most once the ink is near its final
+form: earlier, x̂1 is a blur the recognizer was never trained on, and reading
+it would push the student towards whatever the recognizer happens to accept
+there. The flow pass keeps
 its own logit-normal times, so the flow loss trains as before and stays
 dominant; the student should not win by writing ink only this recognizer can
 read, so judge the result with scripts/measure_legibility.py (ideally with a
@@ -27,7 +28,7 @@ the validation flow loss) work as in train_flow.py.
 Usage: python scripts/train_flow_legibility.py --run-dir models/student/<name>
            --init-from models/student/<flow run>/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt
-           [--corpus DIR] [--steps 10000] [--legibility-weight 0.1] [--legibility-t-min 0.8]
+           [--corpus DIR] [--steps 10000] [--legibility-weight 0.3] [--legibility-t-min 0.5]
            [--wandb-project P [--wandb-entity E]]
 """
 import argparse
@@ -61,8 +62,8 @@ def recognizer_labels(corpus, rec_token):
 
 
 def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generator=None):
-    """The recognizer's cross-entropy on x̂1 at flow times in [t_min, 1], over
-    the rows with a label. None if no row has one."""
+    """The recognizer's cross-entropy on x̂1 at flow times in [t_min, 1], each
+    row weighted by t³, over the rows with a label. None if no row has one."""
     keep = [b for b, label in enumerate(labels) if label is not None]
     if not keep:
         return None
@@ -83,7 +84,8 @@ def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generato
 
     ink = torch.cat([x1_hat[..., :2] * model.coord_std, x1_hat[..., 2:]], dim=-1)
     target, target_len = encode_texts([labels[b] for b in keep], rec_token, "latex")
-    return recognizer.loss(ink, ink_len, target.to(device), target_len.to(device))["ce"]
+    ce_rows = recognizer.loss(ink, ink_len, target.to(device), target_len.to(device))["ce_rows"]
+    return (t ** 3 * ce_rows).mean()
 
 
 @torch.no_grad()
@@ -231,9 +233,10 @@ if __name__ == "__main__":
     ap.add_argument("--lr", type=float, default=3e-5)
     ap.add_argument("--warmup", type=int, default=500)
     ap.add_argument("--clip", type=float, default=1.0)
-    ap.add_argument("--legibility-weight", type=float, default=0.1)
-    ap.add_argument("--legibility-t-min", type=float, default=0.8,
-                    help="the legibility term only sees flow times from here to 1, where the ink is nearly finished")
+    ap.add_argument("--legibility-weight", type=float, default=0.3)
+    ap.add_argument("--legibility-t-min", type=float, default=0.5,
+                    help="the legibility term only sees flow times from here to 1; its t³ weight already favours "
+                         "the nearly finished ink, so raise this to drop the blurry end altogether")
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)

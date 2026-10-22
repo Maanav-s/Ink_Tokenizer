@@ -204,9 +204,9 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     and guidance a flow model is sampled with are stored in its config.
   - [train_flow_legibility.py](scripts/train_flow_legibility.py) — fine-tunes
     a flow checkpoint with an added loss: the frozen recognizer's
-    cross-entropy on the one-step estimate of the finished ink. That term
-    only uses flow times in `[--legibility-t-min, 1]`, where the ink is
-    nearly finished; the flow losses are unchanged.
+    cross-entropy on the one-step estimate of the finished ink, weighted by
+    t³ so nearly finished ink counts most (`--legibility-t-min` can also cut
+    off the early times); the flow losses are unchanged.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
