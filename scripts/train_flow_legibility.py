@@ -9,7 +9,7 @@ whose flow times are drawn uniformly from [--legibility-t-min, 1] and whose
 rows are weighted by t³, so the term counts most once the ink is near its final
 form: earlier, x̂1 is a blur the recognizer was never trained on, and reading
 it would push the student towards whatever the recognizer happens to accept
-there. The flow pass keeps
+there. Validation reports the unweighted cross-entropy. The flow pass keeps
 its own logit-normal times, so the flow loss trains as before and stays
 dominant; the student should not win by writing ink only this recognizer can
 read, so judge the result with scripts/measure_legibility.py (ideally with a
@@ -61,9 +61,10 @@ def recognizer_labels(corpus, rec_token):
     return out
 
 
-def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generator=None):
+def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generator=None, weighted=True):
     """The recognizer's cross-entropy on x̂1 at flow times in [t_min, 1], each
-    row weighted by t³, over the rows with a label. None if no row has one."""
+    row weighted by t³ if weighted, over the rows with a label. None if no row
+    has one."""
     keep = [b for b, label in enumerate(labels) if label is not None]
     if not keep:
         return None
@@ -85,7 +86,7 @@ def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generato
     ink = torch.cat([x1_hat[..., :2] * model.coord_std, x1_hat[..., 2:]], dim=-1)
     target, target_len = encode_texts([labels[b] for b in keep], rec_token, "latex")
     ce_rows = recognizer.loss(ink, ink_len, target.to(device), target_len.to(device))["ce_rows"]
-    return (t ** 3 * ce_rows).mean()
+    return (t ** 3 * ce_rows).mean() if weighted else ce_rows.mean()
 
 
 @torch.no_grad()
@@ -98,7 +99,8 @@ def evaluate(model, recognizer, corpus, labels, rec_token, args, device, limit=2
     for idx in batches:
         with torch.autocast("cuda", dtype=torch.bfloat16):
             loss = legibility_loss(model, recognizer, to_device(corpus.batch(idx), device),
-                                   [labels[i] for i in idx], rec_token, args.legibility_t_min, generator)
+                                   [labels[i] for i in idx], rec_token, args.legibility_t_min, generator,
+                                   weighted=False)
         if loss is not None:
             total, counted = total + loss.item(), counted + 1
     model.train()
@@ -235,8 +237,8 @@ if __name__ == "__main__":
     ap.add_argument("--clip", type=float, default=1.0)
     ap.add_argument("--legibility-weight", type=float, default=0.3)
     ap.add_argument("--legibility-t-min", type=float, default=0.5,
-                    help="the legibility term only sees flow times from here to 1; its t³ weight already favours "
-                         "the nearly finished ink, so raise this to drop the blurry end altogether")
+                    help="the legibility term only sees flow times from here to 1, on top of its t³ weight; "
+                         "below this, x̂1 is too blurry to read")
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)

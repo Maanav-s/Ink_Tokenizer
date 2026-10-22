@@ -109,10 +109,10 @@ class Recognizer(nn.Module):
 
         memory, memory_pad, memory_len = self.encode(ink, ink_len)
         logits = self.decode(tokens, memory, memory_pad)
-        ce = F.cross_entropy(logits.transpose(1, 2), target, ignore_index=PAD)
         known = target != PAD
-        ce_rows = F.cross_entropy(logits.transpose(1, 2), target, ignore_index=PAD, reduction="none").sum(1) \
-            / known.sum(1)
+        token_ce = F.cross_entropy(logits.transpose(1, 2), target, ignore_index=PAD, reduction="none")
+        ce = token_ce.sum() / known.sum()
+        ce_rows = token_ce.sum(1) / known.sum(1)
         acc = ((logits.argmax(-1) == target) & known).sum() / known.sum()
 
         log_probs = F.log_softmax(self.ctc_head(memory).float(), dim=-1).transpose(0, 1)
