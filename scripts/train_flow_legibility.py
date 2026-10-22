@@ -62,9 +62,9 @@ def recognizer_labels(corpus, rec_token):
 
 
 def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generator=None, weighted=True):
-    """The recognizer's cross-entropy on x̂1 at flow times in [t_min, 1], each
-    row weighted by t³ if weighted, over the rows with a label. None if no row
-    has one."""
+    """The recognizer's token cross-entropy on x̂1 at flow times in [t_min, 1],
+    each row's tokens weighted by its t³ if weighted, over the rows with a
+    label. None if no row has one."""
     keep = [b for b, label in enumerate(labels) if label is not None]
     if not keep:
         return None
@@ -85,8 +85,13 @@ def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generato
 
     ink = torch.cat([x1_hat[..., :2] * model.coord_std, x1_hat[..., 2:]], dim=-1)
     target, target_len = encode_texts([labels[b] for b in keep], rec_token, "latex")
-    ce_rows = recognizer.loss(ink, ink_len, target.to(device), target_len.to(device))["ce_rows"]
-    return (t ** 3 * ce_rows).mean() if weighted else ce_rows.mean()
+    target, target_len = target.to(device), target_len.to(device)
+    ce_rows = recognizer.loss(ink, ink_len, target, target_len)["ce_rows"]
+    # Averaged over tokens, not rows: dropped and duplicated symbols are mostly
+    # in long labels, which a per-row average would dilute.
+    n = target_len + 1
+    weight = t ** 3 if weighted else torch.ones_like(t)
+    return (weight * ce_rows * n).sum() / n.sum()
 
 
 @torch.no_grad()
