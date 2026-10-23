@@ -43,6 +43,37 @@ def encode_texts(texts, token, tokenizer="char"):
     return out, torch.tensor([len(p) for p in pieces])
 
 
+def resample_ink(offsets, chars, n, mu, std):
+    """One ink's normalized offsets (k, 3) and token labels (k,) -> the same
+    ink drawn with n points. Each stroke keeps a share of n in proportion to
+    its points, and at least one, so no stroke (a dot, say) disappears; its
+    points are spread evenly along it by linear interpolation, which keeps
+    arc-length spacing for inks already resampled by arc length. Each new
+    point takes the label of the nearest original one."""
+    xy = np.cumsum(offsets[:, :2] * std + mu, axis=0)
+    ends = np.flatnonzero(offsets[:, 2] > 0.5)
+    if not len(ends) or ends[-1] != len(offsets) - 1:
+        ends = np.append(ends, len(offsets) - 1)
+    starts = np.concatenate([[0], ends[:-1] + 1])
+    sizes = ends - starts + 1
+    n = max(n, len(sizes))
+    counts = np.maximum(1, np.round(sizes * n / len(offsets))).astype(int)
+    # Rounding and the one-point minimum leave the total a few points off n.
+    while counts.sum() != n:
+        counts[np.argmax(counts)] += 1 if counts.sum() < n else -1
+    new_xy, new_chars, pen = [], [], []
+    for s, k, m in zip(starts, sizes, counts):
+        t = np.linspace(0, k - 1, m)
+        index = np.arange(k)
+        new_xy.append(np.stack([np.interp(t, index, xy[s:s + k, 0]), np.interp(t, index, xy[s:s + k, 1])], axis=1))
+        new_chars.append(chars[s:s + k][np.rint(t).astype(int)])
+        pen.append(np.arange(m) == m - 1)
+    new_xy = np.concatenate(new_xy)
+    raw = np.diff(new_xy, axis=0, prepend=np.zeros((1, 2)))
+    new_offsets = np.concatenate([(raw - mu) / std, np.concatenate(pen)[:, None]], axis=1)
+    return new_offsets.astype(offsets.dtype), np.concatenate(new_chars)
+
+
 class Corpus:
     def __init__(self, corpus_dir, shards):
         self.meta = json.load(open(os.path.join(corpus_dir, "meta.json")))
@@ -80,19 +111,33 @@ class Corpus:
     def __len__(self):
         return len(self.texts)
 
-    def batch(self, indices):
+    def batch(self, indices, stretch=None):
         """text (B, T) left-padded tokens, text_len (B,), offsets (B, N, 3)
-        and chars (B, N) right-padded with zeros, ink_len (B,)."""
+        and chars (B, N) right-padded with zeros, ink_len (B,).
+
+        stretch, one factor per line, resamples each ink to that many times
+        its points (resample_ink); the batch then also has true_len, the
+        lengths before resampling."""
         texts = [self.texts[i] for i in indices]
-        n = int(self.lengths[indices].max())
-        offsets = torch.zeros(len(indices), n, 3)
-        chars = torch.zeros(len(indices), n, dtype=torch.long)
-        for b, i in enumerate(indices):
-            s, k = self.starts[i], self.lengths[i]
-            offsets[b, :k] = torch.from_numpy(self.offsets[s:s + k])
-            chars[b, :k] = torch.from_numpy(self.chars[s:s + k].astype(np.int64))
+        inks = [(self.offsets[s:s + k], self.chars[s:s + k])
+                for s, k in zip(self.starts[indices], self.lengths[indices])]
+        true_len = torch.from_numpy(self.lengths[indices].astype(np.int64))
+        if stretch is not None:
+            mu, std = np.array(self.meta["mu"][:2]), np.array(self.meta["std"][:2])
+            inks = [resample_ink(off, ch, max(1, round(len(off) * f)), mu, std)
+                    for (off, ch), f in zip(inks, stretch)]
+        lengths = [len(off) for off, _ in inks]
+        offsets = torch.zeros(len(indices), max(lengths), 3)
+        chars = torch.zeros(len(indices), max(lengths), dtype=torch.long)
+        for b, (off, ch) in enumerate(inks):
+            offsets[b, :len(off)] = torch.from_numpy(off)
+            chars[b, :len(off)] = torch.from_numpy(ch.astype(np.int64))
         text, text_len = encode_texts(texts, self.token, self.tokenizer)
-        return {"text": text, "text_len": text_len, "offsets": offsets, "chars": chars, "ink_len": torch.from_numpy(self.lengths[indices].astype(np.int64))}
+        out = {"text": text, "text_len": text_len, "offsets": offsets, "chars": chars,
+               "ink_len": torch.tensor(lengths)}
+        if stretch is not None:
+            out["true_len"] = true_len
+        return out
 
     def batches(self, max_points, rng, pool=64, equal_text_lengths=False):
         """One epoch of index batches, each holding at most max_points padded

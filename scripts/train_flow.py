@@ -19,9 +19,17 @@ carries on from what it learned. Its architecture must match, and this
 corpus's vocabulary must start with the checkpoint's: tokens added after it
 start from fresh embeddings.
 
+--stretch-prob resamples that fraction of training inks to between
+1/--stretch-max and --stretch-max times their points (log-uniform). In
+training the flow is otherwise always given an ink's true point count, but
+when sampling it gets the length head's, so this teaches it to write the
+same thing with more or fewer points. The length head still learns the true
+counts, and validation uses unchanged inks.
+
 Usage: python scripts/train_flow.py --run-dir models/student/<name>
            [--corpus data/teacher_corpus] [--steps 50000] [--max-points 65536]
            [--init-from models/student/<other>/checkpoint.pt] [--sample-steps 8]
+           [--sample-length argmax|sample] [--stretch-prob 0.5 --stretch-max 1.25] [--accumulate 2]
            [--wandb-project P [--wandb-entity E] [--artifact teacher_corpus:latest]]
 """
 import argparse
@@ -31,6 +39,7 @@ import os
 import random
 import time
 
+import numpy as np
 import torch
 import wandb
 
@@ -101,7 +110,8 @@ def main(args):
         config = dict(vocab_size=len(train.charset) + 2, offset_mu=train.meta["mu"], offset_std=train.meta["std"],
                       coord_std=coord_std, typical_height=typical_height, d_model=args.d_model,
                       n_layers=args.n_layers, heads=args.heads, text_layers=args.text_layers,
-                      text_dropout=args.text_dropout, sample_steps=args.sample_steps)
+                      text_dropout=args.text_dropout, sample_steps=args.sample_steps,
+                      sample_length=args.sample_length)
     if run:
         run.config.update({"model_config": config}, allow_val_change=True)
     model = FlowStudent(**config).to(device)
@@ -138,22 +148,36 @@ def main(args):
     while step < args.steps:
         # Each epoch's batch order depends only on the seed and epoch, so a
         # resumed run continues where it stopped instead of replaying data.
-        batches = train.batches(args.max_points, random.Random(args.seed * 1000 + epoch))
+        # Stretched inks can be longer than packed for, so pack fewer points.
+        max_points = int(args.max_points / args.stretch_max) if args.stretch_prob else args.max_points
+        batches = train.batches(max_points, random.Random(args.seed * 1000 + epoch))
         while pos < len(batches) and step < args.steps:
-            idx = batches[pos]
             for g in opt.param_groups:
                 g["lr"] = lr_at(step, args.lr, args.warmup, args.steps)
-            with torch.autocast("cuda", dtype=torch.bfloat16):
-                losses = model.loss(to_device(train.batch(idx), device))
-            loss = total_loss(losses, args)
             opt.zero_grad(set_to_none=True)
-            loss.backward()
+            # The last step of an epoch takes whatever batches are left.
+            micro = batches[pos:pos + args.accumulate]
+            losses = dict.fromkeys(LOSSES, 0.0)
+            for m, idx in enumerate(micro):
+                stretch = None
+                if args.stretch_prob:
+                    rng = np.random.default_rng((args.seed, step, m))
+                    factor = np.exp(rng.uniform(-1, 1, len(idx)) * np.log(args.stretch_max))
+                    stretch = np.where(rng.random(len(idx)) < args.stretch_prob, factor, 1.0)
+                with torch.autocast("cuda", dtype=torch.bfloat16):
+                    batch_losses = model.loss(to_device(train.batch(idx, stretch), device))
+                loss = total_loss(batch_losses, args)
+                if not torch.isfinite(loss):
+                    raise RuntimeError(f"non-finite loss at step {step}")
+                (loss / len(micro)).backward()
+                for k in LOSSES:
+                    losses[k] += batch_losses[k].detach() / len(micro)
             grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)
-            if not torch.isfinite(loss) or not torch.isfinite(grad_norm):
-                raise RuntimeError(f"non-finite loss or gradient at step {step}")
+            if not torch.isfinite(grad_norm):
+                raise RuntimeError(f"non-finite gradient at step {step}")
             opt.step()
             step += 1
-            pos += 1
+            pos += len(micro)
 
             if step % args.log_every == 0 or step % args.eval_every == 0:
                 rec = {"step": step, "epoch": epoch, **{k: losses[k].item() for k in LOSSES},
@@ -197,6 +221,9 @@ if __name__ == "__main__":
     ap.add_argument("--val-shards", type=int, default=1)
     ap.add_argument("--steps", type=int, default=50000)
     ap.add_argument("--max-points", type=int, default=65536, help="padded ink points per batch")
+    ap.add_argument("--accumulate", type=int, default=1,
+                    help="batches whose gradients are summed per optimizer step; each step then sees this many "
+                         "times --max-points, and an epoch has this many times fewer steps")
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--warmup", type=int, default=1000)
     ap.add_argument("--clip", type=float, default=1.0)
@@ -212,6 +239,13 @@ if __name__ == "__main__":
                     help="fraction of lines trained without their text, for classifier-free guidance")
     ap.add_argument("--sample-steps", type=int, default=8,
                     help="Euler steps the model is sampled with, here and wherever its checkpoint is loaded")
+    ap.add_argument("--sample-length", choices=("argmax", "sample"), default="argmax",
+                    help="how the point count is chosen when sampling: the length head's most likely bin, "
+                         "or a draw from it")
+    ap.add_argument("--stretch-prob", type=float, default=0.0,
+                    help="fraction of training inks resampled to another point count")
+    ap.add_argument("--stretch-max", type=float, default=1.25,
+                    help="largest factor on the point count (and 1/it the smallest)")
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
     ap.add_argument("--sample-every", type=int, default=2000)
