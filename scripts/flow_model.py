@@ -5,7 +5,10 @@ a time, this model generates a whole line at once:
 
 - the text is encoded by a bidirectional transformer over [c1 .. cU, SEP];
 - a head on SEP predicts how many points the ink has (in bins of LENGTH_BIN),
-  which replaces the Mamba student's "finished" class;
+  which replaces the Mamba student's "finished" class. Sampling takes its
+  most likely bin by default (sample_length "argmax"): its draws are spread
+  wide enough that the few far from the ink's real length are unreadable
+  (scripts/length_sweep.py);
 - a transformer over the points, with cross-attention to the text in every
   block, predicts the velocity that carries Gaussian noise to the ink along a
   straight path (x_t = (1 - t) noise + t ink, velocity = ink - noise).
@@ -108,14 +111,18 @@ class Block(nn.Module):
 
 class FlowStudent(nn.Module):
     def __init__(self, vocab_size, offset_mu, offset_std, coord_std, typical_height, d_model=384, n_layers=8,
-                 heads=6, text_layers=3, text_dropout=0.1, sample_steps=32, sample_guidance=2.0):
+                 heads=6, text_layers=3, text_dropout=0.1, sample_steps=32, sample_guidance=2.0,
+                 sample_length="argmax"):
+        if sample_length not in ("argmax", "sample"):
+            raise ValueError(f"sample_length must be argmax or sample, not {sample_length!r}")
         super().__init__()
         self.config = dict(vocab_size=vocab_size, offset_mu=list(offset_mu), offset_std=list(offset_std),
                            coord_std=list(coord_std), typical_height=typical_height, d_model=d_model,
                            n_layers=n_layers, heads=heads, text_layers=text_layers, text_dropout=text_dropout,
-                           sample_steps=sample_steps, sample_guidance=sample_guidance)
+                           sample_steps=sample_steps, sample_guidance=sample_guidance, sample_length=sample_length)
         self.sample_steps = sample_steps
         self.sample_guidance = sample_guidance
+        self.sample_length = sample_length
         self.typical_height = typical_height
         self.d_model = d_model
         self.text_dropout = text_dropout
@@ -203,7 +210,8 @@ class FlowStudent(nn.Module):
         neighbouring points), length, char_ce and char_acc.
 
         pair is (noise, ink), both (B, N, 3), to train on instead of the
-        batch's ink and fresh noise."""
+        batch's ink and fresh noise. If the batch has true_len (its inks
+        resampled to other lengths), the length head learns true_len."""
         text, text_len, offsets, chars, ink_len = (batch[k] for k in ("text", "text_len", "offsets", "chars", "ink_len"))
         B, N, _ = offsets.shape
         device = offsets.device
@@ -230,7 +238,7 @@ class FlowStudent(nn.Module):
         step = torch.diff(error[..., :2], dim=1) * pairs.unsqueeze(-1)
         smooth = step.pow(2).sum() / (2 * pairs.sum().clamp(min=1))
 
-        length_bin = ((ink_len - 1) // LENGTH_BIN).clamp(0, LENGTH_BINS - 1)
+        length_bin = ((batch.get("true_len", ink_len) - 1) // LENGTH_BIN).clamp(0, LENGTH_BINS - 1)
         length = F.cross_entropy(length_logit, length_bin)
 
         # Labels cannot be read off ink that is still mostly noise, so nearly
@@ -272,14 +280,20 @@ class FlowStudent(nn.Module):
         """Write a batch of lines. text: (B, T) left-padded tokens.
 
         Returns per line (offsets (n, 3), chars (n,), finished), as
-        Student.sample() does. finished is always True: the length is drawn
-        before the ink. steps and guidance are as in transport().
+        Student.sample() does. finished is always True: the length is chosen
+        before the ink, as the length head's most likely bin, or drawn from
+        it (sharpened by bias) if sample_length is "sample". steps and
+        guidance are as in transport().
         """
         B, device = text.shape[0], text.device
         bias = torch.as_tensor(bias, dtype=torch.float32, device=device).reshape(-1).expand(B)
         _, _, length_logit = self.encode_text(text, text_len)
-        length_p = F.softmax(length_logit * (1 + bias).unsqueeze(1), dim=-1)
-        ink_len = torch.multinomial(length_p, 1, generator=generator).squeeze(1) * LENGTH_BIN + LENGTH_BIN // 2
+        if self.sample_length == "argmax":
+            length_bin = length_logit.argmax(-1)
+        else:
+            length_p = F.softmax(length_logit * (1 + bias).unsqueeze(1), dim=-1)
+            length_bin = torch.multinomial(length_p, 1, generator=generator).squeeze(1)
+        ink_len = length_bin * LENGTH_BIN + LENGTH_BIN // 2
 
         x = torch.randn((B, int(ink_len.max()), 3), generator=generator, device=device)
         x = x * torch.exp(-BIAS_TEMPERATURE * bias).view(B, 1, 1)

@@ -1,11 +1,13 @@
 """Test whether a flow student's misshapen ink (loops, scribbles, repeated
 symbols) comes from being given the wrong number of points.
 
-FlowStudent.sample() draws the point count from the length head before any
-denoising, but training always uses the true count. This writes the same
+FlowStudent.sample() takes the point count from the length head before any
+denoising, but training uses the true count (unless train_flow.py
+--stretch-prob is set). This writes the same
 held-out labels from the same noise at several point counts: the true one,
 the true one scaled by each --scales factor, the length head's most likely
-bin and a draw from it (what sample() does). The recognizer reads every ink
+bin (what sample() does by default) and a draw from it (sample_length
+"sample"). The recognizer reads every ink
 and the token error rate is reported per count, with its mistakes split into
 added, dropped and substituted tokens (repeated symbols show up as added).
 
