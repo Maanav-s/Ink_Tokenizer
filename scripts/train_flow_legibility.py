@@ -235,8 +235,9 @@ if __name__ == "__main__":
     ap.add_argument("--corpus", help="default: the corpus the student was trained on")
     ap.add_argument("--val-shards", type=int, default=1)
     ap.add_argument("--steps", type=int, default=10000)
-    ap.add_argument("--max-points", type=int, default=65536,
-                    help="padded ink points per batch; each step runs the student twice")
+    ap.add_argument("--max-points", type=int, default=32768,
+                    help="padded ink points per batch; each step runs the student twice and backpropagates "
+                         "through the recognizer, so this is half train_flow.py's to fit on a 24 GB GPU")
     ap.add_argument("--lr", type=float, default=3e-5)
     ap.add_argument("--warmup", type=int, default=500)
     ap.add_argument("--clip", type=float, default=1.0)
