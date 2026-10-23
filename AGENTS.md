@@ -207,6 +207,11 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     cross-entropy on the one-step estimate of the finished ink, weighted by
     t³ so nearly finished ink counts most (`--legibility-t-min` can also cut
     off the early times); the flow losses are unchanged.
+  - [length_sweep.py](scripts/length_sweep.py) — writes held-out labels from
+    the same noise at the true point count, scaled versions of it, and the
+    length head's argmax and draw, and has the recognizer read each, to test
+    whether a wrong point count causes loops and repeated symbols. Results
+    and drawings go to W&B (job type "length_sweep").
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
