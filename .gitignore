@@ -49,3 +49,4 @@ logs/
 wandb/
 .cache/
 data/
+temp.txt
