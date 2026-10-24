@@ -110,6 +110,8 @@ class Block(nn.Module):
 
 
 class FlowStudent(nn.Module):
+    length_bin = LENGTH_BIN
+
     def __init__(self, vocab_size, offset_mu, offset_std, coord_std, typical_height, d_model=384, n_layers=8,
                  heads=6, text_layers=3, text_dropout=0.1, sample_steps=32, sample_guidance=2.0,
                  sample_length="argmax"):
@@ -238,7 +240,7 @@ class FlowStudent(nn.Module):
         step = torch.diff(error[..., :2], dim=1) * pairs.unsqueeze(-1)
         smooth = step.pow(2).sum() / (2 * pairs.sum().clamp(min=1))
 
-        length_bin = ((batch.get("true_len", ink_len) - 1) // LENGTH_BIN).clamp(0, LENGTH_BINS - 1)
+        length_bin = ((batch.get("true_len", ink_len) - 1) // self.length_bin).clamp(0, LENGTH_BINS - 1)
         length = F.cross_entropy(length_logit, length_bin)
 
         # Labels cannot be read off ink that is still mostly noise, so nearly
@@ -293,7 +295,7 @@ class FlowStudent(nn.Module):
         else:
             length_p = F.softmax(length_logit * (1 + bias).unsqueeze(1), dim=-1)
             length_bin = torch.multinomial(length_p, 1, generator=generator).squeeze(1)
-        ink_len = length_bin * LENGTH_BIN + LENGTH_BIN // 2
+        ink_len = length_bin * self.length_bin + self.length_bin // 2
 
         x = torch.randn((B, int(ink_len.max()), 3), generator=generator, device=device)
         x = x * torch.exp(-BIAS_TEMPERATURE * bias).view(B, 1, 1)

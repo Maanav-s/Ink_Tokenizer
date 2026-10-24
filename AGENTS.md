@@ -215,6 +215,20 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     length head's argmax and draw, and has the recognizer read each, to test
     whether a wrong point count causes loops and repeated symbols. Results
     and drawings go to W&B (job type "length_sweep").
+  - Spline flow student (experiment): the flow student writing each stroke's
+    B-spline control points instead of its points.
+    [spline_corpus.py](scripts/spline_corpus.py) fits every stroke of a
+    corpus with a clamped cubic B-spline, about one control point per
+    `--points-per-control` points (default 4; about 3.3 on MathWriting,
+    since short strokes keep at least two), and writes the same shard format
+    to `data/spline_corpus` (meta.json `spline` names the source).
+    [spline_flow_model.py](scripts/spline_flow_model.py) is `FlowStudent`
+    with length bins of 2 control points, and its `sample()` decodes the
+    splines into dense ink, so `sample_student.py` and `visualize_flow.py`
+    (with `--corpus <source>`) load it as they do the flow student.
+    [train_spline_flow.py](scripts/train_spline_flow.py) trains it (no
+    `--init-from` or `--stretch-prob`). Its losses are over control points,
+    so they are not comparable with the point flow student's.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
@@ -275,6 +289,10 @@ uv run python scripts/mixed_corpus.py
 uv run python scripts/font_corpus.py --base data/mixed_corpus --out-dir data/font_mixed_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
     --corpus data/font_mixed_corpus --artifact none $WB
+# Spline flow student: control points instead of points (experiment).
+uv run python scripts/spline_corpus.py --source data/mathwriting_corpus --out-dir data/spline_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_spline_flow.py --run-dir models/student/<name> \
+    --corpus data/spline_corpus --accumulate 2 $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB

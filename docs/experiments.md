@@ -23,6 +23,7 @@ Status values: `planned`, `running`, `done`, `dropped`.
 | Mamba + attention hybrid sized like the flow student | `9bb9335`, [hybrid_model.py](../scripts/hybrid_model.py) | | |
 | Font-rendered MathWriting labels (`\typeset{...}`) added to the flow corpus | `8443925`, `58ba14b`, [font_corpus.py](../scripts/font_corpus.py) | done | not yet written up |
 | Ink-to-LaTeX recognizer, to judge generated ink | `5aa8364`, `5999c13`, `1025563`, [recognizer_model.py](../scripts/recognizer_model.py) | done (`transformer_v1`) | val token acc 0.97 (teacher-forced); most misreads are plausible readings of unclear handwriting, see below |
+| Flow student writing B-spline control points instead of points | [spline_flow_model.py](../scripts/spline_flow_model.py), [spline_corpus.py](../scripts/spline_corpus.py) | planned | see below |
 
 ### Ink-to-LaTeX recognizer
 
@@ -78,6 +79,33 @@ checkpoint's sample grid at a chosen number of Euler steps and guidance, as
 its own W&B run; it was used for a steps and guidance sweep.
 
 ## Planned
+
+### Splines instead of points
+
+Status: `planned`
+
+The flow student writes every point, about a tenth of a symbol apart, so a
+line is hundreds of positions and the curve is only as smooth as the smooth
+loss makes it. [spline_corpus.py](../scripts/spline_corpus.py) fits each stroke
+with a clamped cubic B-spline (least squares, chord-length parameters), and
+[spline_flow_model.py](../scripts/spline_flow_model.py) generates the control
+points with the flow student's architecture unchanged, then decodes them to
+dense ink. On 512 MathWriting inks the fit has 3.3 points per control point
+(`--points-per-control 4`; short strokes keep at least two) and an RMS error
+of 0.02 ink units, a fifth of the point spacing, while keeping every stroke.
+
+Expected: shorter sequences (faster, longer lines fit in a batch), curves
+smooth by construction, and fewer points for the length head to get wrong.
+Risks: one wrong control point moves a whole stretch of curve, and a
+control point is less tied to one token than a point is.
+
+Run: `spline_corpus.py` on `data/mathwriting_corpus` (or `data/font_corpus`
+for token alignment), then `train_spline_flow.py --accumulate 2` (the point flow runs' 32768 per
+batch, counted in control points, so a step sees about 3x the ink) for as
+many steps as the point flow student it is compared with. Measure the
+recognizer's token error rate and exact rate on human `valid` samples next
+to that student's, and the sampling time per line. The flow losses are not comparable. Variants:
+`--points-per-control` 2 and 8.
 
 ### Font-rendered labels for legibility
 

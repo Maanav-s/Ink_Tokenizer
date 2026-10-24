@@ -3,7 +3,9 @@ Euler steps and upload it to W&B.
 
 The image is train_flow.py's: rows alternate held-out corpus ink and the
 student writing the same line. It goes to a new W&B run (job type
-"visualize") rather than the training run, which may still be logging.
+"visualize") rather than the training run, which may still be logging. For a
+spline flow student, pass its source corpus as --corpus, so the corpus rows
+are the original ink rather than control points.
 
 Usage: python scripts/visualize_flow.py --checkpoint models/student/<run>/checkpoint.pt
            --wandb-project P [--wandb-entity E] [--steps 16] [--guidance 2.0]
@@ -21,7 +23,7 @@ from sample_student import load_model, teacher_vs_student
 
 def main(args):
     model, ckpt = load_model(args.checkpoint)
-    if ckpt.get("architecture") != "flow":
+    if ckpt.get("architecture") not in ("flow", "spline_flow"):
         raise SystemExit(f"{args.checkpoint} is not a flow student")
     train_args = ckpt["args"]
     corpus_dir = args.corpus or train_args["corpus"]
