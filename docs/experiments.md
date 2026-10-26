@@ -235,8 +235,11 @@ labels, and that human-likeness does not drop.
 
 ### Guiding away from font ink
 
-Status: `planned` (after the font-rendered run; lower priority while
-legibility is the goal)
+Status: `planned`; code ready: `FlowStudent.guide_from_fonts`, and
+`--font-guidance` in [measure_legibility.py](../scripts/measure_legibility.py)
+and [visualize_flow.py](../scripts/visualize_flow.py). First run: the spline
+student continued on `font_corpus.py --splits train synthetic`, converted by
+`spline_corpus.py`
 
 Treat font ink as non-expert data and use classifier-free guidance to push
 samples away from it, as CFGRL does for policies (Frans et al., "Diffusion

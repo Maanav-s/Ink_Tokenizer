@@ -8,13 +8,19 @@ the recognizer's reads of samples. Sample images draw the source corpus's
 held-out ink (meta.json "spline" source, which must be present) next to the
 student's decoded samples.
 
-Not carried over from train_flow.py, to keep the experiment small:
---init-from (a point checkpoint's length head and positions mean something
-else here) and --stretch-prob (resample_ink interpolates control points,
-which changes the curve).
+--init-from starts a new run from another spline flow checkpoint, as in
+train_flow.py: same architecture and points per control point, a vocabulary
+this corpus's starts with (new tokens, such as a font corpus's \\typeset,
+start from fresh embeddings), and the checkpoint's ink statistics if the
+corpus is in its ink units. A point flow checkpoint cannot be used: its
+length head and positions mean something else here.
+
+Not carried over from train_flow.py: --stretch-prob (resample_ink
+interpolates control points, which changes the curve).
 
 Usage: python scripts/train_spline_flow.py --run-dir models/student/<name>
            [--corpus data/spline_corpus] [--steps 50000] [--max-points 32768] [--accumulate 2]
+           [--init-from models/student/<spline run>/checkpoint.pt]
            [--wandb-project P [--wandb-entity E]]
 """
 import argparse
@@ -50,10 +56,21 @@ def main(args):
     _, source_val = Corpus.split(train.meta["spline"]["source"], args.val_shards)
     print(f"train {len(train)} lines, val {len(val)} lines", flush=True)
 
+    init = None
     if ckpt is not None:
         config = ckpt["config"]
     else:
         coord_std, typical_height = ink_statistics(train)
+        if args.init_from:
+            init = torch.load(args.init_from, map_location=device, weights_only=False)
+            if init.get("architecture") != "spline_flow":
+                raise SystemExit(f"{args.init_from} is not a spline flow checkpoint")
+            trained = init["config"]
+            if trained["points_per_control"] != train.meta["spline"]["points_per_control"]:
+                raise SystemExit(f"{args.init_from} was trained with {trained['points_per_control']} points per "
+                                 f"control point, {args.corpus} has {train.meta['spline']['points_per_control']}")
+            if (trained["offset_mu"], trained["offset_std"]) == (train.meta["mu"], train.meta["std"]):
+                coord_std, typical_height = trained["coord_std"], trained["typical_height"]
         config = dict(points_per_control=train.meta["spline"]["points_per_control"],
                       vocab_size=len(train.charset) + 2, offset_mu=train.meta["mu"], offset_std=train.meta["std"],
                       coord_std=coord_std, typical_height=typical_height, d_model=args.d_model,
@@ -70,6 +87,16 @@ def main(args):
         opt.load_state_dict(ckpt["opt"])
         step, epoch, pos, best_val = ckpt["step"], ckpt["epoch"], ckpt["pos"], ckpt["best_val"]
         print(f"resumed at step {step}", flush=True)
+    elif init is not None:
+        known = len(init["charset"])
+        if train.charset[:known] != init["charset"]:
+            raise ValueError(f"{args.init_from} was trained on a vocabulary this corpus's does not start with")
+        # The buffers hold the ink statistics, which are this run's config's.
+        state = {**init["model"], **dict(model.named_buffers())}
+        state["char_embed.weight"] = torch.cat([init["model"]["char_embed.weight"],
+                                                model.char_embed.weight[known + 2:].detach()])
+        model.load_state_dict(state)
+        print(f"initialized from {args.init_from} at step {init['step']}", flush=True)
     print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
     def save():
@@ -153,6 +180,7 @@ if __name__ == "__main__":
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--warmup", type=int, default=1000)
     ap.add_argument("--clip", type=float, default=1.0)
+    ap.add_argument("--init-from", help="spline flow checkpoint whose weights start a new run")
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)

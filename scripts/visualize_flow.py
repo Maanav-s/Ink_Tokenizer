@@ -8,7 +8,7 @@ spline flow student, pass its source corpus as --corpus, so the corpus rows
 are the original ink rather than control points.
 
 Usage: python scripts/visualize_flow.py --checkpoint models/student/<run>/checkpoint.pt
-           --wandb-project P [--wandb-entity E] [--steps 16] [--guidance 2.0]
+           --wandb-project P [--wandb-entity E] [--steps 16] [--guidance 2.0] [--font-guidance W]
            [--lines 8] [--corpus DIR] [--artifact NAME|none]
 """
 import argparse
@@ -31,7 +31,8 @@ def main(args):
     run_name = os.path.basename(os.path.dirname(os.path.abspath(args.checkpoint)))
 
     run = wandb.init(entity=args.wandb_entity, project=args.wandb_project, job_type="visualize",
-                     name=f"{run_name}-euler{args.steps}",
+                     name=f"{run_name}-euler{args.steps}"
+                          + (f"-font{args.font_guidance:g}" if args.font_guidance != 1 else ""),
                      config={**vars(args), "checkpoint_step": ckpt["step"], "corpus": corpus_dir})
     names = None
     if artifact != "none":
@@ -41,11 +42,14 @@ def main(args):
     model.sample_steps = args.steps
     if args.guidance is not None:
         model.sample_guidance = args.guidance
+    if args.font_guidance != 1:
+        model.guide_from_fonts(ckpt["charset"], args.font_guidance)
     img = teacher_vs_student(model, val, args.lines, args.seed)
     if args.out:
         img.save(args.out)
         print(f"saved {args.out}", flush=True)
-    caption = (f"{run_name} step {ckpt['step']}, {args.steps} Euler steps, guidance {model.sample_guidance}; "
+    caption = (f"{run_name} step {ckpt['step']}, {args.steps} Euler steps, guidance {model.sample_guidance}, "
+               f"font guidance {args.font_guidance:g}; "
                f"rows alternate corpus ink, flow student")
     run.log({"samples": wandb.Image(img, caption=caption)})
     run.finish()
@@ -56,6 +60,8 @@ if __name__ == "__main__":
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--steps", type=int, default=16, help="Euler steps")
     ap.add_argument("--guidance", type=float, help="classifier-free guidance scale (default: the checkpoint's)")
+    ap.add_argument("--font-guidance", type=float, default=1.0,
+                    help="weight w guiding away from font ink (models trained on a font corpus; 1 = off)")
     ap.add_argument("--lines", type=int, default=8, help="held-out lines drawn")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--corpus", help="corpus directory (default: the one the checkpoint was trained on)")

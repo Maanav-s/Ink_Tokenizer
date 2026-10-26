@@ -230,12 +230,18 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     with length bins of 2 control points, and its `sample()` decodes the
     splines into dense ink, so `sample_student.py` and `visualize_flow.py`
     (with `--corpus <source>`) load it as they do the flow student.
-    [train_spline_flow.py](scripts/train_spline_flow.py) trains it (no
-    `--init-from` or `--stretch-prob`). Its losses are over control points,
+    [train_spline_flow.py](scripts/train_spline_flow.py) trains it, with
+    `--init-from` as in `train_flow.py` (no `--stretch-prob`). Its losses are over control points,
     so they are not comparable with the point flow student's.
     `train_flow_legibility.py` fine-tunes it too (it decodes x̂1 into dense
     ink, differentiably, for the recognizer), and `measure_legibility.py`
     scores it against its source corpus's real ink by default.
+  - Font guidance (CFGRL): a flow or spline flow student trained on a font
+    corpus can be sampled away from font ink, `v(\typeset{label}) + w ·
+    (v(label) − v(\typeset{label}))` before text guidance
+    (`FlowStudent.guide_from_fonts`, one extra pass per step).
+    `measure_legibility.py` and `visualize_flow.py` take `--font-guidance w`;
+    w = 1 is plain sampling.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching

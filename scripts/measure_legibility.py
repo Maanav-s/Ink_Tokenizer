@@ -16,7 +16,7 @@ With --wandb-project, everything also goes to a new W&B run (job type
 
 Usage: python scripts/measure_legibility.py --student models/student/<run>/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt [--corpus DIR] [--lines 1000]
-           [--samples 1] [--steps S] [--guidance G] [--bias 0] [--batch 16] [--out PATH]
+           [--samples 1] [--steps S] [--guidance G] [--font-guidance W] [--bias 0] [--batch 16] [--out PATH]
            [--wandb-project P [--wandb-entity E]]
 """
 import argparse
@@ -77,6 +77,8 @@ def main(args):
         student.sample_steps = args.steps
     if args.guidance is not None:
         student.sample_guidance = args.guidance
+    if args.font_guidance != 1:
+        student.guide_from_fonts(student_ckpt["charset"], args.font_guidance)
     rec_ckpt = torch.load(args.recognizer, map_location=device, weights_only=False)
     recognizer = Recognizer(**rec_ckpt["config"]).to(device)
     recognizer.load_state_dict(rec_ckpt["model"])
@@ -173,7 +175,8 @@ def main(args):
                          config={**vars(args), "student_step": student_ckpt["step"],
                                  "recognizer_step": rec_ckpt["step"], "corpus": corpus_dir,
                                  "sample_steps": getattr(student, "sample_steps", None),
-                                 "sample_guidance": getattr(student, "sample_guidance", None)})
+                                 "sample_guidance": getattr(student, "sample_guidance", None),
+                                 "font_guidance": args.font_guidance})
         mistake_rows = [[op[0], op[1], op[2] if op[0] == "sub" else "", count] if op[0] != "add"
                         else [op[0], "", op[1], count] for op, count in mistakes.most_common()]
         reads = [[" ".join(t), " ".join(s[0]), len(s[1]), " ".join(r[0]), len(r[1])]
@@ -199,6 +202,8 @@ if __name__ == "__main__":
     ap.add_argument("--samples", type=int, default=1, help="samples per label")
     ap.add_argument("--steps", type=int, help="Euler steps (flow students; default: the checkpoint's)")
     ap.add_argument("--guidance", type=float, help="guidance scale (flow students; default: the checkpoint's)")
+    ap.add_argument("--font-guidance", type=float, default=1.0,
+                    help="weight w guiding away from font ink (flow students trained on a font corpus; 1 = off)")
     ap.add_argument("--bias", type=float, default=0.0, help="sampling bias; MathWriting corpora are written at 0")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--batch", type=int, default=16,

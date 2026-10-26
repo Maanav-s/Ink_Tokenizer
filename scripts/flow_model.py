@@ -33,6 +33,13 @@ How many Euler steps and how much classifier-free guidance a model is sampled
 with are part of its config, because a reflowed model
 (scripts/train_reflow.py) needs fewer steps and no guidance.
 
+A model trained on a font corpus (scripts/font_corpus.py) can also be guided
+away from font ink, as CFGRL guides a policy away from non-expert data:
+guide_from_fonts() sets a weight w, and each step's conditional velocity
+becomes v(\\typeset{label}) + w (v(label) - v(\\typeset{label})) before text
+guidance. w = 1 (the default) is plain sampling; it is a sampling setting, not
+part of the config. See docs/experiments.md, "Guiding away from font ink".
+
 sample() returns what Student.sample() returns, normalized offsets included,
 so scripts/sample_student.py and the page renderer work with either model.
 """
@@ -125,6 +132,8 @@ class FlowStudent(nn.Module):
         self.sample_steps = sample_steps
         self.sample_guidance = sample_guidance
         self.sample_length = sample_length
+        self.font_guidance = 1.0
+        self.typeset_tokens = None
         self.typical_height = typical_height
         self.d_model = d_model
         self.text_dropout = text_dropout
@@ -257,7 +266,8 @@ class FlowStudent(nn.Module):
         """Carry noise x (B, N, 3) to ink with Euler steps. Returns the ink
         and the index of the text token each point draws (B, N). guidance is
         the classifier-free guidance scale (1 turns it off); steps and
-        guidance default to the model's own."""
+        guidance default to the model's own. Font guidance
+        (guide_from_fonts) adds a pass per step."""
         steps = self.sample_steps if steps is None else steps
         guidance = self.sample_guidance if guidance is None else guidance
         B, device = x.shape[0], x.device
@@ -265,9 +275,14 @@ class FlowStudent(nn.Module):
         if guidance != 1:
             everything = torch.ones(B, dtype=torch.bool, device=device)
             null_memory, null_pad, _ = self.encode_text(text, text_len, everything)
+        if self.font_guidance != 1:
+            font_memory, font_pad, _ = self.encode_text(*self.typeset(text, text_len))
         for n in range(steps):
             t = torch.full((B,), n / steps, device=device)
             velocity, _ = self.denoise(x, t, ink_len, memory, memory_pad)
+            if self.font_guidance != 1:
+                font, _ = self.denoise(x, t, ink_len, font_memory, font_pad)
+                velocity = font + self.font_guidance * (velocity - font)
             if guidance != 1:
                 unconditional, _ = self.denoise(x, t, ink_len, null_memory, null_pad)
                 velocity = unconditional + guidance * (velocity - unconditional)
@@ -276,6 +291,30 @@ class FlowStudent(nn.Module):
         _, char_logit = self.denoise(x, torch.ones(B, device=device), ink_len, memory, memory_pad)
         valid = torch.arange(MAX_TEXT, device=device).unsqueeze(0) < text_len.unsqueeze(1)
         return x, char_logit.masked_fill(~valid.unsqueeze(1), -torch.inf).argmax(-1)
+
+    def guide_from_fonts(self, charset, weight):
+        """Guide sampling away from font ink with weight w (1 turns it off).
+        charset is the checkpoint's; it needs \\typeset, so the model must
+        have been trained on a font corpus."""
+        token = {ch: i + 2 for i, ch in enumerate(charset)}
+        if weight != 1 and not {"\\typeset", "{", "}"} <= token.keys():
+            raise ValueError("font guidance needs a model trained on a font corpus (no \\typeset token)")
+        self.font_guidance = weight
+        if weight != 1:
+            self.typeset_tokens = (token["\\typeset"], token["{"], token["}"])
+
+    def typeset(self, text, text_len):
+        """Left-padded labels (B, T) -> the same labels wrapped in
+        \\typeset{...}, as font_corpus.py writes font ink's text."""
+        command, open_brace, close_brace = self.typeset_tokens
+        B, T = text.shape
+        out = torch.full((B, T + 3), PAD, dtype=text.dtype, device=text.device)
+        out[:, 2:T + 2] = text
+        out[:, -1] = close_brace
+        rows, start = torch.arange(B, device=text.device), T + 2 - text_len
+        out[rows, start - 2] = command
+        out[rows, start - 1] = open_brace
+        return out, text_len + 3
 
     @torch.no_grad()
     def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None):
