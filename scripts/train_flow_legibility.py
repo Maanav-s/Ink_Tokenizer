@@ -23,12 +23,14 @@ lines are read as their label, as in train_recognizer.py.
 --init-from is the student checkpoint, whose architecture and ink statistics
 are kept; the corpus (by default the checkpoint's) must have its vocabulary.
 The run directory, resuming, W&B, sample images and the divergence stop (on
-the validation flow loss) work as in train_flow.py.
+the validation flow loss) work as in train_flow.py, and so does
+--stretch-prob; the recognizer reads stretched inks against the same label.
 
 Usage: python scripts/train_flow_legibility.py --run-dir models/student/<name>
            --init-from models/student/<flow run>/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt
            [--corpus DIR] [--steps 10000] [--legibility-weight 0.3] [--legibility-t-min 0.5]
+           [--char-weight 0.1] [--stretch-prob 0.5 --stretch-max 1.25]
            [--wandb-project P [--wandb-entity E]]
 """
 import argparse
@@ -45,7 +47,7 @@ from flow_model import FlowStudent
 from ink_corpus import Corpus, char_tokens, encode_texts, split_text
 from recognizer_model import Recognizer
 from sample_student import teacher_vs_student
-from train_flow import DIVERGED, LOSSES, total_loss
+from train_flow import DIVERGED, LOSSES, stretch_factors, total_loss
 from train_flow import evaluate as evaluate_flow
 from train_recognizer import unwrap
 from train_student import lr_at, start_wandb_run, to_device
@@ -168,12 +170,13 @@ def main(args):
     model.train()
     start = time.time()
     while step < args.steps:
-        batches = train.batches(args.max_points, random.Random(args.seed * 1000 + epoch))
+        max_points = int(args.max_points / args.stretch_max) if args.stretch_prob else args.max_points
+        batches = train.batches(max_points, random.Random(args.seed * 1000 + epoch))
         while pos < len(batches) and step < args.steps:
             idx = batches[pos]
             for g in opt.param_groups:
                 g["lr"] = lr_at(step, args.lr, args.warmup, args.steps)
-            batch = to_device(train.batch(idx), device)
+            batch = to_device(train.batch(idx, stretch_factors(args, step, 0, len(idx))), device)
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 losses = model.loss(batch)
                 legibility = legibility_loss(model, recognizer, batch, [train_labels[i] for i in idx], rec_token,
@@ -248,6 +251,10 @@ if __name__ == "__main__":
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)
+    ap.add_argument("--stretch-prob", type=float, default=0.0,
+                    help="fraction of training inks resampled to another point count (as in train_flow.py)")
+    ap.add_argument("--stretch-max", type=float, default=1.25,
+                    help="largest factor on the point count (and 1/it the smallest)")
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--eval-every", type=int, default=1000)
     ap.add_argument("--sample-every", type=int, default=2000)

@@ -209,7 +209,8 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     a flow checkpoint with an added loss: the frozen recognizer's
     cross-entropy on the one-step estimate of the finished ink, weighted by
     t³ so nearly finished ink counts most (`--legibility-t-min` can also cut
-    off the early times); the flow losses are unchanged.
+    off the early times); the flow losses are unchanged. It takes
+    `--stretch-prob` like `train_flow.py`.
   - [length_sweep.py](scripts/length_sweep.py) — writes held-out labels from
     the same noise at the true point count, scaled versions of it, and the
     length head's argmax and draw, and has the recognizer read each, to test

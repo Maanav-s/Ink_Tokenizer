@@ -58,6 +58,16 @@ def total_loss(losses, args):
             + args.char_weight * losses["char_ce"])
 
 
+def stretch_factors(args, step, micro, n):
+    """Per line of a batch, the factor its point count is resampled by, or
+    None if --stretch-prob is off."""
+    if not args.stretch_prob:
+        return None
+    rng = np.random.default_rng((args.seed, step, micro))
+    factor = np.exp(rng.uniform(-1, 1, n) * np.log(args.stretch_max))
+    return np.where(rng.random(n) < args.stretch_prob, factor, 1.0)
+
+
 @torch.no_grad()
 def evaluate(model, corpus, max_points, device, limit=200):
     model.eval()
@@ -159,11 +169,7 @@ def main(args):
             micro = batches[pos:pos + args.accumulate]
             losses = dict.fromkeys(LOSSES, 0.0)
             for m, idx in enumerate(micro):
-                stretch = None
-                if args.stretch_prob:
-                    rng = np.random.default_rng((args.seed, step, m))
-                    factor = np.exp(rng.uniform(-1, 1, len(idx)) * np.log(args.stretch_max))
-                    stretch = np.where(rng.random(len(idx)) < args.stretch_prob, factor, 1.0)
+                stretch = stretch_factors(args, step, m, len(idx))
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     batch_losses = model.loss(to_device(train.batch(idx, stretch), device))
                 loss = total_loss(batch_losses, args)

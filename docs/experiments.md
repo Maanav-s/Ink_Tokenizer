@@ -23,6 +23,7 @@ Status values: `planned`, `running`, `done`, `dropped`.
 | Mamba + attention hybrid sized like the flow student | `9bb9335`, [hybrid_model.py](../scripts/hybrid_model.py) | | |
 | Font-rendered MathWriting labels (`\typeset{...}`) added to the flow corpus | `8443925`, `58ba14b`, [font_corpus.py](../scripts/font_corpus.py) | done | not yet written up |
 | Ink-to-LaTeX recognizer, to judge generated ink | `5aa8364`, `5999c13`, `1025563`, [recognizer_model.py](../scripts/recognizer_model.py) | done (`transformer_v1`) | val token acc 0.97 (teacher-forced); most misreads are plausible readings of unclear handwriting, see below |
+| Flow student trained on inks resampled to other point counts | `2789a1b`, [train_flow.py](../scripts/train_flow.py) | done (`font_flow_stretch`) | sample grids clearly better by eye; length sweep not yet run, see below |
 | Flow student writing B-spline control points instead of points | [spline_flow_model.py](../scripts/spline_flow_model.py), [spline_corpus.py](../scripts/spline_corpus.py) | planned | see below |
 
 ### Ink-to-LaTeX recognizer
@@ -77,6 +78,44 @@ training steps from the math.
 [visualize_flow.py](../scripts/visualize_flow.py) (`283df41`) renders a flow
 checkpoint's sample grid at a chosen number of Euler steps and guidance, as
 its own W&B run; it was used for a steps and guidance sweep.
+
+### Training on other point counts
+
+Status: `done` (`models/student/font_flow_stretch`, W&B `inkEncoder`
+run `fa2a16cb`); measured by eye only
+
+The flow is trained at each ink's true point count but sampled at the length
+head's prediction, so it never learned to write with a count that is off.
+[length_sweep.py](../scripts/length_sweep.py) on `legibility_reward_flow_v2`
+(run `w4a4tf0a`, 500 human `valid` labels, recognizer `all_sources_v1`)
+showed the count matters:
+
+| Point count | Token error rate | Exact |
+|---|---|---|
+| true | 0.055 | 0.750 |
+| true × 0.6 | 0.133 | 0.486 |
+| true × 0.8 | 0.051 | 0.722 |
+| true × 1.25 | 0.058 | 0.714 |
+| true × 1.5 | 0.079 | 0.662 |
+| length head argmax | 0.049 | 0.750 |
+| length head draw | 0.100 | 0.714 |
+
+The draws are within 25% of the true count only 66% of the time, and they
+double the error rate, mostly through dropped tokens (0.045 per token vs 0.021
+at the true count). `8b3de3e` switched sampling to the argmax.
+
+Run: continue `font_flow` on `data/font_corpus` for 20k steps with
+`--stretch-prob 0.5 --stretch-max 1.25 --accumulate 2` (half the inks
+resampled to 0.8–1.25× their points, log-uniform). Validation losses are
+unchanged from the legibility runs (val_flow 0.191 vs 0.193), as expected,
+since validation uses unresampled inks.
+
+Result: the sample grids look much better, judged by eye. This has not been
+measured. Next: run
+`length_sweep.py --student models/student/font_flow_stretch/checkpoint.pt
+--recognizer models/recognizer/all_sources_v1/checkpoint.pt` with the
+settings above and compare it with the table. It should show a flatter error
+rate across scales and a smaller gap between the draw and the true count.
 
 ## Planned
 
