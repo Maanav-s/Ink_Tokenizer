@@ -216,8 +216,11 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     length head's argmax and draw, and has the recognizer read each, to test
     whether a wrong point count causes loops and repeated symbols. Results
     and drawings go to W&B (job type "length_sweep").
-  - Spline flow student (experiment): the flow student writing each stroke's
-    B-spline control points instead of its points.
+  - Spline flow student — **the default text-to-ink student**; start new
+    text-to-ink work from it (the point flow student above is the baseline).
+    It is the flow student writing each stroke's B-spline control points
+    instead of its points (docs/experiments.md, "Splines instead of points";
+    `models/student/spline_flow`, W&B `splineDecoder` run `41721da5`).
     [spline_corpus.py](scripts/spline_corpus.py) fits every stroke of a
     corpus with a clamped cubic B-spline, about one control point per
     `--points-per-control` points (default 4; about 3.3 on MathWriting,
@@ -230,6 +233,9 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     [train_spline_flow.py](scripts/train_spline_flow.py) trains it (no
     `--init-from` or `--stretch-prob`). Its losses are over control points,
     so they are not comparable with the point flow student's.
+    `train_flow_legibility.py` fine-tunes it too (it decodes x̂1 into dense
+    ink, differentiably, for the recognizer), and `measure_legibility.py`
+    scores it against its source corpus's real ink by default.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
@@ -290,10 +296,14 @@ uv run python scripts/mixed_corpus.py
 uv run python scripts/font_corpus.py --base data/mixed_corpus --out-dir data/font_mixed_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
     --corpus data/font_mixed_corpus --artifact none $WB
-# Spline flow student: control points instead of points (experiment).
+# Spline flow student (the default): control points instead of points.
 uv run python scripts/spline_corpus.py --source data/mathwriting_corpus --out-dir data/spline_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_spline_flow.py --run-dir models/student/<name> \
     --corpus data/spline_corpus --accumulate 2 $WB
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/measure_legibility.py --student models/student/spline_flow/checkpoint.pt \
+    --recognizer models/recognizer/<run>/checkpoint.pt $WB
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow_legibility.py --run-dir models/student/<name> \
+    --init-from models/student/spline_flow/checkpoint.pt --recognizer models/recognizer/<run>/checkpoint.pt $WB
 # Reflow a flow student to sample in --student-steps Euler steps (default 4).
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
     --teacher models/student/<name>/checkpoint.pt $WB

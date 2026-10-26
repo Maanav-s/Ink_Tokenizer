@@ -26,8 +26,14 @@ The run directory, resuming, W&B, sample images and the divergence stop (on
 the validation flow loss) work as in train_flow.py, and so does
 --stretch-prob; the recognizer reads stretched inks against the same label.
 
+A spline flow student (scripts/spline_flow_model.py) is fine-tuned the same
+way: its x̂1 is control points, which SplineFlowStudent.dense_ink decodes,
+differentiably, into the dense ink the recognizer reads, with the strokes of
+the corpus ink. Its sample images draw the source corpus's held-out ink, as
+train_spline_flow.py does. --stretch-prob does not apply to it.
+
 Usage: python scripts/train_flow_legibility.py --run-dir models/student/<name>
-           --init-from models/student/<flow run>/checkpoint.pt
+           --init-from models/student/<flow or spline flow run>/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt
            [--corpus DIR] [--steps 10000] [--legibility-weight 0.3] [--legibility-t-min 0.5]
            [--char-weight 0.1] [--stretch-prob 0.5 --stretch-max 1.25]
@@ -47,6 +53,7 @@ from flow_model import FlowStudent
 from ink_corpus import Corpus, char_tokens, encode_texts, split_text
 from recognizer_model import Recognizer
 from sample_student import teacher_vs_student
+from spline_flow_model import SplineFlowStudent
 from train_flow import DIVERGED, LOSSES, stretch_factors, total_loss
 from train_flow import evaluate as evaluate_flow
 from train_recognizer import unwrap
@@ -85,7 +92,10 @@ def legibility_loss(model, recognizer, batch, labels, rec_token, t_min, generato
     velocity, _ = model.denoise(xt, t, ink_len, memory, memory_pad)
     x1_hat = (xt + (1 - t.view(B, 1, 1)) * velocity) * mask
 
-    ink = torch.cat([x1_hat[..., :2] * model.coord_std, x1_hat[..., 2:]], dim=-1)
+    if isinstance(model, SplineFlowStudent):
+        ink, ink_len = model.dense_ink(x1_hat, offsets[..., 2], ink_len)
+    else:
+        ink = torch.cat([x1_hat[..., :2] * model.coord_std, x1_hat[..., 2:]], dim=-1)
     target, target_len = encode_texts([labels[b] for b in keep], rec_token, "latex")
     target, target_len = target.to(device), target_len.to(device)
     ce_rows = recognizer.loss(ink, ink_len, target, target_len)["ce_rows"]
@@ -122,8 +132,11 @@ def main(args):
     ckpt_path = os.path.join(args.run_dir, "checkpoint.pt")
     ckpt = torch.load(ckpt_path, map_location=device, weights_only=False) if os.path.exists(ckpt_path) else None
     init = torch.load(args.init_from, map_location=device, weights_only=False)
-    if init.get("architecture") != "flow":
+    architecture = init.get("architecture")
+    if architecture not in ("flow", "spline_flow"):
         raise SystemExit(f"{args.init_from} is not a flow checkpoint")
+    if architecture == "spline_flow" and args.stretch_prob:
+        raise SystemExit("--stretch-prob would interpolate control points, which changes the curve")
     args.corpus = args.corpus or init["args"]["corpus"]
 
     run = start_wandb_run(args) if args.wandb_project else None
@@ -132,6 +145,9 @@ def main(args):
         raise SystemExit(f"{args.corpus} does not have the vocabulary {args.init_from} was trained on")
     if train.tokenizer != "latex":
         raise SystemExit(f"{args.corpus} does not use the latex tokenizer, so the recognizer cannot read its labels")
+    sample_val = val
+    if architecture == "spline_flow":
+        _, sample_val = Corpus.split(train.meta["spline"]["source"], args.val_shards)
 
     rec_ckpt = torch.load(args.recognizer, map_location=device, weights_only=False)
     recognizer = Recognizer(**rec_ckpt["config"]).to(device)
@@ -146,7 +162,7 @@ def main(args):
     config = ckpt["config"] if ckpt is not None else init["config"]
     if run:
         run.config.update({"model_config": config, "recognizer_step": rec_ckpt["step"]}, allow_val_change=True)
-    model = FlowStudent(**config).to(device)
+    model = (SplineFlowStudent if architecture == "spline_flow" else FlowStudent)(**config).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
     step, epoch, pos, best_val = 0, 0, 0, math.inf
     if ckpt is not None:
@@ -161,7 +177,7 @@ def main(args):
 
     def save():
         tmp = ckpt_path + ".tmp"
-        torch.save({"architecture": "flow", "model": model.state_dict(), "opt": opt.state_dict(), "step": step,
+        torch.save({"architecture": architecture, "model": model.state_dict(), "opt": opt.state_dict(), "step": step,
                     "epoch": epoch, "pos": pos, "best_val": best_val, "config": model.config, "charset": train.charset,
                     "meta": train.meta, "args": vars(args)}, tmp)
         os.replace(tmp, ckpt_path)
@@ -217,7 +233,7 @@ def main(args):
                                        f"checkpoint.pt is from the evaluation before")
             if step % args.sample_every == 0:
                 os.makedirs(os.path.join(args.run_dir, "samples"), exist_ok=True)
-                img = teacher_vs_student(model, val, args.sample_lines)
+                img = teacher_vs_student(model, sample_val, args.sample_lines)
                 img.save(os.path.join(args.run_dir, "samples", f"step_{step:07d}.png"))
                 if run:
                     run.log({"samples": wandb.Image(img, caption="rows alternate corpus ink, flow student")},
@@ -233,7 +249,7 @@ def main(args):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--run-dir", required=True)
-    ap.add_argument("--init-from", required=True, help="flow student checkpoint to fine-tune")
+    ap.add_argument("--init-from", required=True, help="flow or spline flow student checkpoint to fine-tune")
     ap.add_argument("--recognizer", required=True, help="recognizer checkpoint, kept frozen")
     ap.add_argument("--corpus", help="default: the corpus the student was trained on")
     ap.add_argument("--val-shards", type=int, default=1)

@@ -24,7 +24,7 @@ Status values: `planned`, `running`, `done`, `dropped`.
 | Font-rendered MathWriting labels (`\typeset{...}`) added to the flow corpus | `8443925`, `58ba14b`, [font_corpus.py](../scripts/font_corpus.py) | done | not yet written up |
 | Ink-to-LaTeX recognizer, to judge generated ink | `5aa8364`, `5999c13`, `1025563`, [recognizer_model.py](../scripts/recognizer_model.py) | done (`transformer_v1`) | val token acc 0.97 (teacher-forced); most misreads are plausible readings of unclear handwriting, see below |
 | Flow student trained on inks resampled to other point counts | `2789a1b`, [train_flow.py](../scripts/train_flow.py) | done (`font_flow_stretch`) | sample grids clearly better by eye; length sweep not yet run, see below |
-| Flow student writing B-spline control points instead of points | [spline_flow_model.py](../scripts/spline_flow_model.py), [spline_corpus.py](../scripts/spline_corpus.py) | planned | see below |
+| Flow student writing B-spline control points instead of points | `ad6a417`, [spline_flow_model.py](../scripts/spline_flow_model.py), [spline_corpus.py](../scripts/spline_corpus.py) | done | worked very well; splines are now the default ink representation, see below |
 
 ### Ink-to-LaTeX recognizer
 
@@ -117,11 +117,9 @@ measured. Next: run
 settings above and compare it with the table. It should show a flatter error
 rate across scales and a smaller gap between the draw and the true count.
 
-## Planned
-
 ### Splines instead of points
 
-Status: `planned`
+Status: `done`; the new default representation for text-to-ink students
 
 The flow student writes every point, about a tenth of a symbol apart, so a
 line is hundreds of positions and the curve is only as smooth as the smooth
@@ -138,13 +136,33 @@ smooth by construction, and fewer points for the length head to get wrong.
 Risks: one wrong control point moves a whole stretch of curve, and a
 control point is less tied to one token than a point is.
 
-Run: `spline_corpus.py` on `data/mathwriting_corpus` (or `data/font_corpus`
-for token alignment), then `train_spline_flow.py --accumulate 2` (the point flow runs' 32768 per
-batch, counted in control points, so a step sees about 3x the ink) for as
-many steps as the point flow student it is compared with. Measure the
-recognizer's token error rate and exact rate on human `valid` samples next
-to that student's, and the sampling time per line. The flow losses are not comparable. Variants:
+Run as planned: `spline_corpus.py` on `data/mathwriting_corpus` (or
+`data/font_corpus` for token alignment), then `train_spline_flow.py
+--accumulate 2` (the point flow runs' 32768 per batch, counted in control
+points, so a step sees about 3x the ink) for as many steps as the point flow
+student it is compared with. Measure the recognizer's token error rate and
+exact rate on human `valid` samples next to that student's, and the sampling
+time per line. The flow losses are not comparable. Variants:
 `--points-per-control` 2 and 8.
+
+Result (`models/student/spline_flow`, W&B `splineDecoder` run
+`41721da5`): MathWriting, default architecture (d=384, 8 layers),
+`--points-per-control 4`, 50k steps of 32768 control points x 2, about
+6.5 h. Final train / val losses: flow 0.292 / 0.376, smooth 0.175 / 0.329,
+length 2.83 / 3.41 (over control points, so not comparable with the point
+student's). No token alignment on MathWriting, so `char_acc` is 0.
+
+It worked very well, a clear improvement over the point flow student, judged
+by its samples. Splines replace points as the project's default ink
+representation: new text-to-ink work should start from the spline student,
+and the point flow student is the baseline.
+
+The run covered 171 epochs, and val ends well above train (flow 0.376 vs
+0.292), so it repeats the data heavily. Font renders (`data/font_corpus`)
+would add data and token alignment. Still to measure: the recognizer's token
+error and exact rates against the point student.
+
+## Planned
 
 ### Font-rendered labels for legibility
 

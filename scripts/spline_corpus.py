@@ -51,12 +51,12 @@ def basis(u, m):
     return N
 
 
-def stroke_bounds(offsets):
-    """(start, size) of each stroke in an ink's offsets; the last point always
-    ends a stroke."""
-    ends = np.flatnonzero(offsets[:, 2] > 0.5)
-    if not len(ends) or ends[-1] != len(offsets) - 1:
-        ends = np.append(ends, len(offsets) - 1)
+def stroke_bounds(pen):
+    """(start, size) of each stroke, from an ink's pen flags; the last point
+    always ends a stroke."""
+    ends = np.flatnonzero(pen > 0.5)
+    if not len(ends) or ends[-1] != len(pen) - 1:
+        ends = np.append(ends, len(pen) - 1)
     starts = np.concatenate([[0], ends[:-1] + 1])
     return starts, ends - starts + 1
 
@@ -75,7 +75,7 @@ def fit_ink(offsets, chars, points_per_control, mu, std):
     sum of squared fit errors over the ink's points (in ink units)."""
     xy = np.cumsum(offsets[:, :2] * std + mu, axis=0)
     control, labels, sizes, error = [], [], [], 0.0
-    for s, k in zip(*stroke_bounds(offsets)):
+    for s, k in zip(*stroke_bounds(offsets[:, 2])):
         points = xy[s:s + k]
         m = 1 if k == 1 else min(k, 1 + math.ceil((k - 1) / points_per_control))
         chord = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(points, axis=0), axis=1))])
@@ -97,7 +97,7 @@ def decode_ink(control, chars, points_per_control, mu, std):
     label of the control point nearest its parameter."""
     xy = np.cumsum(control[:, :2] * std + mu, axis=0)
     points, labels, sizes = [], [], []
-    for s, m in zip(*stroke_bounds(control)):
+    for s, m in zip(*stroke_bounds(control[:, 2])):
         n = 1 if m == 1 else (m - 1) * points_per_control + 1
         u = np.linspace(0, 1, n)
         points.append(basis(u, m) @ xy[s:s + m])
@@ -105,6 +105,23 @@ def decode_ink(control, chars, points_per_control, mu, std):
         sizes.append(n)
     return (to_offsets(np.concatenate(points), sizes, mu, std).astype(control.dtype),
             np.concatenate(labels).astype(chars.dtype))
+
+
+def decode_weights(pen, points_per_control):
+    """For control points with these pen flags, decode_ink's points as
+    weighted sums of control points: per point, the indices (n, DEGREE + 1)
+    of the control points it mixes and their weights (zero where a stroke
+    has fewer), and its pen flag (n,)."""
+    index, weight, ends = [], [], []
+    for s, m in zip(*stroke_bounds(pen)):
+        n = 1 if m == 1 else (m - 1) * points_per_control + 1
+        # A point of a B-spline mixes at most DEGREE + 1 control points.
+        B = np.pad(basis(np.linspace(0, 1, n), m), ((0, 0), (0, max(0, DEGREE + 1 - m))))
+        cols = np.argsort(-B, axis=1, kind="stable")[:, :DEGREE + 1]
+        weight.append(np.take_along_axis(B, cols, axis=1))
+        index.append(s + np.minimum(cols, m - 1))
+        ends.append(np.arange(n) == n - 1)
+    return np.concatenate(index), np.concatenate(weight), np.concatenate(ends)
 
 
 def convert_shard(path, out_dir, points_per_control, mu, std):

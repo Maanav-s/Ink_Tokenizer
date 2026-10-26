@@ -3,7 +3,8 @@ the recognizer (scripts/train_recognizer.py) reads them back, and the token
 error rate (edit distance / label tokens) and exact-read rate are reported.
 
 The recognizer also reads the real ink of the same labels, so the student's
-numbers can be set against how well it reads human handwriting. With
+numbers can be set against how well it reads human handwriting (for a spline
+flow student, the ink of the corpus its spline corpus was fit to). With
 --samples N > 1, each label is written N times: the rates are averaged over
 samples, and "best of N" is the fraction of labels with at least one sample
 read exactly (what picking samples with the recognizer would give).
@@ -81,7 +82,8 @@ def main(args):
     recognizer.load_state_dict(rec_ckpt["model"])
     recognizer.eval()
 
-    corpus_dir = args.corpus or student_ckpt["args"]["corpus"]
+    # A spline student's corpus holds control points; the real ink is in its source.
+    corpus_dir = args.corpus or student_ckpt["meta"].get("spline", {}).get("source") or student_ckpt["args"]["corpus"]
     shards = sorted(glob.glob(os.path.join(corpus_dir, "shard_*.npz")))
     val = Corpus(corpus_dir, shards[-student_ckpt["args"].get("val_shards", 1):])
     val.texts = [unwrap(t) for t in val.texts]
@@ -191,7 +193,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--student", required=True)
     ap.add_argument("--recognizer", required=True)
-    ap.add_argument("--corpus", help="corpus whose validation labels are written (default: the student's)")
+    ap.add_argument("--corpus", help="corpus whose validation labels are written (default: the student's, or for "
+                                     "a spline student its source corpus)")
     ap.add_argument("--lines", type=int, default=1000, help="labels written, spread over the validation shard")
     ap.add_argument("--samples", type=int, default=1, help="samples per label")
     ap.add_argument("--steps", type=int, help="Euler steps (flow students; default: the checkpoint's)")
