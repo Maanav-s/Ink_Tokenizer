@@ -21,7 +21,10 @@ Lines it cannot read (a token outside its vocabulary, such as the teacher's
 lines are read as their label, as in train_recognizer.py.
 
 --init-from is the student checkpoint, whose architecture and ink statistics
-are kept; the corpus (by default the checkpoint's) must have its vocabulary.
+are kept. The corpus (by default the checkpoint's) must be in its ink units
+and have a vocabulary that starts with its own: tokens added after it, such as
+a font corpus's \typeset, start from fresh embeddings, as in train_flow.py
+--init-from, so a student can move onto a font corpus in the same run.
 The run directory, resuming, W&B, sample images and the divergence stop (on
 the validation flow loss) work as in train_flow.py, and so does
 --stretch-prob; the recognizer reads stretched inks against the same label.
@@ -141,8 +144,11 @@ def main(args):
 
     run = start_wandb_run(args) if args.wandb_project else None
     train, val = Corpus.split(args.corpus, args.val_shards)
-    if train.charset != init["charset"]:
-        raise SystemExit(f"{args.corpus} does not have the vocabulary {args.init_from} was trained on")
+    known = len(init["charset"])
+    if train.charset[:known] != init["charset"]:
+        raise SystemExit(f"{args.init_from} was trained on a vocabulary {args.corpus}'s does not start with")
+    if (init["config"]["offset_mu"], init["config"]["offset_std"]) != (train.meta["mu"], train.meta["std"]):
+        raise SystemExit(f"{args.corpus} is not in the ink units {args.init_from} was trained in")
     if train.tokenizer != "latex":
         raise SystemExit(f"{args.corpus} does not use the latex tokenizer, so the recognizer cannot read its labels")
     sample_val = val
@@ -159,7 +165,7 @@ def main(args):
     readable = sum(label is not None for label in train_labels)
     print(f"train {len(train)} lines ({readable} the recognizer can read), val {len(val)} lines", flush=True)
 
-    config = ckpt["config"] if ckpt is not None else init["config"]
+    config = ckpt["config"] if ckpt is not None else {**init["config"], "vocab_size": len(train.charset) + 2}
     if run:
         run.config.update({"model_config": config, "recognizer_step": rec_ckpt["step"]}, allow_val_change=True)
     model = (SplineFlowStudent if architecture == "spline_flow" else FlowStudent)(**config).to(device)
@@ -171,7 +177,10 @@ def main(args):
         step, epoch, pos, best_val = ckpt["step"], ckpt["epoch"], ckpt["pos"], ckpt["best_val"]
         print(f"resumed at step {step}", flush=True)
     else:
-        model.load_state_dict(init["model"])
+        state = dict(init["model"])
+        state["char_embed.weight"] = torch.cat([init["model"]["char_embed.weight"],
+                                                model.char_embed.weight[known + 2:].detach()])
+        model.load_state_dict(state)
         print(f"initialized from {args.init_from} at step {init['step']}", flush=True)
     print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
