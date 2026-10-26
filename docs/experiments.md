@@ -271,7 +271,7 @@ legibility, which must not drop.
 ### Placing suggested items on the page
 
 The suggestion model needs a way to say where a suggestion goes, so that a
-text, box or arrow can be drawn in the right place. Both options below keep the
+text, box or arrow can be drawn in the right place. All options below keep the
 ink decoder free of page position. It draws each item in the item's own frame
 (text at unit height, as the flow student already does; shapes from their
 bbox or control points), and an affine transform puts it on the page.
@@ -338,3 +338,33 @@ Plan: build Option A first as the baseline and fallback. Add Option B once
 real pages show where the resolver's placement is off. Measure placement error
 on real handwriting, and the false-suggestion rate with and without placement
 in the gate.
+
+#### Option C: position heads on a pretrained LLM
+
+Status: `planned` (future, after the basic demos)
+
+Writing positions out as text is slow and inaccurate, and Option B's separate
+placement model may miss what the tokens mean. Instead, add position input and
+output heads to an open LLM (Qwen3 0.6B/1.7B, Gemma 3 1B), so that position
+goes through the same transformer as the tokens. Only LoRA and the new heads
+are trained. Similar setups: pi0 (flow-matching action expert on PaliGemma)
+and OpenVLA-OFT (continuous action head instead of action tokens).
+
+- Input: `tok_emb(t) + MLP(fourier(x, y, w, h))`, with the MLP's last layer
+  zero-initialized so training starts from the unchanged LLM. RoPE is left
+  alone.
+- Output: a head on the final hidden state, run in the same forward pass as
+  the logits. Use a softmax over 2D bins (e.g. 64×64) or a mixture density
+  head, not plain regression. Regression gives no confidence for the gate and
+  averages between equally plausible positions.
+- At generation, the predicted position goes back through the input embedding
+  for the next step.
+- Positions belong to structural items (cell, row, symbol group), not BPE
+  tokens. Predict on the item's first token and mask the loss elsewhere.
+  Coordinates are in a local frame, not page mm. `layout.json` supplies the
+  labels.
+- Risk: the hidden states of a LoRA-tuned LLM may not hold enough spatial
+  information for a small head. Check this early.
+
+Plan: compare against PaliGemma-style location tokens as the baseline. Measure
+position error, calibration of the position confidence, and decode latency.

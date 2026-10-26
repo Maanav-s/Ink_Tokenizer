@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink Demo</title>
+<style>
+  :root { --bg: #f6f6f4; --panel: #fff; --ink: #1b1b1b; --muted: #6b6b6b; --line: #d9d9d4; --accent: #2457c5; --error: #b3261e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--ink); font: 15px/1.4 system-ui, sans-serif; }
+  .boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 800px) { .boxes { grid-template-columns: 1fr; } }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  .box h2 { margin: 0 0 8px; font-size: 14px; font-weight: 600; color: var(--muted); }
+  canvas { display: block; width: 100%; height: 360px; border: 1px dashed var(--line); border-radius: 6px; touch-action: none; }
+  .controls { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  input[type=text] { flex: 1; min-width: 200px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+  button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font: inherit; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .latex { margin-top: 8px; font-family: ui-monospace, monospace; font-size: 13px; min-height: 1.4em; word-break: break-all; }
+  #status { margin-top: 12px; color: var(--muted); min-height: 1.4em; }
+  #status.error { color: var(--error); }
+</style>
+</head>
+<body>
+<div class="boxes">
+  <div class="box">
+    <h2>Write here</h2>
+    <canvas id="input"></canvas>
+    <div class="latex">read: <span id="read"></span></div>
+  </div>
+  <div class="box">
+    <h2>Reply</h2>
+    <canvas id="output"></canvas>
+    <div class="latex">claude: <span id="reply"></span></div>
+  </div>
+</div>
+<div class="controls">
+  <input type="text" id="instruction" value="Simplify this expression.">
+  <button id="clear">Clear</button>
+  <button id="send" class="primary">Send</button>
+</div>
+<div id="status"></div>
+
+<script>
+const input = document.getElementById("input");
+const output = document.getElementById("output");
+const status = document.getElementById("status");
+let strokes = [];
+let current = null;
+
+function fit(canvas) {
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = canvas.clientWidth * ratio;
+  canvas.height = canvas.clientHeight * ratio;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.lineCap = ctx.lineJoin = "round";
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = getComputedStyle(document.body).color;
+  return ctx;
+}
+
+function drawStrokes(ctx, list, transform = p => p) {
+  for (const stroke of list) {
+    ctx.beginPath();
+    const [x0, y0] = transform(stroke[0]);
+    ctx.moveTo(x0, y0);
+    if (stroke.length === 1) ctx.lineTo(x0 + 0.1, y0);
+    for (const p of stroke.slice(1)) ctx.lineTo(...transform(p));
+    ctx.stroke();
+  }
+}
+
+function redrawInput() {
+  const ctx = fit(input);
+  drawStrokes(ctx, strokes);
+}
+
+function drawOutput(list) {
+  const ctx = fit(output);
+  if (!list.length) return;
+  const points = list.flat();
+  const xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+  const minX = Math.min(...xs), minY = Math.min(...ys);
+  const w = Math.max(...xs) - minX || 1, h = Math.max(...ys) - minY || 1;
+  const pad = 24, boxW = output.clientWidth - 2 * pad, boxH = output.clientHeight - 2 * pad;
+  const scale = Math.min(boxW / w, boxH / h);
+  const dx = pad + (boxW - w * scale) / 2, dy = pad + (boxH - h * scale) / 2;
+  drawStrokes(ctx, list, ([x, y]) => [dx + (x - minX) * scale, dy + (y - minY) * scale]);
+}
+
+function point(e) {
+  const r = input.getBoundingClientRect();
+  return [e.clientX - r.left, e.clientY - r.top];
+}
+
+input.addEventListener("pointerdown", e => {
+  input.setPointerCapture(e.pointerId);
+  current = [point(e)];
+  strokes.push(current);
+});
+input.addEventListener("pointermove", e => {
+  if (!current) return;
+  const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  for (const ev of events) current.push(point(ev));
+  redrawInput();
+});
+const end = () => { current = null; };
+input.addEventListener("pointerup", end);
+input.addEventListener("pointercancel", end);
+
+document.getElementById("clear").onclick = () => {
+  strokes = [];
+  redrawInput();
+  drawOutput([]);
+  document.getElementById("read").textContent = "";
+  document.getElementById("reply").textContent = "";
+  setStatus("");
+};
+
+function setStatus(text, error = false) {
+  status.textContent = text;
+  status.className = error ? "error" : "";
+}
+
+async function post(path, body) {
+  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+}
+
+document.getElementById("send").onclick = async () => {
+  if (!strokes.length) return;
+  const button = document.getElementById("send");
+  button.disabled = true;
+  try {
+    setStatus("reading…");
+    const { latex } = await post("/api/read", { strokes });
+    document.getElementById("read").textContent = latex;
+    setStatus("asking Claude…");
+    const reply = await post("/api/claude", { latex, instruction: document.getElementById("instruction").value });
+    document.getElementById("reply").textContent = reply.latex;
+    setStatus("writing…");
+    const written = await post("/api/write", { latex: reply.latex });
+    drawOutput(written.strokes);
+    setStatus("");
+  } catch (err) {
+    setStatus(err.message, true);
+  } finally {
+    button.disabled = false;
+  }
+};
+
+window.addEventListener("resize", redrawInput);
+redrawInput();
+drawOutput([]);
+</script>
+</body>
+</html>

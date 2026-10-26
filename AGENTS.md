@@ -72,8 +72,9 @@ risks. Most importantly, evaluation must still use real handwriting.
 
 ## Repository State
 
-Early scaffold — Python 3.13, managed with `uv`. The only dependencies are
-the optional `render` extra (Hershey-Fonts, Pillow).
+Early scaffold — Python 3.13, managed with `uv`. All dependencies are
+optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
+(anthropic).
 
 - [pyproject.toml](pyproject.toml) — project metadata
 - [main.py](main.py) — placeholder entry point
@@ -249,6 +250,12 @@ the optional `render` extra (Hershey-Fonts, Pillow).
     directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
     (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
     be pulled onto the workstation (`push`/`pull`).
+- [demo_server.py](scripts/demo_server.py) — stylus demo (stdlib HTTP
+  server + [demo/index.html](scripts/demo/index.html)): the recognizer reads
+  what is written in one box, Claude replies in LaTeX limited to the
+  student's vocabulary, and the student writes the reply into a second box
+  (no placement yet). The Claude step needs the `demo` extra (`anthropic`)
+  and `ANTHROPIC_API_KEY` in `.env` (copy `.env.example`) or the shell.
 - Environment: uv on the host, with `.venv` synced to `uv.lock` (uv fetches
   Python 3.13 itself). The host needs a C compiler, because Triton builds its
   kernel launchers at runtime. The `model` extra pins torch 2.9 and prebuilt

@@ -18,6 +18,9 @@ model = [
     "causal-conv1d",
     "wandb",
 ]
+demo = [
+    "anthropic",
+]
 
 # PyPI only has source tarballs for these, which compile CUDA kernels at install
 # time. The prebuilt wheels must match the torch minor version and CUDA major
