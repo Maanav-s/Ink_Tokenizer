@@ -4,6 +4,7 @@
 #
 #   CUDA_VISIBLE_DEVICES=0 scripts/serve_llm.sh
 #   MODEL=google/gemma-4-E4B-it PORT=8001 GPU_MEM=0.8 scripts/serve_llm.sh [extra vllm serve args...]
+#   MODEL=Qwen/Qwen3.5-4B scripts/serve_llm.sh --reasoning-parser qwen3
 #
 # vLLM pins its own torch, which clashes with the `model` extra's, so it runs
 # from a uv tool environment rather than the project's .venv. Gemma is gated

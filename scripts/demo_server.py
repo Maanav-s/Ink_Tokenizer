@@ -166,14 +166,19 @@ class Demo:
         if self.llm_model is None:
             with urllib.request.urlopen(f"{self.llm_url}/models") as r:
                 self.llm_model = json.load(r)["data"][0]["id"]
-        body = {"model": self.llm_model, "max_tokens": 1024, "temperature": 0,
+        # No max_tokens or temperature: a thinking model needs room to reason before the JSON, and the
+        # server then uses the model's own sampling defaults (greedy decoding makes Qwen's thinking loop).
+        body = {"model": self.llm_model,
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
                 "response_format": {"type": "json_schema",
                                     "json_schema": {"name": "reply", "schema": REPLY_FORMAT["schema"]}}}
         request = urllib.request.Request(f"{self.llm_url}/chat/completions", json.dumps(body).encode(),
                                          {"Content-Type": "application/json"})
         with urllib.request.urlopen(request) as r:
-            return json.load(r)["choices"][0]["message"]["content"]
+            choice = json.load(r)["choices"][0]
+        if not choice["message"].get("content"):
+            raise ValueError(f"the model gave no answer (finish reason: {choice['finish_reason']})")
+        return choice["message"]["content"]
 
     @torch.no_grad()
     def write(self, latex):
