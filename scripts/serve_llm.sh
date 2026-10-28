@@ -3,7 +3,7 @@
 # scripts/demo_server.py --llm-url http://localhost:$PORT/v1.
 #
 #   CUDA_VISIBLE_DEVICES=0 scripts/serve_llm.sh
-#   MODEL=google/gemma-3-4b-it PORT=8001 scripts/serve_llm.sh [extra vllm serve args...]
+#   MODEL=google/gemma-4-E4B-it PORT=8001 scripts/serve_llm.sh [extra vllm serve args...]
 #
 # vLLM pins its own torch, which clashes with the `model` extra's, so it runs
 # from a uv tool environment rather than the project's .venv. Gemma is gated
@@ -11,7 +11,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MODEL=${MODEL:-google/gemma-3-4b-it}
+MODEL=${MODEL:-google/gemma-4-E4B-it}
 PORT=${PORT:-8001}
 export HF_HOME=${HF_HOME:-$PWD/.cache/huggingface}
 

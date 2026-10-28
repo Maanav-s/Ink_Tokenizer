@@ -261,7 +261,7 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
   `.env.example`) or the shell. With `--llm-url` it asks a local
   OpenAI-compatible server instead, with the same prompts.
 - [serve_llm.sh](scripts/serve_llm.sh) — downloads and serves an
-  open-weights model with vLLM (default `google/gemma-3-4b-it`, gated: needs
+  open-weights model with vLLM (default `google/gemma-4-E4B-it`, gated: needs
   `HF_TOKEN` and the license accepted) on `127.0.0.1:8001`, for
   `demo_server.py --llm-url`. vLLM runs from `uvx`, not `.venv`, because it
   pins its own torch; weights go in `.cache/huggingface`.
