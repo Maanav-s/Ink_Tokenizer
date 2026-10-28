@@ -138,11 +138,13 @@ class Demo:
                    f"right {box['right']:.0f}, bottom {box['bottom']:.0f}\n\nLaTeX: {latex}")
         if instruction is not None:
             content = f"Instruction: {instruction}\n\n{content}"
+        # Haiku has no server-side refusal fallback.
+        fallback = {} if self.model.startswith("claude-haiku") else {
+            "betas": ["server-side-fallback-2026-07-01"], "fallbacks": "default"}
         response = self.client.beta.messages.create(
             model=self.model,
             max_tokens=16000,
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
+            **fallback,
             output_config={"effort": "low", "format": REPLY_FORMAT},
             system=system,
             messages=[{"role": "user", "content": content}],
