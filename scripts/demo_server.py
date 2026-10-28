@@ -4,26 +4,33 @@ Claude answers with LaTeX, and the student writes the answer as ink.
 Serves scripts/demo/index.html and three JSON endpoints the page calls in turn:
 
   POST /api/read   {"strokes": [[[x, y], ...], ...]}   -> {"latex": ...}
-  POST /api/claude {"latex": ..., "instruction": ...}  -> {"latex": ...}
+  POST /api/claude {"latex": ..., "instruction": ..., "box": ..., "board": ...}
+                                                       -> {"latex": ..., "box": ...}
+                   (without "instruction", Claude suggests the right-hand side once the LaTeX
+                   ends in =, and "latex" may be empty)
   POST /api/write  {"latex": ...}                      -> {"strokes": [[[x, y], ...], ...]}
 
 Strokes are in any unit with y down (the page sends canvas pixels); the
 written ink comes back in the student's own units, for the page to scale into
-its box. There is no placement yet: what is read and what is written go in two
-separate boxes.
+its box. Boxes are {"left", "top", "right", "bottom"} in the page's units and
+the board is {"width", "height"}: the page sends the box around what was
+written, and Claude guesses the box its reply goes in, which the page draws
+the written ink into.
 
 /api/claude needs the `demo` extra and ANTHROPIC_API_KEY, from the shell or
 from a .env at the repository root (see .env.example). Claude is told the student's vocabulary, and a
-reply that uses other tokens is refused rather than written.
+reply that uses other tokens is refused rather than written. With --llm-url, /api/claude asks a local
+OpenAI-compatible server instead (scripts/serve_llm.sh runs one with vLLM), with the same prompts.
 
 Usage: python scripts/demo_server.py --student models/student/spline_flow/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt [--port 8000] [--device cuda]
-           [--model claude-opus-5-5]
+           [--model claude-opus-5-5 | --llm-url http://localhost:8001/v1]
 """
 import argparse
 import json
 import os
 import re
+import urllib.request
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import numpy as np
@@ -37,12 +44,37 @@ from sample_student import load_model
 PAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "demo", "index.html")
 ENV_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
 
-SYSTEM = """The user handwrote a math expression on a whiteboard, and a recognizer read it as the LaTeX below.
-Follow the user's instruction and reply with a single LaTeX expression and nothing else: no $ signs, no
-code fences, no words. The reply is handwritten back onto the board by a model that can only write these
-LaTeX tokens (one per line), and at most {max_text} of them:
+VOCABULARY = """Your whole reply is handwritten onto the board exactly as you send it, so work silently: never
+explain, show steps or reason in the reply, because every character of it ends up on the board. It is
+written by a model that can only write these LaTeX tokens (one per line), and at most {max_text} of them:
 
 {vocabulary}"""
+
+PLACEMENT = """You are also given the board's size and the bounding box of the user's writing, in pixels with x to
+the right and y down. Give the box your reply is written into, as its left, top, right and bottom edges:
+where the user would write it, with symbols the same size as theirs, inside the board and not overlapping
+their writing. A right-hand side starts just right of the equals sign, which ends the writing, and is
+centered on the same line; anything else goes wherever it reads naturally next to what is written.
+"""
+
+INSTRUCTION = """The user handwrote a math expression on a whiteboard, and a recognizer read it as the LaTeX below.
+Follow the user's instruction and reply with a single LaTeX expression and nothing else: no $ signs, no
+code fences, no words. """ + PLACEMENT + VOCABULARY
+
+AUTOCOMPLETE = """The user is handwriting math on a whiteboard, and a recognizer read what they have written so far
+as the LaTeX below. It ends with an equals sign. Suggest the right-hand side, the way code autocomplete
+would: reply with only the LaTeX that goes after the equals sign, not what is already written, and nothing
+else: no $ signs, no code fences, no words. Give the form the user would most likely write next. A wrong
+suggestion is worse than none, so if you are not confident, reply with nothing. For example, for
+\\int_{{0}}^{{2}}x^{{3}}\\,dx= the whole reply is: 4
+""" + PLACEMENT + VOCABULARY
+
+BOX = {"type": "object", "properties": {edge: {"type": "number"} for edge in ("left", "top", "right", "bottom")},
+       "required": ["left", "top", "right", "bottom"], "additionalProperties": False}
+# At low effort Claude sometimes works the answer out in its reply; fixed fields leave no room for that.
+REPLY_FORMAT = {"type": "json_schema", "schema": {"type": "object",
+                                                  "properties": {"latex": {"type": "string"}, "box": BOX},
+                                                  "required": ["latex", "box"], "additionalProperties": False}}
 
 
 def load_env(path):
@@ -60,6 +92,8 @@ class Demo:
     def __init__(self, args):
         self.device = args.device
         self.model = args.model
+        self.llm_url = args.llm_url.rstrip("/") if args.llm_url else None
+        self.llm_model = None
 
         rec_ckpt = torch.load(args.recognizer, map_location=self.device, weights_only=False)
         self.recognizer = Recognizer(**rec_ckpt["config"]).to(self.device)
@@ -92,25 +126,54 @@ class Demo:
             ids = self.recognizer.read(ink, ink_len)[0]
         return "".join(self.rec_charset[t - 2] for t in ids)
 
-    def ask_claude(self, latex, instruction):
+    def ask_claude(self, latex, instruction, box, board):
+        """The reply's LaTeX and the box Claude puts it in. With no instruction, Claude suggests the
+        right-hand side of LaTeX that ends in =, and may reply with nothing."""
+        if instruction is None and not latex.rstrip().endswith("="):
+            return {"latex": "", "box": None}
+        prompt = AUTOCOMPLETE if instruction is None else INSTRUCTION
+        system = prompt.format(max_text=MAX_TEXT, vocabulary="\n".join(self.student_token))
+        content = (f"Board: {board['width']:.0f} x {board['height']:.0f}\n"
+                   f"Writing's box: left {box['left']:.0f}, top {box['top']:.0f}, "
+                   f"right {box['right']:.0f}, bottom {box['bottom']:.0f}\n\nLaTeX: {latex}")
+        if instruction is not None:
+            content = f"Instruction: {instruction}\n\n{content}"
+        complete = self.complete_local if self.llm_url else self.complete_claude
+        reply = json.loads(complete(system, content))
+        reply["latex"] = re.sub(r"^\$+|\$+$", "", reply["latex"].strip().strip("`").strip()).strip()
+        return reply
+
+    def complete_claude(self, system, content):
         import anthropic
 
         if self.client is None:
             self.client = anthropic.Anthropic()
-        system = SYSTEM.format(max_text=MAX_TEXT, vocabulary="\n".join(self.student_token))
         response = self.client.beta.messages.create(
             model=self.model,
             max_tokens=16000,
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",
-            output_config={"effort": "low"},
+            output_config={"effort": "low", "format": REPLY_FORMAT},
             system=system,
-            messages=[{"role": "user", "content": f"Instruction: {instruction}\n\nLaTeX: {latex}"}],
+            messages=[{"role": "user", "content": content}],
         )
         if response.stop_reason == "refusal":
             raise ValueError("Claude declined to answer")
-        text = "".join(b.text for b in response.content if b.type == "text").strip()
-        return re.sub(r"^\$+|\$+$", "", text.strip("`").strip()).strip()
+        return "".join(b.text for b in response.content if b.type == "text")
+
+    def complete_local(self, system, content):
+        # The server serves one model; asking for its name saves passing it twice.
+        if self.llm_model is None:
+            with urllib.request.urlopen(f"{self.llm_url}/models") as r:
+                self.llm_model = json.load(r)["data"][0]["id"]
+        body = {"model": self.llm_model, "max_tokens": 1024, "temperature": 0,
+                "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
+                "response_format": {"type": "json_schema",
+                                    "json_schema": {"name": "reply", "schema": REPLY_FORMAT["schema"]}}}
+        request = urllib.request.Request(f"{self.llm_url}/chat/completions", json.dumps(body).encode(),
+                                         {"Content-Type": "application/json"})
+        with urllib.request.urlopen(request) as r:
+            return json.load(r)["choices"][0]["message"]["content"]
 
     @torch.no_grad()
     def write(self, latex):
@@ -153,7 +216,8 @@ def handler(demo):
                 if self.path == "/api/read":
                     self.send(200, {"latex": demo.read(request["strokes"])})
                 elif self.path == "/api/claude":
-                    self.send(200, {"latex": demo.ask_claude(request["latex"], request["instruction"])})
+                    self.send(200, demo.ask_claude(request["latex"], request.get("instruction"),
+                                                   request["box"], request["board"]))
                 elif self.path == "/api/write":
                     self.send(200, {"strokes": demo.write(request["latex"])})
                 else:
@@ -172,6 +236,8 @@ if __name__ == "__main__":
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--model", default="claude-opus-5-5", help="Claude model for /api/claude")
+    ap.add_argument("--llm-url", help="OpenAI-compatible server to use instead of Claude, "
+                                      "e.g. http://localhost:8001/v1 (see scripts/serve_llm.sh)")
     args = ap.parse_args()
     load_env(ENV_FILE)
     demo = Demo(args)

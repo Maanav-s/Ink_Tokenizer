@@ -252,10 +252,19 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     be pulled onto the workstation (`push`/`pull`).
 - [demo_server.py](scripts/demo_server.py) — stylus demo (stdlib HTTP
   server + [demo/index.html](scripts/demo/index.html)): the recognizer reads
-  what is written in one box, Claude replies in LaTeX limited to the
-  student's vocabulary, and the student writes the reply into a second box
-  (no placement yet). The Claude step needs the `demo` extra (`anthropic`)
-  and `ANTHROPIC_API_KEY` in `.env` (copy `.env.example`) or the shell.
+  what is written on the board, Claude replies in LaTeX limited to the
+  student's vocabulary (following a typed instruction, or suggesting the
+  right-hand side once an equals sign is written) along with a guessed box
+  for it, from the writing's bounding box, and the student's ink is drawn
+  into that box on the same board in blue. The Claude step needs the
+  `demo` extra (`anthropic`) and `ANTHROPIC_API_KEY` in `.env` (copy
+  `.env.example`) or the shell. With `--llm-url` it asks a local
+  OpenAI-compatible server instead, with the same prompts.
+- [serve_llm.sh](scripts/serve_llm.sh) — downloads and serves an
+  open-weights model with vLLM (default `google/gemma-3-4b-it`, gated: needs
+  `HF_TOKEN` and the license accepted) on `127.0.0.1:8001`, for
+  `demo_server.py --llm-url`. vLLM runs from `uvx`, not `.venv`, because it
+  pins its own torch; weights go in `.cache/huggingface`.
 - Environment: uv on the host, with `.venv` synced to `uv.lock` (uv fetches
   Python 3.13 itself). The host needs a C compiler, because Triton builds its
   kernel launchers at runtime. The `model` extra pins torch 2.9 and prebuilt
