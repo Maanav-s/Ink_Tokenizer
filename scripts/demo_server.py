@@ -19,18 +19,16 @@ the written ink into.
 
 /api/claude needs the `demo` extra and ANTHROPIC_API_KEY, from the shell or
 from a .env at the repository root (see .env.example). Claude is told the student's vocabulary, and a
-reply that uses other tokens is refused rather than written. With --llm-url, /api/claude asks a local
-OpenAI-compatible server instead (scripts/serve_llm.sh runs one with vLLM), with the same prompts.
+reply that uses other tokens is refused rather than written.
 
 Usage: python scripts/demo_server.py --student models/student/spline_flow/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt [--port 8000] [--device cuda]
-           [--model claude-opus-5-5 | --llm-url http://localhost:8001/v1]
+           [--model claude-opus-5-5]
 """
 import argparse
 import json
 import os
 import re
-import urllib.request
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import numpy as np
@@ -92,8 +90,6 @@ class Demo:
     def __init__(self, args):
         self.device = args.device
         self.model = args.model
-        self.llm_url = args.llm_url.rstrip("/") if args.llm_url else None
-        self.llm_model = None
 
         rec_ckpt = torch.load(args.recognizer, map_location=self.device, weights_only=False)
         self.recognizer = Recognizer(**rec_ckpt["config"]).to(self.device)
@@ -129,8 +125,12 @@ class Demo:
     def ask_claude(self, latex, instruction, box, board):
         """The reply's LaTeX and the box Claude puts it in. With no instruction, Claude suggests the
         right-hand side of LaTeX that ends in =, and may reply with nothing."""
+        import anthropic
+
         if instruction is None and not latex.rstrip().endswith("="):
             return {"latex": "", "box": None}
+        if self.client is None:
+            self.client = anthropic.Anthropic()
         prompt = AUTOCOMPLETE if instruction is None else INSTRUCTION
         system = prompt.format(max_text=MAX_TEXT, vocabulary="\n".join(self.student_token))
         content = (f"Board: {board['width']:.0f} x {board['height']:.0f}\n"
@@ -138,16 +138,6 @@ class Demo:
                    f"right {box['right']:.0f}, bottom {box['bottom']:.0f}\n\nLaTeX: {latex}")
         if instruction is not None:
             content = f"Instruction: {instruction}\n\n{content}"
-        complete = self.complete_local if self.llm_url else self.complete_claude
-        reply = json.loads(complete(system, content))
-        reply["latex"] = re.sub(r"^\$+|\$+$", "", reply["latex"].strip().strip("`").strip()).strip()
-        return reply
-
-    def complete_claude(self, system, content):
-        import anthropic
-
-        if self.client is None:
-            self.client = anthropic.Anthropic()
         response = self.client.beta.messages.create(
             model=self.model,
             max_tokens=16000,
@@ -159,26 +149,9 @@ class Demo:
         )
         if response.stop_reason == "refusal":
             raise ValueError("Claude declined to answer")
-        return "".join(b.text for b in response.content if b.type == "text")
-
-    def complete_local(self, system, content):
-        # The server serves one model; asking for its name saves passing it twice.
-        if self.llm_model is None:
-            with urllib.request.urlopen(f"{self.llm_url}/models") as r:
-                self.llm_model = json.load(r)["data"][0]["id"]
-        # No max_tokens or temperature: a thinking model needs room to reason before the JSON, and the
-        # server then uses the model's own sampling defaults (greedy decoding makes Qwen's thinking loop).
-        body = {"model": self.llm_model,
-                "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
-                "response_format": {"type": "json_schema",
-                                    "json_schema": {"name": "reply", "schema": REPLY_FORMAT["schema"]}}}
-        request = urllib.request.Request(f"{self.llm_url}/chat/completions", json.dumps(body).encode(),
-                                         {"Content-Type": "application/json"})
-        with urllib.request.urlopen(request) as r:
-            choice = json.load(r)["choices"][0]
-        if not choice["message"].get("content"):
-            raise ValueError(f"the model gave no answer (finish reason: {choice['finish_reason']})")
-        return choice["message"]["content"]
+        reply = json.loads("".join(b.text for b in response.content if b.type == "text"))
+        reply["latex"] = re.sub(r"^\$+|\$+$", "", reply["latex"].strip().strip("`").strip()).strip()
+        return reply
 
     @torch.no_grad()
     def write(self, latex):
@@ -241,8 +214,6 @@ if __name__ == "__main__":
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--model", default="claude-opus-5-5", help="Claude model for /api/claude")
-    ap.add_argument("--llm-url", help="OpenAI-compatible server to use instead of Claude, "
-                                      "e.g. http://localhost:8001/v1 (see scripts/serve_llm.sh)")
     args = ap.parse_args()
     load_env(ENV_FILE)
     demo = Demo(args)
