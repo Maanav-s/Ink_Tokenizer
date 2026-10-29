@@ -1,0 +1,1665 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0003",
+ "layout_seed": 2,
+ "unit": "mm",
+ "page": {
+  "width": 1200.0,
+  "height": 800.0,
+  "origin": "top-left",
+  "y_axis": "down"
+ },
+ "style": {
+  "h": 20.436,
+  "title": 28.253,
+  "heading": 23.08,
+  "subbullet": 17.452,
+  "note": 16.543,
+  "table": 19.324,
+  "diagram": 16.771,
+  "math": 22.605,
+  "line_gap": 1.575,
+  "block_gap": 1.137,
+  "col_gap": 2.929,
+  "margin_x": 41.893,
+  "margin_y": 20.425,
+  "indent": 1.612,
+  "dash": "-",
+  "numbered": "{}.",
+  "title_underline": false,
+  "title_center": false,
+  "heading_underline": false,
+  "table_style": "grid",
+  "table_rules": "first",
+  "table_left_align": true,
+  "row_h": 1.898,
+  "cell_pad": 0.836,
+  "side_by_side": 0.584,
+  "fill": 0.678,
+  "multi_writer": true,
+  "correction_rate": 0.1,
+  "scale": 1.0,
+  "page_w": 1200.0,
+  "page_h": 800.0,
+  "blocks": {
+   "h_act": {
+    "fill": "rows",
+    "rules": "first",
+    "style": "grid"
+   },
+   "h_sched": {
+    "fill": "columns",
+    "rules": "first",
+    "style": "grid"
+   }
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  },
+  {
+   "id": "writer_1",
+   "start_after": "decisions.3.marker"
+  }
+ ],
+ "items": {
+  "title": {
+   "kind": "text",
+   "text": "Sensor brd rev B - power design review",
+   "bbox": [
+    41.89,
+    20.43,
+    723.92,
+    48.68
+   ],
+   "text_height": 28.25,
+   "role": "title",
+   "bold": true,
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "meta": {
+   "kind": "text",
+   "text": "Thu 1 Oct   att: MK, JR, AS, DP, LT",
+   "bbox": [
+    41.89,
+    71.92,
+    417.06,
+    88.46
+   ],
+   "text_height": 16.54,
+   "role": "note",
+   "element": "meta",
+   "writer": "writer_0"
+  },
+  "agenda.heading": {
+   "kind": "text",
+   "text": "Agenda",
+   "bbox": [
+    41.89,
+    111.7,
+    144.97,
+    134.78
+   ],
+   "text_height": 23.08,
+   "role": "heading",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.1.marker": {
+   "kind": "text",
+   "text": "1.",
+   "bbox": [
+    41.89,
+    159.22,
+    62.34,
+    179.66
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 0,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.1": {
+   "kind": "text",
+   "text": "3V3 rail: LDO vs buck",
+   "bbox": [
+    69.88,
+    159.22,
+    338.84,
+    179.66
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.2.marker": {
+   "kind": "text",
+   "text": "2.",
+   "bbox": [
+    41.89,
+    191.41,
+    62.73,
+    211.84
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 1,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.2": {
+   "kind": "text",
+   "text": "Vin range + rev-pol prot.",
+   "bbox": [
+    69.88,
+    191.41,
+    383.77,
+    211.84
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.3.marker": {
+   "kind": "text",
+   "text": "3.",
+   "bbox": [
+    41.89,
+    223.59,
+    62.34,
+    244.02
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 2,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.3": {
+   "kind": "text",
+   "text": "sleep current budget",
+   "bbox": [
+    69.88,
+    223.59,
+    317.78,
+    244.02
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.4.marker": {
+   "kind": "text",
+   "text": "4.",
+   "bbox": [
+    41.89,
+    255.77,
+    62.34,
+    276.21
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 3,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.4": {
+   "kind": "text",
+   "text": "rev B schedule / owners",
+   "bbox": [
+    69.88,
+    255.77,
+    371.0,
+    276.21
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "decisions.heading": {
+   "kind": "text",
+   "text": "Decisions",
+   "bbox": [
+    41.89,
+    299.45,
+    169.76,
+    322.53
+   ],
+   "text_height": 23.08,
+   "role": "heading",
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "dec_1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    41.89,
+    346.97,
+    60.87,
+    367.41
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "decisions",
+   "level": 0,
+   "index": 0,
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "dec_1": {
+   "kind": "text",
+   "text": "3V3 → sync buck, 2 MHz",
+   "bbox": [
+    68.02,
+    346.97,
+    376.87,
+    367.41
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "dec_1.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    74.84,
+    377.44,
+    91.05,
+    394.89
+   ],
+   "text_height": 17.45,
+   "role": "list_marker",
+   "list": "decisions",
+   "level": 1,
+   "index": 0,
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "dec_1.1": {
+   "kind": "text",
+   "text": "LDO only as post-reg for AFE",
+   "bbox": [
+    97.16,
+    377.44,
+    430.5,
+    394.89
+   ],
+   "text_height": 17.45,
+   "role": "subbullet",
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "dec_1.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    74.84,
+    404.92,
+    91.05,
+    422.37
+   ],
+   "text_height": 17.45,
+   "role": "list_marker",
+   "list": "decisions",
+   "level": 1,
+   "index": 1,
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "dec_1.2": {
+   "kind": "text",
+   "text": "target η ≥ 85% @ 50 mA",
+   "bbox": [
+    97.16,
+    404.92,
+    422.31,
+    422.37
+   ],
+   "text_height": 17.45,
+   "role": "subbullet",
+   "element": "decisions",
+   "corrections": [
+    {
+     "index": 0,
+     "wrong": "targt",
+     "style": "scribble"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "decisions.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    41.89,
+    434.12,
+    60.87,
+    454.55
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "decisions",
+   "level": 0,
+   "index": 1,
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "decisions.2": {
+   "kind": "text",
+   "text": "Vin 2.7-5.5 V, P-FET rev-pol",
+   "bbox": [
+    68.02,
+    434.12,
+    440.28,
+    454.55
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "decisions.3.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    41.89,
+    466.3,
+    60.87,
+    486.74
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "decisions",
+   "level": 0,
+   "index": 2,
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "decisions.3": {
+   "kind": "text",
+   "text": "keep 2V5 ref ±0.1%, split AGND",
+   "bbox": [
+    68.02,
+    466.3,
+    469.42,
+    486.74
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "decisions",
+   "writer": "writer_0"
+  },
+  "questions.heading": {
+   "kind": "text",
+   "text": "Open questions",
+   "bbox": [
+    529.28,
+    76.57,
+    732.04,
+    99.65
+   ],
+   "text_height": 23.08,
+   "role": "heading",
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    529.28,
+    124.09,
+    548.26,
+    144.52
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "questions",
+   "level": 0,
+   "index": 0,
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.1": {
+   "kind": "text",
+   "text": "buck Iq in sleep ≤ 1 μA?",
+   "bbox": [
+    555.41,
+    124.09,
+    881.79,
+    144.52
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "questions",
+   "corrections": [
+    {
+     "index": 19,
+     "wrong": "7",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_1"
+  },
+  "questions.1.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    562.23,
+    154.56,
+    578.44,
+    172.01
+   ],
+   "text_height": 17.45,
+   "role": "list_marker",
+   "list": "questions",
+   "level": 1,
+   "index": 0,
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.1.1": {
+   "kind": "text",
+   "text": "DS: 0.6 μA typ, no max given",
+   "bbox": [
+    584.55,
+    154.56,
+    895.68,
+    172.01
+   ],
+   "text_height": 17.45,
+   "role": "subbullet",
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    529.28,
+    183.75,
+    548.26,
+    204.19
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "questions",
+   "level": 0,
+   "index": 1,
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.2": {
+   "kind": "text",
+   "text": "inrush on USB hot-plug?",
+   "bbox": [
+    555.41,
+    183.75,
+    858.25,
+    204.19
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.2.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    562.23,
+    214.22,
+    578.44,
+    231.67
+   ],
+   "text_height": 17.45,
+   "role": "list_marker",
+   "list": "questions",
+   "level": 1,
+   "index": 0,
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.2.1": {
+   "kind": "text",
+   "text": "soft-start ≥ 1 ms enough?",
+   "bbox": [
+    584.55,
+    214.22,
+    865.45,
+    231.67
+   ],
+   "text_height": 17.45,
+   "role": "subbullet",
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.3.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    529.28,
+    243.42,
+    548.26,
+    263.86
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "questions",
+   "level": 0,
+   "index": 2,
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "questions.3": {
+   "kind": "text",
+   "text": "EMI vs RF front end ??",
+   "bbox": [
+    555.41,
+    243.42,
+    862.51,
+    263.86
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "questions",
+   "writer": "writer_1"
+  },
+  "risks.heading": {
+   "kind": "text",
+   "text": "Risks",
+   "bbox": [
+    529.28,
+    287.1,
+    598.62,
+    310.18
+   ],
+   "text_height": 23.08,
+   "role": "heading",
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    529.28,
+    334.62,
+    548.26,
+    355.05
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 0,
+   "index": 0,
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.1": {
+   "kind": "text",
+   "text": "buck ripple → ADC noise",
+   "bbox": [
+    555.41,
+    334.62,
+    856.92,
+    355.05
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.1.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    562.23,
+    365.08,
+    578.44,
+    382.54
+   ],
+   "text_height": 17.45,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 1,
+   "index": 0,
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.1.1": {
+   "kind": "text",
+   "text": "spec ripple ≤ 10 mVpp",
+   "bbox": [
+    584.55,
+    365.08,
+    817.27,
+    382.54
+   ],
+   "text_height": 17.45,
+   "role": "subbullet",
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.1.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    562.23,
+    392.57,
+    578.44,
+    410.02
+   ],
+   "text_height": 17.45,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 1,
+   "index": 1,
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.1.2": {
+   "kind": "text",
+   "text": "LC filter + keep-out",
+   "bbox": [
+    584.55,
+    392.57,
+    801.36,
+    410.02
+   ],
+   "text_height": 17.45,
+   "role": "subbullet",
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "rk_lead.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    529.28,
+    421.77,
+    548.26,
+    442.2
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 0,
+   "index": 1,
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "rk_lead": {
+   "kind": "text",
+   "text": "inductor lead time 12 wk",
+   "bbox": [
+    555.41,
+    421.77,
+    855.55,
+    442.2
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.3.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    529.28,
+    453.95,
+    548.26,
+    474.38
+   ],
+   "text_height": 20.44,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 0,
+   "index": 2,
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "risks.3": {
+   "kind": "text",
+   "text": "ΔT @ 300 mA burst ~8 C ?",
+   "bbox": [
+    555.41,
+    453.95,
+    903.14,
+    474.38
+   ],
+   "text_height": 20.44,
+   "role": "bullet",
+   "element": "risks",
+   "writer": "writer_1"
+  },
+  "h_act": {
+   "kind": "text",
+   "text": "Action items",
+   "bbox": [
+    529.28,
+    497.63,
+    814.04,
+    520.71
+   ],
+   "text_height": 23.08,
+   "role": "heading",
+   "element": "h_act",
+   "corrections": [
+    {
+     "index": 0,
+     "wrong": "Acction",
+     "style": "scribble"
+    }
+   ],
+   "writer": "writer_1"
+  },
+  "act.border": {
+   "kind": "rect",
+   "bbox": [
+    529.28,
+    530.92,
+    1018.48,
+    784.05
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     529.28,
+     573.11
+    ],
+    [
+     1018.48,
+     573.11
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_h2": {
+   "kind": "polyline",
+   "points": [
+    [
+     529.28,
+     615.3
+    ],
+    [
+     1018.48,
+     615.3
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_h3": {
+   "kind": "polyline",
+   "points": [
+    [
+     529.28,
+     657.49
+    ],
+    [
+     1018.48,
+     657.49
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_h4": {
+   "kind": "polyline",
+   "points": [
+    [
+     529.28,
+     699.67
+    ],
+    [
+     1018.48,
+     699.67
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_h5": {
+   "kind": "polyline",
+   "points": [
+    [
+     529.28,
+     741.86
+    ],
+    [
+     1018.48,
+     741.86
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     605.45,
+     530.92
+    ],
+    [
+     605.45,
+     784.05
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     922.09,
+     530.92
+    ],
+    [
+     922.09,
+     784.05
+    ]
+   ],
+   "role": "rule",
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.h0": {
+   "kind": "text",
+   "text": "who",
+   "bbox": [
+    545.45,
+    541.78,
+    588.26,
+    561.1
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.h1": {
+   "kind": "text",
+   "text": "task",
+   "bbox": [
+    621.62,
+    541.78,
+    667.16,
+    561.1
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.h2": {
+   "kind": "text",
+   "text": "due",
+   "bbox": [
+    938.26,
+    541.78,
+    976.91,
+    561.1
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r0c0": {
+   "kind": "text",
+   "text": "MK",
+   "bbox": [
+    545.45,
+    583.96,
+    589.29,
+    603.29
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r0c1": {
+   "kind": "text",
+   "text": "buck schem + BOM",
+   "bbox": [
+    621.62,
+    583.96,
+    856.19,
+    603.29
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r0c2": {
+   "kind": "text",
+   "text": "Wk41",
+   "bbox": [
+    938.26,
+    583.96,
+    1001.95,
+    603.29
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r1c0": {
+   "kind": "text",
+   "text": "JR",
+   "bbox": [
+    545.45,
+    626.15,
+    576.57,
+    645.47
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r1c1": {
+   "kind": "text",
+   "text": "inrush / soft-start sim",
+   "bbox": [
+    621.62,
+    626.15,
+    894.46,
+    645.47
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r1c2": {
+   "kind": "text",
+   "text": "Wk41",
+   "bbox": [
+    938.26,
+    626.15,
+    1001.95,
+    645.47
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 1,
+   "col": 2,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r2c0": {
+   "kind": "text",
+   "text": "AS",
+   "bbox": [
+    545.45,
+    668.34,
+    581.31,
+    687.66
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r2c1": {
+   "kind": "text",
+   "text": "Iq meas. on eval brd",
+   "bbox": [
+    621.62,
+    668.34,
+    920.09,
+    687.66
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "act",
+   "corrections": [
+    {
+     "index": 12,
+     "wrong": "evval",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_1"
+  },
+  "act.r2c2": {
+   "kind": "text",
+   "text": "Wk42",
+   "bbox": [
+    938.26,
+    668.34,
+    1002.31,
+    687.66
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 2,
+   "col": 2,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r3c0": {
+   "kind": "text",
+   "text": "DP",
+   "bbox": [
+    545.45,
+    710.52,
+    583.56,
+    729.85
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 3,
+   "col": 0,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r3c1": {
+   "kind": "text",
+   "text": "layout keep-out vs ADC",
+   "bbox": [
+    621.62,
+    710.52,
+    905.93,
+    729.85
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 3,
+   "col": 1,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r3c2": {
+   "kind": "text",
+   "text": "Wk42",
+   "bbox": [
+    938.26,
+    710.52,
+    1002.31,
+    729.85
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 3,
+   "col": 2,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r4c0": {
+   "kind": "text",
+   "text": "LT",
+   "bbox": [
+    545.45,
+    752.71,
+    572.61,
+    772.04
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 4,
+   "col": 0,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r4c1": {
+   "kind": "text",
+   "text": "order L samples",
+   "bbox": [
+    621.62,
+    752.71,
+    806.66,
+    772.04
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 4,
+   "col": 1,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "act.r4c2": {
+   "kind": "text",
+   "text": "Wk41",
+   "bbox": [
+    938.26,
+    752.71,
+    1001.95,
+    772.04
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 4,
+   "col": 2,
+   "element": "act",
+   "writer": "writer_1"
+  },
+  "h_sched": {
+   "kind": "text",
+   "text": "Schedule",
+   "bbox": [
+    41.89,
+    506.57,
+    158.21,
+    529.65
+   ],
+   "text_height": 23.08,
+   "role": "heading",
+   "element": "h_sched",
+   "writer": "writer_0"
+  },
+  "sched.border": {
+   "kind": "rect",
+   "bbox": [
+    41.89,
+    539.87,
+    472.87,
+    624.24
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     41.89,
+     582.05
+    ],
+    [
+     472.87,
+     582.05
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     145.08,
+     539.87
+    ],
+    [
+     145.08,
+     624.24
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     244.22,
+     539.87
+    ],
+    [
+     244.22,
+     624.24
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.rule_c2": {
+   "kind": "polyline",
+   "points": [
+    [
+     340.24,
+     539.87
+    ],
+    [
+     340.24,
+     624.24
+    ]
+   ],
+   "role": "rule",
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.h0": {
+   "kind": "text",
+   "text": "Wk41",
+   "bbox": [
+    58.06,
+    550.72,
+    121.75,
+    570.04
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.h1": {
+   "kind": "text",
+   "text": "Wk42",
+   "bbox": [
+    161.25,
+    550.72,
+    225.3,
+    570.04
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.h2": {
+   "kind": "text",
+   "text": "Wk43",
+   "bbox": [
+    260.38,
+    550.72,
+    324.07,
+    570.04
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.h3": {
+   "kind": "text",
+   "text": "Wk44",
+   "bbox": [
+    356.4,
+    550.72,
+    420.09,
+    570.04
+   ],
+   "text_height": 19.32,
+   "role": "header_cell",
+   "row": "header",
+   "col": 3,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.r0c0": {
+   "kind": "text",
+   "text": "schem",
+   "bbox": [
+    58.06,
+    592.9,
+    128.92,
+    612.23
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.r0c1": {
+   "kind": "text",
+   "text": "layout",
+   "bbox": [
+    161.25,
+    592.9,
+    228.05,
+    612.23
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.r0c2": {
+   "kind": "text",
+   "text": "fab",
+   "bbox": [
+    260.38,
+    592.9,
+    299.5,
+    612.23
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "sched.r0c3": {
+   "kind": "text",
+   "text": "bring-up",
+   "bbox": [
+    356.4,
+    592.9,
+    456.71,
+    612.23
+   ],
+   "text_height": 19.32,
+   "role": "cell",
+   "row": 0,
+   "col": 3,
+   "element": "sched",
+   "writer": "writer_0"
+  },
+  "note_lead": {
+   "kind": "text",
+   "text": "! L lead time gates bring-up",
+   "bbox": [
+    41.89,
+    647.48,
+    322.31,
+    664.02
+   ],
+   "text_height": 16.54,
+   "role": "note",
+   "element": "note_lead",
+   "writer": "writer_0"
+  },
+  "note_next": {
+   "kind": "text",
+   "text": "next review: Wk42 Thu",
+   "bbox": [
+    41.89,
+    687.27,
+    263.54,
+    703.81
+   ],
+   "text_height": 16.54,
+   "role": "note",
+   "element": "note_next",
+   "writer": "writer_0"
+  },
+  "box_dec": {
+   "kind": "rect",
+   "bbox": [
+    39.65,
+    344.72,
+    379.11,
+    369.65
+   ],
+   "corner_radius": 0,
+   "role": "annotation_box",
+   "element": "box_dec",
+   "target": "dec_1",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "title",
+  "meta",
+  "agenda.heading",
+  "agenda.1.marker",
+  "agenda.1",
+  "agenda.2.marker",
+  "agenda.2",
+  "agenda.3.marker",
+  "agenda.3",
+  "agenda.4.marker",
+  "agenda.4",
+  "decisions.heading",
+  "dec_1.marker",
+  "dec_1",
+  "box_dec",
+  "dec_1.1.marker",
+  "dec_1.1",
+  "dec_1.2.marker",
+  "dec_1.2",
+  "decisions.2.marker",
+  "decisions.2",
+  "decisions.3.marker",
+  "questions.heading",
+  "questions.1.marker",
+  "questions.1",
+  "questions.1.1.marker",
+  "questions.1.1",
+  "questions.2.marker",
+  "questions.2",
+  "questions.2.1.marker",
+  "questions.2.1",
+  "questions.3.marker",
+  "questions.3",
+  "risks.heading",
+  "risks.1.marker",
+  "risks.1",
+  "risks.1.1.marker",
+  "risks.1.1",
+  "risks.1.2.marker",
+  "risks.1.2",
+  "rk_lead.marker",
+  "rk_lead",
+  "risks.3.marker",
+  "risks.3",
+  "h_act",
+  "act.border",
+  "act.rule_h1",
+  "act.rule_h2",
+  "act.rule_h3",
+  "act.rule_h4",
+  "act.rule_h5",
+  "act.rule_c0",
+  "act.rule_c1",
+  "act.h0",
+  "act.h1",
+  "act.h2",
+  "act.r0c0",
+  "act.r0c1",
+  "act.r0c2",
+  "act.r1c0",
+  "act.r1c1",
+  "act.r1c2",
+  "act.r2c0",
+  "act.r2c1",
+  "act.r2c2",
+  "act.r3c0",
+  "act.r3c1",
+  "act.r3c2",
+  "act.r4c0",
+  "act.r4c1",
+  "act.r4c2",
+  "decisions.3",
+  "h_sched",
+  "sched.border",
+  "sched.rule_h1",
+  "sched.rule_c0",
+  "sched.rule_c1",
+  "sched.rule_c2",
+  "sched.h0",
+  "sched.h1",
+  "sched.h2",
+  "sched.h3",
+  "sched.r0c0",
+  "sched.r0c1",
+  "sched.r0c2",
+  "sched.r0c3",
+  "note_lead",
+  "note_next"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "agenda",
+   "after": {
+    "id": "agenda.2"
+   },
+   "target": [
+    {
+     "id": "agenda.3.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_1",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "agenda",
+   "after": {
+    "id": "agenda.3"
+   },
+   "target": [
+    {
+     "id": "agenda.4.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_2",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "act",
+   "after": {
+    "id": "act.border"
+   },
+   "target": [
+    {
+     "id": "act.rule_h1"
+    },
+    {
+     "id": "act.rule_h2"
+    },
+    {
+     "id": "act.rule_h3"
+    },
+    {
+     "id": "act.rule_h4"
+    },
+    {
+     "id": "act.rule_h5"
+    },
+    {
+     "id": "act.rule_c0"
+    },
+    {
+     "id": "act.rule_c1"
+    }
+   ]
+  },
+  {
+   "id": "tgt_3",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "sched",
+   "after": {
+    "id": "sched.border"
+   },
+   "target": [
+    {
+     "id": "sched.rule_h1"
+    },
+    {
+     "id": "sched.rule_c0"
+    },
+    {
+     "id": "sched.rule_c1"
+    },
+    {
+     "id": "sched.rule_c2"
+    }
+   ]
+  },
+  {
+   "id": "tgt_4",
+   "kind": "header_sequence",
+   "tier": "structural",
+   "element": "sched",
+   "after": {
+    "id": "sched.h1"
+   },
+   "target": [
+    {
+     "id": "sched.h2"
+    },
+    {
+     "id": "sched.h3"
+    }
+   ]
+  },
+  {
+   "id": "tgt_5",
+   "kind": "header_sequence",
+   "tier": "structural",
+   "element": "sched",
+   "after": {
+    "id": "sched.h2"
+   },
+   "target": [
+    {
+     "id": "sched.h3"
+    }
+   ]
+  }
+ ],
+ "layout_attempt": 4
+}

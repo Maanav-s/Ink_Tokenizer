@@ -1,0 +1,36 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.content/v1",
+ "page_id": "page_0001",
+ "topic": "digital logic: 1-bit full adder",
+ "provenance": {"generator": "LLM agent (Claude), ported from the v0 hand-made page", "automated": false},
+ "elements": [
+  {"id": "title", "type": "text", "role": "title", "text": "Full adder - design session"},
+  {"id": "notes", "type": "list", "style": "dash", "items": [
+   {"text": "need 1-bit FA cell for 4-bit ripple carry"},
+   {"text": "in: A, B, Cin   out: S, Cout"},
+   {"text": "build w/ 2 XOR, 2 AND, 1 OR"}]},
+  {"id": "tt_1", "type": "table", "kind": "truth_table", "header": ["A", "B", "Cin", "S", "Cout"],
+   "input_columns": [0, 1, 2], "output_columns": [3, 4], "row_order": "binary_counting_msb_first",
+   "rows": [["0","0","0","0","0"], ["0","0","1","1","0"], ["0","1","0","1","0"], ["0","1","1","0","1"],
+            ["1","0","0","1","0"], ["1","0","1","0","1"], ["1","1","0","0","1"], ["1","1","1","1","1"]]},
+  {"id": "math_1", "type": "math", "latex": "S = A \\oplus B \\oplus C_{in}", "text": "S = A xor B xor Cin", "defines": "S"},
+  {"id": "math_2", "type": "math", "latex": "C_{out} = AB + AC_{in} + BC_{in}", "text": "Cout = AB + A Cin + B Cin", "defines": "Cout"},
+  {"id": "math_3", "type": "math", "latex": "= AB + C_{in}(A \\oplus B)", "text": "= AB + Cin (A xor B)", "defines": "Cout", "continues": "math_2"},
+  {"id": "dia_1", "type": "circuit", "implements": {"S": "math_1", "Cout": "math_3"},
+   "components": [
+    {"id": "pin_A", "type": "input_pin", "label": "A"}, {"id": "pin_B", "type": "input_pin", "label": "B"},
+    {"id": "pin_Cin", "type": "input_pin", "label": "Cin"},
+    {"id": "xor_1", "type": "xor2"}, {"id": "and_1", "type": "and2"}, {"id": "xor_2", "type": "xor2"},
+    {"id": "and_2", "type": "and2"}, {"id": "or_1", "type": "or2"},
+    {"id": "pin_S", "type": "output_pin", "label": "S"}, {"id": "pin_Cout", "type": "output_pin", "label": "Cout"}],
+   "wires": [
+    {"id": "w_1", "net": "A", "from": "pin_A.y", "to": "xor_1.a"}, {"id": "w_2", "net": "A", "from": "pin_A.y", "to": "and_1.a"},
+    {"id": "w_3", "net": "B", "from": "pin_B.y", "to": "xor_1.b"}, {"id": "w_4", "net": "B", "from": "pin_B.y", "to": "and_1.b"},
+    {"id": "w_5", "net": "P", "from": "xor_1.y", "to": "xor_2.a"}, {"id": "w_6", "net": "P", "from": "xor_1.y", "to": "and_2.a"},
+    {"id": "w_7", "net": "Cin", "from": "pin_Cin.y", "to": "xor_2.b"}, {"id": "w_8", "net": "Cin", "from": "pin_Cin.y", "to": "and_2.b"},
+    {"id": "w_9", "net": "G", "from": "and_1.y", "to": "or_1.b"}, {"id": "w_10", "net": "Q", "from": "and_2.y", "to": "or_1.a"},
+    {"id": "w_11", "net": "S", "from": "xor_2.y", "to": "pin_S.a"}, {"id": "w_12", "net": "Cout", "from": "or_1.y", "to": "pin_Cout.a"}],
+   "labels": [{"id": "lbl_caption", "text": "1-bit FA", "attached_to": null},
+              {"id": "lbl_P", "text": "P", "attached_to": "net:P"}, {"id": "lbl_G", "text": "G", "attached_to": "net:G"}]}
+ ]
+}

@@ -1,0 +1,978 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0002",
+ "layout_seed": 2,
+ "unit": "mm",
+ "page": {
+  "width": 1200.0,
+  "height": 800.0,
+  "origin": "top-left",
+  "y_axis": "down"
+ },
+ "style": {
+  "h": 19.344,
+  "title": 26.082,
+  "heading": 19.776,
+  "subbullet": 18.234,
+  "note": 15.626,
+  "table": 17.582,
+  "diagram": 16.317,
+  "math": 20.453,
+  "line_gap": 1.835,
+  "block_gap": 1.572,
+  "col_gap": 3.147,
+  "margin_x": 49.142,
+  "margin_y": 19.469,
+  "indent": 1.418,
+  "dash": "-",
+  "numbered": "{}.",
+  "title_underline": false,
+  "title_center": false,
+  "heading_underline": true,
+  "table_style": "grid",
+  "table_rules": "after_header",
+  "table_left_align": true,
+  "row_h": 1.856,
+  "cell_pad": 0.888,
+  "side_by_side": 0.25,
+  "fill": 0.682,
+  "multi_writer": false,
+  "correction_rate": 0.06,
+  "scale": 1.0,
+  "page_w": 1200.0,
+  "page_h": 800.0
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "title": {
+   "kind": "text",
+   "text": "Deploy pipeline - canary + rollback",
+   "bbox": [
+    49.14,
+    19.47,
+    607.05,
+    45.55
+   ],
+   "text_height": 26.08,
+   "role": "title",
+   "bold": true,
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "notes.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    49.14,
+    75.95,
+    67.1,
+    95.3
+   ],
+   "text_height": 19.34,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 0,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.1": {
+   "kind": "text",
+   "text": "canary: 10% traffic first",
+   "bbox": [
+    73.87,
+    75.95,
+    362.83,
+    95.3
+   ],
+   "text_height": 19.34,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    49.14,
+    111.46,
+    67.1,
+    130.8
+   ],
+   "text_height": 19.34,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 1,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.2": {
+   "kind": "text",
+   "text": "gate: 5xx err rate, 5 min",
+   "bbox": [
+    73.87,
+    111.46,
+    359.07,
+    130.8
+   ],
+   "text_height": 19.34,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.3.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    49.14,
+    146.96,
+    67.1,
+    166.31
+   ],
+   "text_height": 19.34,
+   "role": "list_marker",
+   "list": "notes",
+   "level": 0,
+   "index": 2,
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "notes.3": {
+   "kind": "text",
+   "text": "rollback is automatic",
+   "bbox": [
+    73.87,
+    146.96,
+    310.06,
+    166.31
+   ],
+   "text_height": 19.34,
+   "role": "bullet",
+   "element": "notes",
+   "writer": "writer_0"
+  },
+  "fc_1.n1.box": {
+   "kind": "rect",
+   "bbox": [
+    444.8,
+    82.03,
+    616.27,
+    123.83
+   ],
+   "corner_radius": 20.89975345166266,
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n1.text": {
+   "kind": "text",
+   "text": "push to main",
+   "bbox": [
+    468.15,
+    95.75,
+    592.92,
+    112.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e1.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     123.83
+    ],
+    [
+     530.53,
+     160.03
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n1",
+   "to": "n2",
+   "writer": "writer_0"
+  },
+  "fc_1.n2.text": {
+   "kind": "text",
+   "text": "read deploy.yaml",
+   "bbox": [
+    450.74,
+    173.75,
+    610.33,
+    190.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.n2.box": {
+   "kind": "parallelogram",
+   "bbox": [
+    429.05,
+    160.03,
+    632.01,
+    201.83
+   ],
+   "skew": 20.632980464321843,
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.e2.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     201.83
+    ],
+    [
+     530.53,
+     238.03
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n2",
+   "to": "n3",
+   "writer": "writer_0"
+  },
+  "fc_1.n3.box": {
+   "kind": "rect",
+   "bbox": [
+    431.26,
+    238.03,
+    629.81,
+    279.83
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n3.text": {
+   "kind": "text",
+   "text": "build + unit tests",
+   "bbox": [
+    447.56,
+    251.75,
+    613.5,
+    268.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e3.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     279.83
+    ],
+    [
+     530.53,
+     312.05
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n3",
+   "to": "n4",
+   "writer": "writer_0"
+  },
+  "fc_1.n4.text": {
+   "kind": "text",
+   "text": "tests pass?",
+   "bbox": [
+    476.92,
+    335.75,
+    584.14,
+    352.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.n4.box": {
+   "kind": "diamond",
+   "bbox": [
+    434.38,
+    312.05,
+    626.69,
+    373.81
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.e4.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     373.81
+    ],
+    [
+     530.53,
+     406.03
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n4",
+   "to": "n5",
+   "writer": "writer_0"
+  },
+  "fc_1.e4.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    539.51,
+    382.79,
+    570.55,
+    399.11
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.n5.box": {
+   "kind": "rect",
+   "bbox": [
+    423.71,
+    406.03,
+    637.36,
+    447.83
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n5.text": {
+   "kind": "text",
+   "text": "deploy canary 10%",
+   "bbox": [
+    440.01,
+    419.75,
+    621.06,
+    436.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.n6.box": {
+   "kind": "rect",
+   "bbox": [
+    463.74,
+    484.03,
+    597.32,
+    525.83
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n6.text": {
+   "kind": "text",
+   "text": "wait 5 min",
+   "bbox": [
+    480.05,
+    497.75,
+    581.02,
+    514.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e6.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     447.83
+    ],
+    [
+     530.53,
+     484.03
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n5",
+   "to": "n6",
+   "writer": "writer_0"
+  },
+  "fc_1.n7.box": {
+   "kind": "diamond",
+   "bbox": [
+    440.46,
+    558.05,
+    620.61,
+    619.81
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n7.text": {
+   "kind": "text",
+   "text": "err < 1%?",
+   "bbox": [
+    480.67,
+    581.75,
+    580.39,
+    598.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e7.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     525.83
+    ],
+    [
+     530.53,
+     558.05
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n6",
+   "to": "n7",
+   "writer": "writer_0"
+  },
+  "fc_1.e8.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     619.81
+    ],
+    [
+     530.53,
+     654.05
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n7",
+   "to": "n8",
+   "writer": "writer_0"
+  },
+  "fc_1.e8.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    539.51,
+    628.79,
+    570.55,
+    645.11
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.n8.box": {
+   "kind": "diamond",
+   "bbox": [
+    449.14,
+    654.05,
+    611.93,
+    715.81
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n8.text": {
+   "kind": "text",
+   "text": "at 100%?",
+   "bbox": [
+    486.03,
+    677.75,
+    575.04,
+    694.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e11.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     611.93,
+     684.93
+    ],
+    [
+     695.58,
+     684.93
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n8",
+   "to": "n9",
+   "writer": "writer_0"
+  },
+  "fc_1.e11.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    620.9,
+    658.83,
+    643.05,
+    675.14
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.n12.text": {
+   "kind": "text",
+   "text": "done",
+   "bbox": [
+    508.68,
+    761.75,
+    552.39,
+    778.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.n12.box": {
+   "kind": "rect",
+   "bbox": [
+    485.33,
+    748.03,
+    575.73,
+    789.83
+   ],
+   "corner_radius": 20.89975345166266,
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.e10.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     530.53,
+     715.81
+    ],
+    [
+     530.53,
+     748.03
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n8",
+   "to": "n12",
+   "writer": "writer_0"
+  },
+  "fc_1.e10.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    539.51,
+    724.79,
+    570.55,
+    741.11
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.n9.box": {
+   "kind": "rect",
+   "bbox": [
+    695.58,
+    664.03,
+    881.49,
+    705.83
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n9.text": {
+   "kind": "text",
+   "text": "traffic += 30%",
+   "bbox": [
+    711.88,
+    677.75,
+    865.18,
+    694.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e12.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     740.53,
+     664.03
+    ],
+    [
+     740.53,
+     618.93
+    ],
+    [
+     662.53,
+     618.93
+    ],
+    [
+     662.53,
+     504.93
+    ],
+    [
+     597.32,
+     504.93
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n9",
+   "to": "n6",
+   "writer": "writer_0"
+  },
+  "fc_1.n10.box": {
+   "kind": "rect",
+   "bbox": [
+    735.53,
+    568.03,
+    841.54,
+    609.83
+   ],
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n10.text": {
+   "kind": "text",
+   "text": "rollback",
+   "bbox": [
+    751.83,
+    581.75,
+    825.24,
+    598.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e9.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     620.61,
+     588.93
+    ],
+    [
+     735.53,
+     588.93
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n7",
+   "to": "n10",
+   "writer": "writer_0"
+  },
+  "fc_1.e9.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    629.58,
+    562.83,
+    651.73,
+    579.14
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.n11.box": {
+   "kind": "rect",
+   "bbox": [
+    700.49,
+    484.03,
+    876.58,
+    525.83
+   ],
+   "corner_radius": 20.89975345166266,
+   "element": "fc_1",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "fc_1.n11.text": {
+   "kind": "text",
+   "text": "stop + notify",
+   "bbox": [
+    723.83,
+    497.75,
+    853.23,
+    514.07
+   ],
+   "text_height": 16.32,
+   "align": "center",
+   "element": "fc_1",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "fc_1.e5.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     626.69,
+     342.93
+    ],
+    [
+     680.53,
+     342.93
+    ],
+    [
+     680.53,
+     504.93
+    ],
+    [
+     700.49,
+     504.93
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n4",
+   "to": "n11",
+   "writer": "writer_0"
+  },
+  "fc_1.e5.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    635.66,
+    316.83,
+    657.81,
+    333.14
+   ],
+   "text_height": 16.32,
+   "element": "fc_1",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "fc_1.e13.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     788.53,
+     568.03
+    ],
+    [
+     788.53,
+     525.83
+    ]
+   ],
+   "head": 6.5593731782940345,
+   "element": "fc_1",
+   "role": "edge",
+   "from": "n10",
+   "to": "n11",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "title",
+  "notes.1.marker",
+  "notes.1",
+  "notes.2.marker",
+  "notes.2",
+  "notes.3.marker",
+  "notes.3",
+  "fc_1.n1.box",
+  "fc_1.n1.text",
+  "fc_1.e1.arrow",
+  "fc_1.n2.text",
+  "fc_1.n2.box",
+  "fc_1.e2.arrow",
+  "fc_1.n3.box",
+  "fc_1.n3.text",
+  "fc_1.e3.arrow",
+  "fc_1.n4.text",
+  "fc_1.n4.box",
+  "fc_1.e4.arrow",
+  "fc_1.e4.label",
+  "fc_1.n5.box",
+  "fc_1.n5.text",
+  "fc_1.n6.box",
+  "fc_1.n6.text",
+  "fc_1.e6.arrow",
+  "fc_1.n7.box",
+  "fc_1.n7.text",
+  "fc_1.e7.arrow",
+  "fc_1.e8.arrow",
+  "fc_1.e8.label",
+  "fc_1.n8.box",
+  "fc_1.n8.text",
+  "fc_1.e11.arrow",
+  "fc_1.e11.label",
+  "fc_1.n12.text",
+  "fc_1.n12.box",
+  "fc_1.e10.arrow",
+  "fc_1.e10.label",
+  "fc_1.n9.box",
+  "fc_1.n9.text",
+  "fc_1.e12.arrow",
+  "fc_1.n10.box",
+  "fc_1.n10.text",
+  "fc_1.e9.arrow",
+  "fc_1.e9.label",
+  "fc_1.n11.box",
+  "fc_1.n11.text",
+  "fc_1.e5.arrow",
+  "fc_1.e5.label",
+  "fc_1.e13.arrow"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.e4.label"
+   },
+   "target": [
+    {
+     "id": "fc_1.e5.label"
+    }
+   ]
+  },
+  {
+   "id": "tgt_1",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.e8.label"
+   },
+   "target": [
+    {
+     "id": "fc_1.e9.label"
+    }
+   ]
+  },
+  {
+   "id": "tgt_2",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.e11.label"
+   },
+   "target": [
+    {
+     "id": "fc_1.e10.label"
+    }
+   ]
+  },
+  {
+   "id": "tgt_3",
+   "kind": "node_outline",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.n2.text"
+   },
+   "target": [
+    {
+     "id": "fc_1.n2.box"
+    }
+   ]
+  },
+  {
+   "id": "tgt_4",
+   "kind": "node_outline",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.n4.text"
+   },
+   "target": [
+    {
+     "id": "fc_1.n4.box"
+    }
+   ]
+  },
+  {
+   "id": "tgt_5",
+   "kind": "node_outline",
+   "tier": "structural",
+   "element": "fc_1",
+   "after": {
+    "id": "fc_1.n12.text"
+   },
+   "target": [
+    {
+     "id": "fc_1.n12.box"
+    }
+   ]
+  }
+ ],
+ "layout_attempt": 1
+}

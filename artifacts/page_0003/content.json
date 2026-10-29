@@ -1,0 +1,45 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.content/v1",
+ "page_id": "page_0003",
+ "topic": "meeting notes: sensor board rev B power subsystem design review",
+ "provenance": {"generator": "LLM agent (Claude), ported from the v0 hand-made page", "automated": false},
+ "elements": [
+  {"id": "title", "type": "text", "role": "title", "text": "Sensor brd rev B - power design review"},
+  {"id": "meta", "type": "text", "role": "note", "text": "Thu 1 Oct   att: MK, JR, AS, DP, LT"},
+  {"id": "agenda", "type": "list", "heading": "Agenda", "style": "numbered", "items": [
+   {"text": "3V3 rail: LDO vs buck"},
+   {"text": "Vin range + rev-pol prot."},
+   {"text": "sleep current budget"},
+   {"text": "rev B schedule / owners"}]},
+  {"id": "decisions", "type": "list", "heading": "Decisions", "style": "dash", "items": [
+   {"id": "dec_1", "text": "3V3 → sync buck, 2 MHz", "items": [
+     {"text": "LDO only as post-reg for AFE"},
+     {"text": "target η ≥ 85% @ 50 mA"}]},
+   {"text": "Vin 2.7-5.5 V, P-FET rev-pol"},
+   {"text": "keep 2V5 ref ±0.1%, split AGND"}]},
+  {"id": "questions", "type": "list", "heading": "Open questions", "style": "dash", "items": [
+   {"text": "buck Iq in sleep ≤ 1 μA?", "items": [{"text": "DS: 0.6 μA typ, no max given"}]},
+   {"text": "inrush on USB hot-plug?", "items": [{"text": "soft-start ≥ 1 ms enough?"}]},
+   {"text": "EMI vs RF front end ??"}]},
+  {"id": "risks", "type": "list", "heading": "Risks", "style": "dash", "items": [
+   {"text": "buck ripple → ADC noise", "items": [
+     {"text": "spec ripple ≤ 10 mVpp"},
+     {"text": "LC filter + keep-out"}]},
+   {"id": "rk_lead", "text": "inductor lead time 12 wk"},
+   {"text": "ΔT @ 300 mA burst ~8 C ?"}]},
+  {"id": "h_act", "type": "text", "role": "heading", "text": "Action items"},
+  {"id": "act", "type": "table", "kind": "action_items", "header": ["who", "task", "due"], "rows": [
+   ["MK", "buck schem + BOM", "Wk41"],
+   ["JR", "inrush / soft-start sim", "Wk41"],
+   ["AS", "Iq meas. on eval brd", "Wk42"],
+   ["DP", "layout keep-out vs ADC", "Wk42"],
+   ["LT", "order L samples", "Wk41"]]},
+  {"id": "h_sched", "type": "text", "role": "heading", "text": "Schedule"},
+  {"id": "sched", "type": "table", "kind": "timeline", "header": ["Wk41", "Wk42", "Wk43", "Wk44"], "rows": [
+   ["schem", "layout", "fab", "bring-up"]]},
+  {"id": "note_lead", "type": "text", "role": "note", "text": "! L lead time gates bring-up"},
+  {"id": "note_next", "type": "text", "role": "note", "text": "next review: Wk42 Thu"},
+  {"id": "box_dec", "type": "annotation", "kind": "box", "target": "dec_1"},
+  {"id": "arrow_lead", "type": "annotation", "kind": "arrow", "from": "note_lead", "to": "act.r4"}
+ ]
+}

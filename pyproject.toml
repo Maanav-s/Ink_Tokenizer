@@ -1,52 +1,33 @@
 [project]
 name = "ink-tokenizer"
 version = "0.1.0"
-description = "Structural autocomplete for handwritten engineering work"
+description = "Add your description here"
 readme = "README.md"
-# Upper bound tracks InkSight's own (>=3.11,<3.14). The lower bound stays at
-# 3.11 so a stock lab machine (Ubuntu 24.04 ships 3.12) works out of the box.
-requires-python = ">=3.11,<3.14"
-dependencies = [
-    "pillow>=10.0.0",
-    "httpx>=0.27.0",
-]
+requires-python = ">=3.13"
+dependencies = []
 
 [project.optional-dependencies]
-# Everything needed to run the model in-process. The markers matter: both
-# wheels exist for Linux and macOS-arm64 but NOT for Windows, so on Windows
-# this extra resolves to nothing instead of failing to install.
-inference = [
-    "tensorflow[and-cuda]==2.20.0 ; sys_platform != 'win32'",
-    "tensorflow-text==2.20.1 ; sys_platform != 'win32'",
-    "huggingface-hub>=0.27.0",
+render = [
+    "hershey-fonts>=2.1.0",
+    "pillow>=12.3.0",
 ]
-# Extra deps for running the HTTP service (implies `inference`).
-service = [
-    "ink-tokenizer[inference]",
-    "fastapi>=0.115.0",
-    "uvicorn[standard]>=0.32.0",
-    "python-multipart>=0.0.9",
+model = [
+    "torch==2.9.*",
+    "numpy>=2",
+    "mamba-ssm",
+    "causal-conv1d",
+    "wandb",
 ]
-dev = [
-    "pytest>=8.0.0",
+demo = [
+    "anthropic",
 ]
 
-# Conventional full-page comparison baseline; kept separate from core imports.
-experiments = [
-    "opencv-python>=4.10.0",
-    "onnxruntime>=1.20.0",
-    "rapidocr>=3.0.0",
-]
+# PyPI only has source tarballs for these, which compile CUDA kernels at install
+# time. The prebuilt wheels must match the torch minor version and CUDA major
+# version above, so bump them together.
+[tool.uv.sources]
+mamba-ssm = { url = "https://github.com/state-spaces/mamba/releases/download/v2.3.2.post1/mamba_ssm-2.3.2.post1%2Bcu12torch2.9cxx11abiTRUE-cp313-cp313-linux_x86_64.whl" }
+causal-conv1d = { url = "https://github.com/Dao-AILab/causal-conv1d/releases/download/v1.7.0/causal_conv1d-1.7.0%2Bcu12torch2.9cxx11abiTRUE-cp313-cp313-linux_x86_64.whl" }
 
-[project.scripts]
-ink-tokenizer = "ink_tokenizer.cli:main"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["ink_tokenizer"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64' and python_version == '3.13'"]

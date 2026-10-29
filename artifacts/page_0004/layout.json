@@ -1,0 +1,596 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0004",
+ "layout_seed": 0,
+ "unit": "mm",
+ "page": {
+  "width": 1200.0,
+  "height": 800.0,
+  "origin": "top-left",
+  "y_axis": "down"
+ },
+ "style": {
+  "h": 24.29,
+  "title": 30.672,
+  "heading": 25.998,
+  "subbullet": 23.032,
+  "note": 21.332,
+  "table": 22.357,
+  "diagram": 20.22,
+  "math": 25.715,
+  "line_gap": 1.69,
+  "block_gap": 1.006,
+  "col_gap": 2.248,
+  "margin_x": 31.172,
+  "margin_y": 29.521,
+  "indent": 1.527,
+  "dash": "*",
+  "numbered": "{}.",
+  "title_underline": false,
+  "title_center": false,
+  "heading_underline": false,
+  "table_style": "grid",
+  "table_rules": "after_header",
+  "table_left_align": false,
+  "row_h": 1.982,
+  "cell_pad": 0.834,
+  "side_by_side": 0.55,
+  "fill": 0.691,
+  "multi_writer": false,
+  "correction_rate": 0.0,
+  "scale": 1.0,
+  "page_w": 1200.0,
+  "page_h": 800.0,
+  "blocks": {
+   "sec_1": {},
+   "eq_2": {},
+   "eq_3": {},
+   "eq_4": {},
+   "sec_2": {},
+   "eq_6": {},
+   "eq_7": {},
+   "eq_8": {},
+   "eq_9": {}
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "title": {
+   "kind": "text",
+   "text": "RC low-pass - step + freq response",
+   "bbox": [
+    31.17,
+    29.52,
+    718.95,
+    60.19
+   ],
+   "text_height": 30.67,
+   "role": "title",
+   "bold": true,
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "givens": {
+   "kind": "text",
+   "text": "given: R = 10 kΩ, C = 100 nF, 5 V step in at t = 0, cap starts at 0 V",
+   "bbox": [
+    31.17,
+    84.64,
+    1057.45,
+    108.93
+   ],
+   "text_height": 24.29,
+   "role": "bullet",
+   "element": "givens",
+   "writer": "writer_0"
+  },
+  "fig_1.V1.label": {
+   "kind": "math",
+   "latex": "V_{in}",
+   "bbox": [
+    31.17,
+    264.98,
+    61.13,
+    285.2
+   ],
+   "baseline": 280.14,
+   "text_height": 20.22,
+   "element": "fig_1",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.V1": {
+   "kind": "component",
+   "component": "voltage_source",
+   "element": "fig_1",
+   "role": "component",
+   "a": [
+    84.22,
+    248.88
+   ],
+   "b": [
+    84.22,
+    298.88
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.R1": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "fig_1",
+   "role": "component",
+   "a": [
+    159.22,
+    193.88
+   ],
+   "b": [
+    209.22,
+    193.88
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.R1.label": {
+   "kind": "text",
+   "text": "R",
+   "bbox": [
+    175.2,
+    133.37,
+    193.25,
+    153.59
+   ],
+   "text_height": 20.22,
+   "align": "center",
+   "element": "fig_1",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.R1.value": {
+   "kind": "text",
+   "text": "10 kΩ",
+   "bbox": [
+    150.63,
+    161.68,
+    217.82,
+    181.9
+   ],
+   "text_height": 20.22,
+   "align": "center",
+   "element": "fig_1",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.in": {
+   "kind": "wire",
+   "points": [
+    [
+     84.22,
+     248.88
+    ],
+    [
+     84.22,
+     193.88
+    ],
+    [
+     159.22,
+     193.88
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "in",
+   "writer": "writer_0"
+  },
+  "fig_1.GND": {
+   "kind": "component",
+   "component": "ground",
+   "element": "fig_1",
+   "role": "component",
+   "a": [
+    184.22,
+    343.88
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.gnd.1": {
+   "kind": "wire",
+   "points": [
+    [
+     84.22,
+     298.88
+    ],
+    [
+     84.22,
+     333.88
+    ],
+    [
+     184.22,
+     333.88
+    ],
+    [
+     184.22,
+     343.88
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "gnd",
+   "writer": "writer_0"
+  },
+  "fig_1.C1": {
+   "kind": "component",
+   "component": "capacitor",
+   "element": "fig_1",
+   "role": "component",
+   "a": [
+    274.22,
+    248.88
+   ],
+   "b": [
+    274.22,
+    298.88
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.C1.label": {
+   "kind": "text",
+   "text": "C",
+   "bbox": [
+    289.06,
+    250.83,
+    305.79,
+    271.05
+   ],
+   "text_height": 20.22,
+   "element": "fig_1",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.C1.value": {
+   "kind": "text",
+   "text": "100 nF",
+   "bbox": [
+    289.06,
+    279.13,
+    374.16,
+    299.35
+   ],
+   "text_height": 20.22,
+   "element": "fig_1",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.out.1": {
+   "kind": "wire",
+   "points": [
+    [
+     209.22,
+     193.88
+    ],
+    [
+     274.22,
+     193.88
+    ],
+    [
+     274.22,
+     248.88
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "out",
+   "writer": "writer_0"
+  },
+  "fig_1.gnd.2": {
+   "kind": "wire",
+   "points": [
+    [
+     184.22,
+     333.88
+    ],
+    [
+     274.22,
+     333.88
+    ],
+    [
+     274.22,
+     298.88
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "gnd",
+   "dots": [
+    [
+     184.22,
+     333.88
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.OUT": {
+   "kind": "component",
+   "component": "terminal",
+   "element": "fig_1",
+   "role": "component",
+   "a": [
+    354.22,
+    193.88
+   ],
+   "writer": "writer_0"
+  },
+  "fig_1.OUT.label": {
+   "kind": "math",
+   "latex": "V_{out}",
+   "bbox": [
+    364.81,
+    184.98,
+    405.47,
+    205.2
+   ],
+   "baseline": 200.14,
+   "text_height": 20.22,
+   "element": "fig_1",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "fig_1.out.2": {
+   "kind": "wire",
+   "points": [
+    [
+     274.22,
+     193.88
+    ],
+    [
+     354.22,
+     193.88
+    ]
+   ],
+   "element": "fig_1",
+   "role": "wire",
+   "net": "out",
+   "dots": [
+    [
+     274.22,
+     193.88
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "sec_1": {
+   "kind": "text",
+   "text": "KCL at out node:",
+   "bbox": [
+    460.07,
+    133.37,
+    703.25,
+    157.66
+   ],
+   "text_height": 24.29,
+   "role": "bullet",
+   "element": "sec_1",
+   "writer": "writer_0"
+  },
+  "eq_1": {
+   "kind": "math",
+   "latex": "i = \\frac{V_{in} - V_{out}}{R} = C \\frac{dV_{out}}{dt}",
+   "bbox": [
+    460.07,
+    169.81,
+    749.06,
+    226.05
+   ],
+   "baseline": 206.29,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_1",
+   "writer": "writer_0"
+  },
+  "eq_2": {
+   "kind": "math",
+   "latex": "V_{out}(t) = \\frac{1}{C} \\int_0^t i \\, dt",
+   "bbox": [
+    460.07,
+    250.49,
+    694.04,
+    303.47
+   ],
+   "baseline": 285.34,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "eq_2",
+   "writer": "writer_0"
+  },
+  "eq_3": {
+   "kind": "math",
+   "latex": "= V_{in} \\left(1 - e^{-t/\\tau}\\right)",
+   "bbox": [
+    560.34,
+    323.02,
+    778.77,
+    355.08
+   ],
+   "baseline": 348.65,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "eq_3",
+   "writer": "writer_0"
+  },
+  "eq_4": {
+   "kind": "math",
+   "latex": "\\tau = RC = 10\\,\\mathrm{k\\Omega} \\cdot 100\\,\\mathrm{nF} = 1\\,\\mathrm{ms}",
+   "bbox": [
+    460.07,
+    379.53,
+    894.19,
+    408.07
+   ],
+   "baseline": 401.64,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_4",
+   "writer": "writer_0"
+  },
+  "sec_2": {
+   "kind": "text",
+   "text": "sine in, phasors:",
+   "bbox": [
+    460.07,
+    432.52,
+    688.65,
+    456.81
+   ],
+   "text_height": 24.29,
+   "role": "bullet",
+   "element": "sec_2",
+   "writer": "writer_0"
+  },
+  "eq_5": {
+   "kind": "math",
+   "latex": "Z_C = \\frac{1}{j \\omega C}",
+   "bbox": [
+    460.07,
+    468.95,
+    584.45,
+    519.94
+   ],
+   "baseline": 498.0,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_5",
+   "writer": "writer_0"
+  },
+  "eq_6": {
+   "kind": "math",
+   "latex": "H(j\\omega) = \\frac{V_{out}}{V_{in}} = \\frac{Z_C}{R + Z_C}",
+   "bbox": [
+    460.07,
+    544.39,
+    759.47,
+    605.0
+   ],
+   "baseline": 583.05,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_6",
+   "writer": "writer_0"
+  },
+  "eq_7": {
+   "kind": "math",
+   "latex": "= \\frac{1}{1 + j \\omega RC}",
+   "bbox": [
+    552.23,
+    624.56,
+    699.56,
+    675.55
+   ],
+   "baseline": 653.6,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_7",
+   "writer": "writer_0"
+  },
+  "eq_8": {
+   "kind": "math",
+   "latex": "|H(j\\omega)| = \\frac{1}{\\sqrt{1 + (\\omega RC)^2}}",
+   "bbox": [
+    460.07,
+    699.99,
+    761.58,
+    755.14
+   ],
+   "baseline": 729.04,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_8",
+   "writer": "writer_0"
+  },
+  "eq_9": {
+   "kind": "math",
+   "latex": "\\boxed{f_c = \\frac{1}{2 \\pi RC} = 159\\,\\mathrm{Hz}}",
+   "bbox": [
+    816.19,
+    699.99,
+    1116.75,
+    759.25
+   ],
+   "baseline": 735.47,
+   "text_height": 25.71,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "eq_9",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "title",
+  "givens",
+  "fig_1.V1.label",
+  "fig_1.V1",
+  "fig_1.R1",
+  "fig_1.R1.label",
+  "fig_1.R1.value",
+  "fig_1.in",
+  "fig_1.GND",
+  "fig_1.gnd.1",
+  "fig_1.C1",
+  "fig_1.C1.label",
+  "fig_1.C1.value",
+  "fig_1.out.1",
+  "fig_1.gnd.2",
+  "fig_1.OUT",
+  "fig_1.OUT.label",
+  "fig_1.out.2",
+  "sec_1",
+  "eq_1",
+  "eq_2",
+  "eq_3",
+  "eq_4",
+  "sec_2",
+  "eq_5",
+  "eq_6",
+  "eq_7",
+  "eq_8",
+  "eq_9"
+ ],
+ "targets": [],
+ "layout_attempt": 0
+}

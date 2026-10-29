@@ -44,6 +44,19 @@ scope by default. Raise it rather than building it.
 - Robust to messy handwriting, multiple writers, and partial/in-progress
   strokes
 
+### Training Data
+
+Training data is **synthesized**. An LLM generates whiteboard notes and
+diagrams in a structured form. A text-to-ink model renders the text as
+handwriting, and heuristics such as artificial jitter make the diagrams look
+hand-drawn. Together they produce timed stroke pages whose structure labels
+come for free. The first text-to-ink model will be an existing handwriting
+synthesis implementation
+([pytorch-handwriting-synthesis-toolkit](https://github.com/X-rayLaser/pytorch-handwriting-synthesis-toolkit)).
+A self-trained Mamba SSM may replace it later. See
+[docs/synthetic_data.md](docs/synthetic_data.md) for the pipeline and its
+risks. Most importantly, evaluation must still use real handwriting.
+
 ## What This Means in Practice
 
 - **Precision over recall.** Showing nothing is an acceptable outcome. Showing
@@ -59,57 +72,283 @@ scope by default. Raise it rather than building it.
 
 ## Repository State
 
-Python 3.11-3.13, managed with `uv`. Current work is **stage 1: data** --
-bootstrapping digitized notes into online-ink-style stroke data using InkSight.
+Early scaffold — Python 3.13, managed with `uv`. All dependencies are
+optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
+(anthropic).
 
-```
-ink_tokenizer/          main package -- imports cleanly on ANY platform
-  ink.py                Stroke / Ink data model + JSON
-  codec.py              ink-token <-> Ink codec (ported from InkSight)
-  preprocess.py         crop -> 224x224 padding and its exact inverse
-  base.py               DerenderBackend: geometry + decoding, shared
-  local.py              LocalBackend  -- in-process inference (Linux/macOS)
-  client.py             InkSightClient -- same API over HTTP (anywhere)
-  tf_runtime.py         the ONLY module that imports TensorFlow
-  cli.py                `ink-tokenizer doctor` / `derender`
-services/inksight/      FastAPI wrapper around tf_runtime, for remote callers
-scripts/setup_linux.sh  one-shot bootstrap for a Linux/lab machine
-docs/                   inksight.md (decisions, constraints)
-                        running-inference.md (how to run it)
-tests/                  codec + geometry tests; need no model and no TF
-```
+- [pyproject.toml](pyproject.toml) — project metadata
+- [main.py](main.py) — placeholder entry point
+- [docs/synthetic_data.md](docs/synthetic_data.md) — synthetic training data
+  plan
+- [docs/slurm.md](docs/slurm.md) — running jobs on Slurm
+- [docs/experiments.md](docs/experiments.md) — past and planned experiments
+- [artifacts/](artifacts/README.md) — sample synthetic pages: content,
+  layouts, clean and handwriting-like InkML renders. `artifacts/` is
+  gitignored, so new pages need `git add -f`.
+- Synthetic page pipeline (in `scripts/`; needs the `render` extra):
+  - [docs/content_prompt.md](docs/content_prompt.md) — prompt and schema for
+    LLM-written `content.json` (content only, no coordinates).
+  - [validate_page.py](scripts/validate_page.py) — content checks (truth
+    tables, Boolean expressions, circuit simulation, numeric equations),
+    layout checks, and ink-overlap checks on rendered ink.
+  - [layout_engine.py](scripts/layout_engine.py) — content -> layout.json
+    from a layout seed: placement, styles, writing order, mistakes, a second
+    writer. It uses [diagram_layout.py](scripts/diagram_layout.py)
+    (flowcharts, circuits, schematics with orthogonal routing),
+    [math_typeset.py](scripts/math_typeset.py) (LaTeX subset) and
+    [targets.py](scripts/targets.py) (structural completion targets).
+  - [render_inkml.py](scripts/render_inkml.py) — layout -> InkML, labelled
+    per item and per character or shape part. It uses
+    [fonts.py](scripts/fonts.py) (single-stroke fonts, pool metrics),
+    [shapes.py](scripts/shapes.py),
+    [hand_noise.py](scripts/hand_noise.py) (handwriting-like variation at
+    the writer, line, character and stroke levels, rather than i.i.d.
+    Gaussian noise) and [digitizer.py](scripts/digitizer.py) (capture
+    artefacts).
+  - [render_batch.py](scripts/render_batch.py) — layouts x fonts x seeds,
+    rejecting renders whose text ink collides.
+  - [inkml_to_png.py](scripts/inkml_to_png.py) — rasterize InkML for
+    inspection.
+  - [fonts/](fonts/README.md) holds OFL-licensed single-line SVG fonts.
+  - `scripts/legacy_v0/` — generators for the old hand-placed v0 pages,
+    kept for reference; the current renderer does not read v0 layouts.
+- Ink format: **InkML**, with X/Y in mm and T in seconds.
+- Text-to-ink teacher (needs the `model` extra):
+  - [teacher_model.py](scripts/teacher_model.py) — the pretrained Graves
+    synthesis network from pytorch-handwriting-synthesis-toolkit, ported to
+    current torch (verified to sample identically to the original) with
+    batched sampling and per-point character alignment.
+  - [fetch_teacher.py](scripts/fetch_teacher.py) — downloads its pinned
+    checkpoint into `models/teacher/` (gitignored).
+  - [text_to_ink.py](scripts/text_to_ink.py) — the text + style -> labelled
+    strokes interface (writing order, no timestamps). It rejects lines and
+    priming that are clearly broken. It cannot detect misspelled words,
+    which the teacher produces often.
+- Mamba text-to-ink student, distilled from the teacher (bootstrap until
+  IAM-OnDB access arrives; it inherits the teacher's misspellings):
+  - [make_corpus_lines.py](scripts/make_corpus_lines.py) — the line list
+    (dictionary prose + charset-limited notation + page strings). Stdlib
+    only; run it on the host, which has the word list.
+  - [generate_teacher_corpus.py](scripts/generate_teacher_corpus.py) —
+    teacher samples as `.npz` shards; resumable and splittable across jobs.
+    About 20-25% of the teacher's attempts are rejected.
+  - [generate_corpus.sh](scripts/generate_corpus.sh) — runs it on a list of
+    GPUs, one job per GPU over a split shard range, then pushes once.
+  - [corpus_artifact.py](scripts/corpus_artifact.py) — keeps the shards in
+    a W&B dataset artifact (`push`/`pull`). Generation, training and eval
+    take `--wandb-entity`, `--wandb-project` and `--artifact`. Training
+    records which artifact version it used and trains on exactly those
+    shards.
+  - [ink_corpus.py](scripts/ink_corpus.py) — model-agnostic shard loader and
+    length-bucketed batching (reusable by other student architectures).
+  - [mathwriting_corpus.py](scripts/mathwriting_corpus.py) — converts the
+    human inks of MathWriting (`data/mathwriting-2024`, real handwritten
+    LaTeX) into the same shard format: `train/` becomes the training shards
+    and `valid/` the last shard (the held-out one). Labels use the `latex`
+    tokenizer from `ink_corpus.split_text`: `\frac`, `\alpha`, `\\` and
+    `\begin{matrix}` are one token each (meta.json `tokenizer`; `charset`
+    holds the tokens, and `MAX_TEXT` counts tokens). Inks are scale-normalized
+    by median stroke size and resampled by arc length. There is no
+    per-point alignment (`chars` = -1), so the index head only learns when
+    to stop on this data, and `char_acc` measures that.
+    [fetch_mathwriting.sh](scripts/fetch_mathwriting.sh) downloads the
+    dataset and runs the conversion. Train on it with `--artifact none`.
+  - [mixed_corpus.py](scripts/mixed_corpus.py) — merges the MathWriting and
+    teacher corpora into `data/mixed_corpus`, so one model writes formulas and
+    plain text. A teacher line becomes `\text{...}` (MathWriting has no
+    `\text`, so the wrapper selects the teacher's hand), and its ink is
+    rescaled, resampled and normalized as MathWriting's is. The vocabulary is
+    MathWriting's with the new tokens appended, so a flow checkpoint trained
+    on MathWriting can continue on it (`train_flow.py --init-from`). The last
+    shard holds both validation sets. Train on it with `--artifact none`.
+  - [font_corpus.py](scripts/font_corpus.py) — renders every unique
+    MathWriting train label in single-stroke fonts (default EMSReadability
+    and EMSTech, clean strokes) with the page pipeline's typesetter, and adds
+    the inks to a base corpus (MathWriting's or the mixed one) as
+    `\typeset{label}`, so a model learns exact layouts and tokens while
+    writing in the human hand when the wrapper is left out. Rendered points
+    are aligned to their tokens, so `char_ce` trains on them. The base's
+    validation shard stays last, so validation is on human ink only. Train on
+    it with `--artifact none`. MathWriting's `valid` labels are rendered into
+    `font_valid.npz` (not a shard), which only the recognizer validates on.
+  - [student_model.py](scripts/student_model.py) — Mamba2 decoder over
+    `[text, SEP, ink]`, with residual cross-attention before the mixture-density
+    and character-index heads. New runs default to `--conditioning unpadded`:
+    equal-token-count batches and prefix trimming keep PAD out of Mamba.
+    `--conditioning transformer` encodes text into 32 learned contextual slots
+    for the Mamba prefix and cross-attention memory. Text conditioning is cached
+    during sampling. Four attention heads are the default (`--cross-attention-heads
+    0` disables it). Checkpoint resumes preserve the saved architecture; older
+    checkpoints retain `legacy` left-padding. Use a fresh run directory for a
+    new architecture.
+  - [train_conditioning.sh](scripts/train_conditioning.sh) — cluster entry point
+    for `unpadded` and `transformer` variants on `teacher` or `mathwriting` data,
+    with separate run directories. See [docs/text_conditioning.md](docs/text_conditioning.md)
+    for architecture details, training commands, and evaluation limitations.
+  - [train_student.py](scripts/train_student.py) — training; resumes from
+    its run directory. Every `--sample-every` steps it draws held-out lines
+    as written by the teacher and by the student, alternating rows, into
+    `<run-dir>/samples/` and W&B.
+  - [sample_student.py](scripts/sample_student.py) — preview, and a failure
+    rate by line length next to the teacher's rejection rate.
+  - [flow_model.py](scripts/flow_model.py) — flow-matching alternative to
+    the Mamba student: a transformer that generates a whole line at once as
+    absolute positions plus a pen channel, with the point count predicted
+    from the text (the length head's most likely bin; `--sample-length
+    sample` draws from it instead). Each ink is scaled to unit height, so the model does not
+    choose a size: whoever places a sample supplies its box. [train_flow.py](scripts/train_flow.py) trains it with the
+    same run directory, corpus and W&B conventions as `train_student.py`;
+    `sample_student.py` loads either kind of checkpoint. Its losses are not
+    comparable with the Mamba student's `ink_nll`. `--stretch-prob` trains
+    on inks resampled to other point counts (`ink_corpus.resample_ink`), so
+    the flow copes with a count that is off.
+  - [train_reflow.py](scripts/train_reflow.py) — reflows a flow checkpoint
+    into one that writes in a few Euler steps without guidance, by training
+    on (noise, ink) pairs the checkpoint itself generates. The step count
+    and guidance a flow model is sampled with are stored in its config.
+  - [train_flow_legibility.py](scripts/train_flow_legibility.py) — fine-tunes
+    a flow checkpoint with an added loss: the frozen recognizer's
+    cross-entropy on the one-step estimate of the finished ink, weighted by
+    t³ so nearly finished ink counts most (`--legibility-t-min` can also cut
+    off the early times); the flow losses are unchanged. It takes
+    `--stretch-prob` like `train_flow.py`.
+  - [length_sweep.py](scripts/length_sweep.py) — writes held-out labels from
+    the same noise at the true point count, scaled versions of it, and the
+    length head's argmax and draw, and has the recognizer read each, to test
+    whether a wrong point count causes loops and repeated symbols. Results
+    and drawings go to W&B (job type "length_sweep").
+  - Spline flow student — **the default text-to-ink student**; start new
+    text-to-ink work from it (the point flow student above is the baseline).
+    It is the flow student writing each stroke's B-spline control points
+    instead of its points (docs/experiments.md, "Splines instead of points";
+    `models/student/spline_flow`, W&B `splineDecoder` run `41721da5`).
+    [spline_corpus.py](scripts/spline_corpus.py) fits every stroke of a
+    corpus with a clamped cubic B-spline, about one control point per
+    `--points-per-control` points (default 4; about 3.3 on MathWriting,
+    since short strokes keep at least two), and writes the same shard format
+    to `data/spline_corpus` (meta.json `spline` names the source).
+    [spline_flow_model.py](scripts/spline_flow_model.py) is `FlowStudent`
+    with length bins of 2 control points, and its `sample()` decodes the
+    splines into dense ink, so `sample_student.py` and `visualize_flow.py`
+    (with `--corpus <source>`) load it as they do the flow student.
+    [train_spline_flow.py](scripts/train_spline_flow.py) trains it (no
+    `--init-from` or `--stretch-prob`). Its losses are over control points,
+    so they are not comparable with the point flow student's.
+    `train_flow_legibility.py` fine-tunes it too (it decodes x̂1 into dense
+    ink, differentiably, for the recognizer), and `measure_legibility.py`
+    scores it against its source corpus's real ink by default.
+  - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
+    at the flow student's width, depth and text encoder (about 32M
+    parameters each), to compare writing point by point with flow matching
+    at equal size. It has the Mamba student's heads and loss, so their
+    `ink_nll` values are comparable. Every block attends to the text and to
+    summaries of the strokes finished so far, and each point's input
+    includes the pen's position. [train_hybrid.py](scripts/train_hybrid.py)
+    trains it, with `--init-from` as in `train_flow.py`; `sample_student.py`
+    loads its checkpoints.
+  - [checkpoint_artifact.py](scripts/checkpoint_artifact.py) — keeps a run
+    directory's `checkpoint.pt` and `metrics.jsonl` in a W&B model artifact
+    (`student-<run name>`, aliased `step-<step>`), so cluster checkpoints can
+    be pulled onto the workstation (`push`/`pull`).
+- [demo_server.py](scripts/demo_server.py) — stylus demo (stdlib HTTP
+  server + [demo/index.html](scripts/demo/index.html)): the recognizer reads
+  what is written on the board, Claude replies in LaTeX limited to the
+  student's vocabulary (following a typed instruction, or suggesting the
+  right-hand side once an equals sign is written) along with a guessed box
+  for it, from the writing's bounding box, and the student's ink is drawn
+  into that box on the same board in blue. The Claude step needs the
+  `demo` extra (`anthropic`) and `ANTHROPIC_API_KEY` in `.env` (copy
+  `.env.example`) or the shell.
+- Environment: uv on the host, with `.venv` synced to `uv.lock` (uv fetches
+  Python 3.13 itself). The host needs a C compiler, because Triton builds its
+  kernel launchers at runtime. The `model` extra pins torch 2.9 and prebuilt
+  CUDA 12 wheels of mamba-ssm / causal-conv1d from GitHub releases; bump them
+  together.
 
-Commands:
+Common commands:
 
 ```bash
-uv sync --extra dev                 # main package, works on any platform
-uv run pytest                       # no TF, no GPU, no model download
-./scripts/setup_linux.sh --prefetch # Linux: full inference setup
-uv run ink-tokenizer doctor         # what can this machine actually do?
+uv sync --all-extras                              # once, and after uv.lock changes
+uv run python scripts/fetch_teacher.py
+uv run python scripts/text_to_ink.py "Hello world" --out hello.png
+CUDA_VISIBLE_DEVICES=0 uv run <command>           # on GPU 0
+
+# Student pipeline (generation and training belong on a cluster). W&B flags
+# are optional; without --wandb-project everything stays local.
+WB="--wandb-entity <entity> --wandb-project <project>"
+python3 scripts/make_corpus_lines.py              # data/teacher_corpus/lines.txt
+scripts/generate_corpus.sh 0,1,2,3 0 64 $WB          # shards 0-63 split over GPUs 0-3, one push at the end
+uv run python scripts/corpus_artifact.py push $WB   # e.g. after a race
+uv run python scripts/corpus_artifact.py pull $WB [--artifact teacher_corpus:v3]
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_student.py --run-dir models/student/<name> $WB
+# MathWriting student: download and convert on each cluster (no artifact),
+# W&B for metrics only.
+scripts/fetch_mathwriting.sh                      # data/mathwriting-2024 -> data/mathwriting_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_student.py --run-dir models/student/<name> \
+    --corpus data/mathwriting_corpus --artifact none $WB
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/sample_student.py \
+    --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
+# Formulas and plain text in one flow student, continuing from a MathWriting one.
+uv run python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
+    --corpus data/mixed_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
+# Font-rendered labels added to MathWriting (or --base data/mixed_corpus), continuing a MathWriting flow student.
+uv run python scripts/font_corpus.py   # needs data/mathwriting-2024 and the base corpus; writes data/font_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
+    --corpus data/font_corpus --artifact none --init-from models/student/<mathwriting run>/checkpoint.pt $WB
+# The hybrid student on MathWriting (--init-from then continues it on the mixed corpus, as above).
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_hybrid.py --run-dir models/student/mathwriting_hybrid \
+    --corpus data/mathwriting_corpus --artifact none $WB
+# Recognizer on human math, font renders and teacher text: pull the teacher
+# shards and fetch MathWriting first. Each eval scores human math (val_*), teacher text (val_text_*)
+# and font renders of valid labels (val_font_*) apart, and draws each one's 10 worst reads.
+uv run python scripts/mixed_corpus.py
+uv run python scripts/font_corpus.py --base data/mixed_corpus --out-dir data/font_mixed_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
+    --corpus data/font_mixed_corpus --artifact none $WB
+# Spline flow student (the default): control points instead of points.
+uv run python scripts/spline_corpus.py --source data/mathwriting_corpus --out-dir data/spline_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_spline_flow.py --run-dir models/student/<name> \
+    --corpus data/spline_corpus --accumulate 2 $WB
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/measure_legibility.py --student models/student/spline_flow/checkpoint.pt \
+    --recognizer models/recognizer/<run>/checkpoint.pt $WB
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow_legibility.py --run-dir models/student/<name> \
+    --init-from models/student/spline_flow/checkpoint.pt --recognizer models/recognizer/<run>/checkpoint.pt $WB
+# Reflow a flow student to sample in --student-steps Euler steps (default 4).
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_reflow.py --run-dir models/student/<name>_reflow \
+    --teacher models/student/<name>/checkpoint.pt $WB
+# Checkpoints: push on the cluster, pull here (latest, :v3 or :step-20000).
+uv run python scripts/checkpoint_artifact.py push --run-dir models/student/<name> $WB
+uv run python scripts/checkpoint_artifact.py pull --run-dir models/student/<name> $WB
 ```
 
-### The TensorFlow boundary -- keep it
+Give each cluster or job its own `--first-shard` range; a shard index
+generated in two places has the same name, and the artifact keeps one copy.
+W&B credentials come from `WANDB_API_KEY` or `wandb login` (`~/.netrc`).
+W&B's run files go in `wandb/` unless `WANDB_DIR` is set.
 
-`tensorflow-text` publishes **no Windows wheels**, and InkSight pins TF 2.20.
-So:
+`uv sync --extra <one>` uninstalls the other extra, so always sync with
+`--all-extras`. `uv run` only adds what is missing. Jobs that start together
+must not sync the same `.venv` at once: sync once beforehand and give them
+`uv run --no-sync` (or `UV_NO_SYNC=1`).
 
-- `tf_runtime.py` is the only module that may `import tensorflow`, and it must
-  configure `XLA_FLAGS` before doing so (the checkpoint predates TF 2.18's XLA
-  change). Never `import tensorflow` anywhere else, and never above that shim.
-- `ink_tokenizer/__init__.py` must stay importable without TensorFlow.
-  `LocalBackend` is exposed through a module-level `__getattr__` for this
-  reason -- do not add it to the eager imports.
-- The `inference` extra is marked `sys_platform != 'win32'` so it resolves to
-  nothing on Windows rather than failing.
-- Coordinate math and token handling belong in the main package, where they
-  are testable without a container. The service's only job is image bytes ->
-  raw model text.
+Where `$HOME` has a small quota (tacc), point the caches at the checkout
+before syncing or running anything:
 
-Read [docs/inksight.md](docs/inksight.md) before touching either side. It
-covers why the split exists and the constraints InkSight imposes -- most
-importantly that **its output has no timestamps** and that its page pipeline
-assumes OCR word boxes, which fit text but not the math and diagrams this
-project targets.
+```bash
+export UV_CACHE_DIR=$PWD/.cache/uv UV_PYTHON_INSTALL_DIR=$PWD/.cache/uv-python
+export TRITON_CACHE_DIR=$PWD/.cache/triton
+export WANDB_DIR=$PWD/.cache/wandb WANDB_CACHE_DIR=$PWD/.cache/wandb/cache WANDB_DATA_DIR=$PWD/.cache/wandb/data
+mkdir -p "$WANDB_DIR"
+```
+
+On tacc, sync on the login node, then wrap the same commands in
+`scripts/submit_slurm.sh -- ` with `uv run --no-sync` (see docs/slurm.md).
+Compute nodes need outbound internet for W&B. Mamba2's Triton kernels compile
+on first use (about a minute).
+
+Update this section as real structure lands (synthetic data pipeline,
+recognition model, suggestion model, evaluation harness).
 
 ## Conventions
 

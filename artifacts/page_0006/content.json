@@ -1,0 +1,86 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0006",
+  "topic": "sprint planning + incident retro for a payments API",
+  "provenance": {"generator": "claude-opus-5-5 / content_prompt.md v1", "automated": true},
+  "elements": [
+    {"id": "title", "type": "text", "role": "title", "text": "Payments API - Sprint 15 plan + INC-412 retro"},
+    {"id": "meta", "type": "text", "role": "note", "text": "Tue 09/29 · Priya, Marco, Jen (SRE), Dev, Lin (PM) · 60 min"},
+    {"id": "agenda", "type": "list", "style": "numbered", "heading": "Agenda", "items": [
+      {"text": "INC-412 retro: dup charges on retry (~0.3% of txns)"},
+      {"text": "Root cause + fix status"},
+      {"text": "Sprint 15 scope / capacity (≈ 34 pts)"},
+      {"text": "Risks, open Qs → owners"}
+    ]},
+    {"id": "inc", "type": "list", "style": "dash", "heading": "INC-412 what happened", "items": [
+      {"text": "PSP timeout 30s → client retried w/o idem key", "items": [
+        {"text": "2nd POST /charges → new charge_id"},
+        {"text": "~1.2k dup charges, $48k refunded"}
+      ]},
+      {"text": "detect: 47 min (alert on refund rate, not dup rate)"},
+      {"text": "mitigate: kill-switch on auto-retry, 14:52 UTC"}
+    ]},
+    {"id": "dec", "type": "list", "style": "dash", "heading": "Decisions", "items": [
+      {"id": "dec_idem", "text": "Idempotency-Key REQUIRED on POST /charges", "items": [
+        {"text": "store key → resp 24h (Redis + PG fallback)"},
+        {"text": "same key + diff body → 422"}
+      ]},
+      {"text": "retry only on 5xx / timeout, max 4, exp backoff"},
+      {"text": "v1 clients w/o key: grace until Sprint 17"}
+    ]},
+    {"id": "backoff", "type": "math", "latex": "t_k = 200\\,\\mathrm{ms} \\cdot 2^{k}", "text": "t_k = 200*2**k", "defines": "t_k", "check": {"vars": {"k": 3, "t_k": 1600}}},
+    {"id": "backoff_sum", "type": "math", "latex": "\\sum_{k=0}^{3} t_k = 3000\\,\\mathrm{ms} \\le 30\\,\\mathrm{s}", "text": "200*(1+2+4+8) = 3000", "check": {"vars": {}}},
+    {"id": "risks", "type": "list", "style": "dash", "heading": "Risks", "items": [
+      {"text": "Redis eviction → key lost → dup possible", "items": [
+        {"text": "mitigation: PG unique idx on (merchant, key)"}
+      ]},
+      {"text": "p99 latency +Δ ≈ 8 ms per key lookup?"},
+      {"text": "big merchants on old SDK (≥ 40% vol)"}
+    ]},
+    {"id": "openq", "type": "list", "style": "dash", "heading": "Open Qs", "items": [
+      {"text": "key TTL 24h vs 72h? (PSP settles T+2)"},
+      {"text": "retry on 409 from PSP? → ask PSP"},
+      {"text": "who owns dup-rate alert? SRE or payments?"}
+    ]},
+    {"id": "actions", "type": "table", "kind": "action_items", "header": ["Who", "Task", "Due"], "rows": [
+      ["Marco", "idem-key middleware + 422 path", "10/09"],
+      ["Priya", "PG unique idx + migration", "10/07"],
+      ["Jen", "alert: dup charge rate > 0.05%", "10/02"],
+      ["Dev", "SDK v2.3: auto-gen idem key", "10/14"],
+      ["Lin", "merchant comms re: key reqd", "10/05"]
+    ]},
+    {"id": "tl_h", "type": "text", "role": "heading", "text": "Rollout timeline"},
+    {"id": "timeline", "type": "table", "kind": "timeline", "header": ["", "Sprint 15", "Sprint 16", "Sprint 17", "Sprint 18"], "rows": [
+      ["idem keys", "build", "canary 5%", "100%", "-"],
+      ["SDK v2.3", "dev", "beta", "GA", "deprecate v1"],
+      ["key enforce", "-", "warn hdr", "422 if missing", "-"],
+      ["postmortem", "draft", "review", "-", "-"]
+    ]},
+    {"id": "flow_h", "type": "text", "role": "heading", "text": "Retry / idempotency logic"},
+    {"id": "flow", "type": "flowchart", "direction": "TB", "nodes": [
+      {"id": "start", "shape": "terminator", "text": "POST /charges"},
+      {"id": "haskey", "shape": "decision", "text": "Idem key\npresent?"},
+      {"id": "rej", "shape": "io", "text": "400 key reqd"},
+      {"id": "seen", "shape": "decision", "text": "key seen?"},
+      {"id": "replay", "shape": "io", "text": "return stored\nresp"},
+      {"id": "call", "shape": "process", "text": "call PSP"},
+      {"id": "ok", "shape": "decision", "text": "5xx / timeout?"},
+      {"id": "retry", "shape": "process", "text": "backoff t_k,\nk < 4"},
+      {"id": "store", "shape": "process", "text": "store key → resp"},
+      {"id": "done", "shape": "terminator", "text": "200 / err"}
+    ], "edges": [
+      {"from": "start", "to": "haskey"},
+      {"from": "haskey", "to": "rej", "label": "no"},
+      {"from": "haskey", "to": "seen", "label": "yes"},
+      {"from": "seen", "to": "replay", "label": "yes"},
+      {"from": "seen", "to": "call", "label": "no"},
+      {"from": "call", "to": "ok"},
+      {"from": "ok", "to": "retry", "label": "yes"},
+      {"from": "ok", "to": "store", "label": "no"},
+      {"from": "retry", "to": "call"},
+      {"from": "store", "to": "done"}
+    ]},
+    {"id": "box_dec", "type": "annotation", "kind": "box", "target": "dec_idem"},
+    {"id": "ul_jen", "type": "annotation", "kind": "underline", "target": "actions.r2"}
+  ]
+}

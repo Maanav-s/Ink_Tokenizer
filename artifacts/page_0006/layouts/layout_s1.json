@@ -1,0 +1,2619 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0006",
+ "layout_seed": 1,
+ "unit": "mm",
+ "page": {
+  "width": 1800.0,
+  "height": 1200.0,
+  "origin": "top-left",
+  "y_axis": "down"
+ },
+ "style": {
+  "h": 17.841,
+  "title": 21.701,
+  "heading": 18.642,
+  "subbullet": 15.793,
+  "note": 16.095,
+  "table": 17.503,
+  "diagram": 16.101,
+  "math": 19.355,
+  "line_gap": 1.612,
+  "block_gap": 1.025,
+  "col_gap": 2.799,
+  "margin_x": 58.484,
+  "margin_y": 18.888,
+  "indent": 1.703,
+  "dash": "*",
+  "numbered": "{}.",
+  "title_underline": false,
+  "title_center": false,
+  "heading_underline": true,
+  "table_style": "header",
+  "table_rules": "last",
+  "table_left_align": false,
+  "row_h": 1.826,
+  "cell_pad": 0.859,
+  "side_by_side": 0.526,
+  "fill": 0.589,
+  "multi_writer": false,
+  "correction_rate": 0.03,
+  "scale": 1.0,
+  "page_w": 1800.0,
+  "page_h": 1200.0,
+  "blocks": {
+   "backoff": {},
+   "backoff_sum": {},
+   "actions": {
+    "fill": "columns",
+    "rules": "last",
+    "style": "header"
+   },
+   "tl_h": {
+    "fill": "rows",
+    "rules": "last",
+    "style": "header"
+   }
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "title": {
+   "kind": "text",
+   "text": "Payments API - Sprint 15 plan + INC-412 retro",
+   "bbox": [
+    58.48,
+    18.89,
+    717.64,
+    40.59
+   ],
+   "text_height": 21.7,
+   "role": "title",
+   "bold": true,
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "meta": {
+   "kind": "text",
+   "text": "Tue 09/29 · Priya, Marco, Jen (SRE), Dev, Lin (PM) · 60 min",
+   "bbox": [
+    58.48,
+    58.88,
+    670.87,
+    74.98
+   ],
+   "text_height": 16.1,
+   "role": "note",
+   "element": "meta",
+   "writer": "writer_0"
+  },
+  "agenda.heading": {
+   "kind": "text",
+   "text": "Agenda",
+   "bbox": [
+    59.85,
+    93.27,
+    143.11,
+    111.91
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     58.48,
+     114.7
+    ],
+    [
+     148.35,
+     113.82
+    ]
+   ],
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.1.marker": {
+   "kind": "text",
+   "text": "1.",
+   "bbox": [
+    59.85,
+    133.07,
+    77.71,
+    150.91
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 0,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.1": {
+   "kind": "text",
+   "text": "INC-412 retro: dup charges on retry (~0.3% of txns)",
+   "bbox": [
+    84.29,
+    133.07,
+    664.43,
+    150.91
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.2.marker": {
+   "kind": "text",
+   "text": "2.",
+   "bbox": [
+    59.85,
+    161.83,
+    78.04,
+    179.67
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 1,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.2": {
+   "kind": "text",
+   "text": "Root cause + fix status",
+   "bbox": [
+    84.29,
+    161.83,
+    338.81,
+    179.67
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.3.marker": {
+   "kind": "text",
+   "text": "3.",
+   "bbox": [
+    59.85,
+    190.58,
+    77.71,
+    208.42
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 2,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.3": {
+   "kind": "text",
+   "text": "Sprint 15 scope / capacity (≈ 34 pts)",
+   "bbox": [
+    84.29,
+    190.58,
+    487.94,
+    208.42
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.4.marker": {
+   "kind": "text",
+   "text": "4.",
+   "bbox": [
+    59.85,
+    219.33,
+    77.71,
+    237.17
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "agenda",
+   "level": 0,
+   "index": 3,
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "agenda.4": {
+   "kind": "text",
+   "text": "Risks, open Qs → owners",
+   "bbox": [
+    84.29,
+    219.33,
+    343.01,
+    237.17
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "agenda",
+   "writer": "writer_0"
+  },
+  "inc.heading": {
+   "kind": "text",
+   "text": "INC-412 what happened",
+   "bbox": [
+    59.28,
+    255.47,
+    332.91,
+    274.11
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     58.48,
+     276.9
+    ],
+    [
+     334.41,
+     276.97
+    ]
+   ],
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    59.28,
+    295.27,
+    73.48,
+    313.11
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "inc",
+   "level": 0,
+   "index": 0,
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.1": {
+   "kind": "text",
+   "text": "PSP timeout 30s → client retried w/o idem key",
+   "bbox": [
+    79.72,
+    295.27,
+    579.51,
+    313.11
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.1.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    89.67,
+    322.77,
+    102.24,
+    338.57
+   ],
+   "text_height": 15.79,
+   "role": "list_marker",
+   "list": "inc",
+   "level": 1,
+   "index": 0,
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.1.1": {
+   "kind": "text",
+   "text": "2nd POST /charges → new charge_id",
+   "bbox": [
+    107.77,
+    322.77,
+    457.72,
+    338.57
+   ],
+   "text_height": 15.79,
+   "role": "subbullet",
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.1.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    89.67,
+    348.23,
+    102.24,
+    364.02
+   ],
+   "text_height": 15.79,
+   "role": "list_marker",
+   "list": "inc",
+   "level": 1,
+   "index": 1,
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.1.2": {
+   "kind": "text",
+   "text": "~1.2k dup charges, $48k refunded",
+   "bbox": [
+    107.77,
+    348.23,
+    429.15,
+    364.02
+   ],
+   "text_height": 15.79,
+   "role": "subbullet",
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    59.28,
+    374.93,
+    73.48,
+    392.77
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "inc",
+   "level": 0,
+   "index": 1,
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.2": {
+   "kind": "text",
+   "text": "detect: 47 min (alert on refund rate, not dup rate)",
+   "bbox": [
+    79.72,
+    374.93,
+    622.58,
+    392.77
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.3.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    59.28,
+    403.69,
+    73.48,
+    421.53
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "inc",
+   "level": 0,
+   "index": 2,
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "inc.3": {
+   "kind": "text",
+   "text": "mitigate: kill-switch on auto-retry, 14:52 UTC",
+   "bbox": [
+    79.72,
+    403.69,
+    566.49,
+    421.53
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "inc",
+   "writer": "writer_0"
+  },
+  "dec.heading": {
+   "kind": "text",
+   "text": "Decisions",
+   "bbox": [
+    59.04,
+    439.82,
+    162.32,
+    458.46
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     58.48,
+     461.26
+    ],
+    [
+     164.94,
+     462.15
+    ]
+   ],
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec_idem.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    59.04,
+    479.63,
+    73.24,
+    497.47
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "dec",
+   "level": 0,
+   "index": 0,
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec_idem": {
+   "kind": "text",
+   "text": "Idempotency-Key REQUIRED on POST /charges",
+   "bbox": [
+    79.48,
+    479.63,
+    609.41,
+    497.47
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec_idem.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    89.43,
+    507.13,
+    102.0,
+    522.92
+   ],
+   "text_height": 15.79,
+   "role": "list_marker",
+   "list": "dec",
+   "level": 1,
+   "index": 0,
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec_idem.1": {
+   "kind": "text",
+   "text": "store key → resp 24h (Redis + PG fallback)",
+   "bbox": [
+    107.53,
+    507.13,
+    525.84,
+    522.92
+   ],
+   "text_height": 15.79,
+   "role": "subbullet",
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec_idem.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    89.43,
+    532.58,
+    102.0,
+    548.37
+   ],
+   "text_height": 15.79,
+   "role": "list_marker",
+   "list": "dec",
+   "level": 1,
+   "index": 1,
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec_idem.2": {
+   "kind": "text",
+   "text": "same key + diff body → 422",
+   "bbox": [
+    107.53,
+    532.58,
+    378.87,
+    548.37
+   ],
+   "text_height": 15.79,
+   "role": "subbullet",
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    59.04,
+    559.28,
+    73.24,
+    577.13
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "dec",
+   "level": 0,
+   "index": 1,
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec.2": {
+   "kind": "text",
+   "text": "retry only on 5xx / timeout, max 4, exp backoff",
+   "bbox": [
+    79.48,
+    559.28,
+    596.04,
+    577.13
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec.3.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    59.04,
+    588.04,
+    73.24,
+    605.88
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "dec",
+   "level": 0,
+   "index": 2,
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "dec.3": {
+   "kind": "text",
+   "text": "v1 clients w/o key: grace until Sprint 17",
+   "bbox": [
+    79.48,
+    588.04,
+    507.77,
+    605.88
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "dec",
+   "writer": "writer_0"
+  },
+  "backoff": {
+   "kind": "math",
+   "latex": "t_k = 200\\,\\mathrm{ms} \\cdot 2^{k}",
+   "bbox": [
+    58.48,
+    624.17,
+    218.52,
+    649.1
+   ],
+   "baseline": 642.62,
+   "text_height": 19.35,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "backoff",
+   "writer": "writer_0"
+  },
+  "backoff_sum": {
+   "kind": "math",
+   "latex": "\\sum_{k=0}^{3} t_k = 3000\\,\\mathrm{ms} \\le 30\\,\\mathrm{s}",
+   "bbox": [
+    720.81,
+    62.54,
+    956.62,
+    118.78
+   ],
+   "baseline": 94.91,
+   "text_height": 19.35,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "backoff_sum",
+   "writer": "writer_0"
+  },
+  "risks.heading": {
+   "kind": "text",
+   "text": "Risks",
+   "bbox": [
+    722.31,
+    137.07,
+    778.32,
+    155.71
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     720.81,
+     158.51
+    ],
+    [
+     783.84,
+     159.32
+    ]
+   ],
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    722.31,
+    176.87,
+    736.51,
+    194.72
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 0,
+   "index": 0,
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.1": {
+   "kind": "text",
+   "text": "Redis eviction → key lost → dup possible",
+   "bbox": [
+    742.76,
+    176.87,
+    1160.24,
+    194.72
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.1.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    752.7,
+    204.37,
+    765.27,
+    220.17
+   ],
+   "text_height": 15.79,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 1,
+   "index": 0,
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.1.1": {
+   "kind": "text",
+   "text": "mitigation: PG unique idx on (merchant, key)",
+   "bbox": [
+    770.8,
+    204.37,
+    1190.25,
+    220.17
+   ],
+   "text_height": 15.79,
+   "role": "subbullet",
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    722.31,
+    231.08,
+    736.51,
+    248.92
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 0,
+   "index": 1,
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.2": {
+   "kind": "text",
+   "text": "p99 latency +Δ ≈ 8 ms per key lookup?",
+   "bbox": [
+    742.76,
+    231.08,
+    1160.57,
+    248.92
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.3.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    722.31,
+    259.83,
+    736.51,
+    277.67
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "risks",
+   "level": 0,
+   "index": 2,
+   "element": "risks",
+   "writer": "writer_0"
+  },
+  "risks.3": {
+   "kind": "text",
+   "text": "big merchants on old SDK (≥ 40% vol)",
+   "bbox": [
+    742.76,
+    259.83,
+    1172.86,
+    277.67
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "risks",
+   "corrections": [
+    {
+     "index": 29,
+     "wrong": "2",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "openq.heading": {
+   "kind": "text",
+   "text": "Open Qs",
+   "bbox": [
+    1241.32,
+    137.07,
+    1332.87,
+    155.71
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     1240.19,
+     158.51
+    ],
+    [
+     1334.15,
+     158.17
+    ]
+   ],
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.1.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    1241.32,
+    176.87,
+    1255.52,
+    194.72
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "openq",
+   "level": 0,
+   "index": 0,
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.1": {
+   "kind": "text",
+   "text": "key TTL 24h vs 72h? (PSP settles T+2)",
+   "bbox": [
+    1261.77,
+    176.87,
+    1688.6,
+    194.72
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.2.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    1241.32,
+    205.63,
+    1255.52,
+    223.47
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "openq",
+   "level": 0,
+   "index": 1,
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.2": {
+   "kind": "text",
+   "text": "retry on 409 from PSP? → ask PSP",
+   "bbox": [
+    1261.77,
+    205.63,
+    1650.11,
+    223.47
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.3.marker": {
+   "kind": "text",
+   "text": "*",
+   "bbox": [
+    1241.32,
+    234.38,
+    1255.52,
+    252.22
+   ],
+   "text_height": 17.84,
+   "role": "list_marker",
+   "list": "openq",
+   "level": 0,
+   "index": 2,
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "openq.3": {
+   "kind": "text",
+   "text": "who owns dup-rate alert? SRE or payments?",
+   "bbox": [
+    1261.77,
+    234.38,
+    1743.68,
+    252.22
+   ],
+   "text_height": 17.84,
+   "role": "bullet",
+   "element": "openq",
+   "writer": "writer_0"
+  },
+  "actions.h0": {
+   "kind": "text",
+   "text": "Who",
+   "bbox": [
+    666.78,
+    292.54,
+    712.59,
+    310.04
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.h1": {
+   "kind": "text",
+   "text": "Task",
+   "bbox": [
+    754.91,
+    292.54,
+    800.68,
+    310.04
+   ],
+   "text_height": 17.5,
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.h2": {
+   "kind": "text",
+   "text": "Due",
+   "bbox": [
+    1143.21,
+    292.54,
+    1185.23,
+    310.04
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r0c0": {
+   "kind": "text",
+   "text": "Marco",
+   "bbox": [
+    654.55,
+    324.5,
+    724.82,
+    342.0
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r1c0": {
+   "kind": "text",
+   "text": "Priya",
+   "bbox": [
+    662.61,
+    356.46,
+    716.75,
+    373.96
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r2c0": {
+   "kind": "text",
+   "text": "Jen",
+   "bbox": [
+    671.84,
+    388.42,
+    707.53,
+    405.92
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r3c0": {
+   "kind": "text",
+   "text": "Dev",
+   "bbox": [
+    669.39,
+    420.38,
+    709.98,
+    437.89
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 0,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r4c0": {
+   "kind": "text",
+   "text": "Lin",
+   "bbox": [
+    675.23,
+    452.34,
+    704.14,
+    469.85
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 0,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r0c1": {
+   "kind": "text",
+   "text": "idem-key middleware + 422 path",
+   "bbox": [
+    754.91,
+    324.5,
+    1102.06,
+    342.0
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r1c1": {
+   "kind": "text",
+   "text": "PG unique idx + migration",
+   "bbox": [
+    754.91,
+    356.46,
+    1030.26,
+    373.96
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r2c1": {
+   "kind": "text",
+   "text": "alert: dup charge rate > 0.05%",
+   "bbox": [
+    754.91,
+    388.42,
+    1076.62,
+    405.92
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r3c1": {
+   "kind": "text",
+   "text": "SDK v2.3: auto-gen idem key",
+   "bbox": [
+    754.91,
+    420.38,
+    1062.96,
+    437.89
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 3,
+   "col": 1,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r4c1": {
+   "kind": "text",
+   "text": "merchant comms re: key reqd",
+   "bbox": [
+    754.91,
+    452.34,
+    1067.02,
+    469.85
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 4,
+   "col": 1,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r0c2": {
+   "kind": "text",
+   "text": "10/09",
+   "bbox": [
+    1132.32,
+    324.5,
+    1196.12,
+    342.0
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r1c2": {
+   "kind": "text",
+   "text": "10/07",
+   "bbox": [
+    1132.32,
+    356.46,
+    1196.12,
+    373.96
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 2,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r2c2": {
+   "kind": "text",
+   "text": "10/02",
+   "bbox": [
+    1132.15,
+    388.42,
+    1196.29,
+    405.92
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 2,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r3c2": {
+   "kind": "text",
+   "text": "10/14",
+   "bbox": [
+    1132.33,
+    420.38,
+    1196.11,
+    437.89
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 2,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.r4c2": {
+   "kind": "text",
+   "text": "10/05",
+   "bbox": [
+    1132.32,
+    452.34,
+    1196.12,
+    469.85
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 2,
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "actions.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     638.48,
+     317.8
+    ],
+    [
+     1212.32,
+     317.8
+    ]
+   ],
+   "role": "rule",
+   "element": "actions",
+   "writer": "writer_0"
+  },
+  "tl_h": {
+   "kind": "text",
+   "text": "Rollout timeline",
+   "bbox": [
+    638.89,
+    488.14,
+    805.89,
+    506.78
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "tl_h",
+   "writer": "writer_0"
+  },
+  "tl_h.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     638.48,
+     509.58
+    ],
+    [
+     808.92,
+     509.51
+    ]
+   ],
+   "element": "tl_h",
+   "writer": "writer_0"
+  },
+  "timeline.h1": {
+   "kind": "text",
+   "text": "Sprint 15",
+   "bbox": [
+    811.56,
+    518.5,
+    906.73,
+    536.0
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.h2": {
+   "kind": "text",
+   "text": "Sprint 16",
+   "bbox": [
+    936.81,
+    518.5,
+    1032.49,
+    536.0
+   ],
+   "text_height": 17.5,
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.h3": {
+   "kind": "text",
+   "text": "Sprint 17",
+   "bbox": [
+    1074.94,
+    518.5,
+    1170.1,
+    536.0
+   ],
+   "text_height": 17.5,
+   "role": "header_cell",
+   "row": "header",
+   "col": 3,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.h4": {
+   "kind": "text",
+   "text": "Sprint 18",
+   "bbox": [
+    1253.85,
+    518.5,
+    1349.28,
+    536.0
+   ],
+   "text_height": 17.5,
+   "role": "header_cell",
+   "row": "header",
+   "col": 4,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r0c0": {
+   "kind": "text",
+   "text": "idem keys",
+   "bbox": [
+    658.43,
+    550.46,
+    759.31,
+    567.96
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r0c1": {
+   "kind": "text",
+   "text": "build",
+   "bbox": [
+    836.12,
+    550.46,
+    882.16,
+    567.96
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r0c2": {
+   "kind": "text",
+   "text": "canary 5%",
+   "bbox": [
+    936.81,
+    550.46,
+    1044.85,
+    567.96
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r0c3": {
+   "kind": "text",
+   "text": "100%",
+   "bbox": [
+    1074.94,
+    550.46,
+    1129.16,
+    567.96
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 0,
+   "col": 3,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r0c4": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    1253.85,
+    550.46,
+    1270.1,
+    567.96
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 0,
+   "col": 4,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r1c0": {
+   "kind": "text",
+   "text": "SDK v2.3",
+   "bbox": [
+    658.43,
+    582.42,
+    756.19,
+    599.92
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r1c1": {
+   "kind": "text",
+   "text": "dev",
+   "bbox": [
+    842.35,
+    582.42,
+    875.93,
+    599.92
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r1c2": {
+   "kind": "text",
+   "text": "beta",
+   "bbox": [
+    936.81,
+    582.42,
+    979.94,
+    599.92
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 1,
+   "col": 2,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r1c3": {
+   "kind": "text",
+   "text": "GA",
+   "bbox": [
+    1074.94,
+    582.42,
+    1111.73,
+    599.92
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 1,
+   "col": 3,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r1c4": {
+   "kind": "text",
+   "text": "deprecate v1",
+   "bbox": [
+    1253.85,
+    582.42,
+    1386.13,
+    599.92
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 1,
+   "col": 4,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r2c0": {
+   "kind": "text",
+   "text": "key enforce",
+   "bbox": [
+    658.43,
+    614.38,
+    781.47,
+    631.88
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r2c1": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    851.02,
+    614.38,
+    867.27,
+    631.88
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r2c2": {
+   "kind": "text",
+   "text": "warn hdr",
+   "bbox": [
+    936.81,
+    614.38,
+    1029.63,
+    631.88
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 2,
+   "col": 2,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r2c3": {
+   "kind": "text",
+   "text": "422 if missing",
+   "bbox": [
+    1074.94,
+    614.38,
+    1223.77,
+    631.88
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 2,
+   "col": 3,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r2c4": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    1253.85,
+    614.38,
+    1270.1,
+    631.88
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 2,
+   "col": 4,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r3c0": {
+   "kind": "text",
+   "text": "postmortem",
+   "bbox": [
+    658.43,
+    646.34,
+    779.83,
+    663.84
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 3,
+   "col": 0,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r3c1": {
+   "kind": "text",
+   "text": "draft",
+   "bbox": [
+    832.3,
+    646.34,
+    885.99,
+    663.84
+   ],
+   "text_height": 17.5,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 1,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r3c2": {
+   "kind": "text",
+   "text": "review",
+   "bbox": [
+    936.81,
+    646.34,
+    1000.01,
+    663.84
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 3,
+   "col": 2,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r3c3": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    1074.94,
+    646.34,
+    1091.19,
+    663.84
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 3,
+   "col": 3,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.r3c4": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    1253.85,
+    646.34,
+    1270.1,
+    663.84
+   ],
+   "text_height": 17.5,
+   "role": "cell",
+   "row": 3,
+   "col": 4,
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "timeline.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     638.48,
+     543.75
+    ],
+    [
+     1403.56,
+     543.75
+    ]
+   ],
+   "role": "rule",
+   "element": "timeline",
+   "writer": "writer_0"
+  },
+  "flow_h": {
+   "kind": "text",
+   "text": "Retry / idempotency logic",
+   "bbox": [
+    639.51,
+    682.13,
+    1078.22,
+    700.78
+   ],
+   "text_height": 18.64,
+   "role": "heading",
+   "element": "flow_h",
+   "corrections": [
+    {
+     "index": 8,
+     "wrong": "ideempotency",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "flow_h.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     638.48,
+     703.57
+    ],
+    [
+     929.76,
+     704.0
+    ]
+   ],
+   "element": "flow_h",
+   "writer": "writer_0"
+  },
+  "flow.start.box": {
+   "kind": "ellipse",
+   "bbox": [
+    638.48,
+    712.92,
+    868.19,
+    751.57
+   ],
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.start.text": {
+   "kind": "text",
+   "text": "POST /charges",
+   "bbox": [
+    679.76,
+    725.16,
+    826.91,
+    741.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.haskey.box": {
+   "kind": "diamond",
+   "bbox": [
+    662.74,
+    780.9,
+    843.94,
+    883.59
+   ],
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.haskey.text.0": {
+   "kind": "text",
+   "text": "Idem key",
+   "bbox": [
+    709.27,
+    813.65,
+    797.41,
+    829.76
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.haskey.text.1": {
+   "kind": "text",
+   "text": "present?",
+   "bbox": [
+    713.6,
+    836.67,
+    793.08,
+    852.77
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e1.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     753.34,
+     751.57
+    ],
+    [
+     753.34,
+     780.9
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "start",
+   "to": "haskey",
+   "writer": "writer_0"
+  },
+  "flow.e3.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     843.94,
+     832.24
+    ],
+    [
+     919.59,
+     832.24
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "haskey",
+   "to": "seen",
+   "writer": "writer_0"
+  },
+  "flow.e3.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    852.8,
+    838.69,
+    883.43,
+    854.79
+   ],
+   "text_height": 16.1,
+   "element": "flow",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "flow.rej.box": {
+   "kind": "parallelogram",
+   "bbox": [
+    670.24,
+    927.15,
+    836.44,
+    967.34
+   ],
+   "skew": 18.9823321629244,
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.rej.text": {
+   "kind": "text",
+   "text": "400 key reqd",
+   "bbox": [
+    690.78,
+    940.16,
+    815.9,
+    956.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e2.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     753.34,
+     883.59
+    ],
+    [
+     753.34,
+     927.15
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "haskey",
+   "to": "rej",
+   "writer": "writer_0"
+  },
+  "flow.e2.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    722.63,
+    892.45,
+    744.48,
+    908.55
+   ],
+   "text_height": 16.1,
+   "element": "flow",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "flow.seen.box": {
+   "kind": "diamond",
+   "bbox": [
+    919.59,
+    806.38,
+    1107.09,
+    858.11
+   ],
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.seen.text": {
+   "kind": "text",
+   "text": "key seen?",
+   "bbox": [
+    967.54,
+    825.16,
+    1059.13,
+    841.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.replay.box": {
+   "kind": "parallelogram",
+   "bbox": [
+    918.77,
+    915.65,
+    1107.91,
+    978.84
+   ],
+   "skew": 29.85298878747241,
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.replay.text.0": {
+   "kind": "text",
+   "text": "return stored",
+   "bbox": [
+    950.18,
+    928.65,
+    1076.5,
+    944.76
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.replay.text.1": {
+   "kind": "text",
+   "text": "resp",
+   "bbox": [
+    993.15,
+    951.67,
+    1033.53,
+    967.77
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e4.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1013.34,
+     858.11
+    ],
+    [
+     1013.34,
+     915.65
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "seen",
+   "to": "replay",
+   "writer": "writer_0"
+  },
+  "flow.e4.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    973.85,
+    866.96,
+    1004.48,
+    883.06
+   ],
+   "text_height": 16.1,
+   "element": "flow",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "flow.call.box": {
+   "kind": "rect",
+   "bbox": [
+    1244.47,
+    812.15,
+    1352.2,
+    852.34
+   ],
+   "corner_radius": 4.025356572721225,
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.call.text": {
+   "kind": "text",
+   "text": "call PSP",
+   "bbox": [
+    1257.61,
+    825.16,
+    1339.07,
+    841.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e5.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1107.09,
+     832.24
+    ],
+    [
+     1244.47,
+     832.24
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "seen",
+   "to": "call",
+   "writer": "writer_0"
+  },
+  "flow.e5.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    1115.94,
+    838.69,
+    1137.79,
+    854.79
+   ],
+   "text_height": 16.1,
+   "element": "flow",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "flow.ok.box": {
+   "kind": "diamond",
+   "bbox": [
+    1159.08,
+    921.38,
+    1437.6,
+    973.11
+   ],
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.ok.text": {
+   "kind": "text",
+   "text": "5xx / timeout?",
+   "bbox": [
+    1227.58,
+    940.16,
+    1369.1,
+    956.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e6.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1298.34,
+     852.34
+    ],
+    [
+     1298.34,
+     921.38
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "call",
+   "to": "ok",
+   "writer": "writer_0"
+  },
+  "flow.e7.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1298.34,
+     973.11
+    ],
+    [
+     1298.34,
+     1010.65
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "ok",
+   "to": "retry",
+   "writer": "writer_0"
+  },
+  "flow.e7.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    1258.85,
+    981.96,
+    1289.48,
+    998.06
+   ],
+   "text_height": 16.1,
+   "element": "flow",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "flow.retry.box": {
+   "kind": "rect",
+   "bbox": [
+    1225.69,
+    1010.65,
+    1370.99,
+    1073.84
+   ],
+   "corner_radius": 4.025356572721225,
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.retry.text.0": {
+   "kind": "text",
+   "text": "backoff t_k,",
+   "bbox": [
+    1238.82,
+    1023.65,
+    1357.85,
+    1039.76
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.retry.text.1": {
+   "kind": "text",
+   "text": "k < 4",
+   "bbox": [
+    1271.6,
+    1046.67,
+    1325.08,
+    1062.77
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e9.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1225.69,
+     1042.24
+    ],
+    [
+     1148.34,
+     1042.24
+    ],
+    [
+     1148.34,
+     867.24
+    ],
+    [
+     1273.34,
+     867.24
+    ],
+    [
+     1273.34,
+     852.34
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "retry",
+   "to": "call",
+   "writer": "writer_0"
+  },
+  "flow.store.box": {
+   "kind": "rect",
+   "bbox": [
+    1490.93,
+    927.15,
+    1675.75,
+    967.34
+   ],
+   "corner_radius": 4.025356572721225,
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.store.text": {
+   "kind": "text",
+   "text": "store key → resp",
+   "bbox": [
+    1504.06,
+    940.16,
+    1662.61,
+    956.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e8.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1437.6,
+     947.24
+    ],
+    [
+     1490.93,
+     947.24
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "ok",
+   "to": "store",
+   "writer": "writer_0"
+  },
+  "flow.e8.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    1446.46,
+    953.69,
+    1468.31,
+    969.79
+   ],
+   "text_height": 16.1,
+   "element": "flow",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "flow.done.box": {
+   "kind": "ellipse",
+   "bbox": [
+    1506.35,
+    1022.92,
+    1660.32,
+    1061.57
+   ],
+   "element": "flow",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "flow.done.text": {
+   "kind": "text",
+   "text": "200 / err",
+   "bbox": [
+    1535.88,
+    1035.16,
+    1630.8,
+    1051.26
+   ],
+   "text_height": 16.1,
+   "align": "center",
+   "element": "flow",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "flow.e10.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     1583.34,
+     967.34
+    ],
+    [
+     1583.34,
+     1022.92
+    ]
+   ],
+   "head": 6.25,
+   "element": "flow",
+   "role": "edge",
+   "from": "store",
+   "to": "done",
+   "writer": "writer_0"
+  },
+  "box_dec": {
+   "kind": "rect",
+   "bbox": [
+    56.18,
+    476.77,
+    612.27,
+    500.32
+   ],
+   "corner_radius": 5.3523328740813625,
+   "role": "annotation_box",
+   "element": "box_dec",
+   "target": "dec_idem",
+   "writer": "writer_0"
+  },
+  "ul_jen": {
+   "kind": "polyline",
+   "points": [
+    [
+     671.84,
+     412.17
+    ],
+    [
+     1196.29,
+     412.17
+    ]
+   ],
+   "role": "annotation_underline",
+   "element": "ul_jen",
+   "target": "actions.r2",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "title",
+  "meta",
+  "agenda.heading",
+  "agenda.heading.underline",
+  "agenda.1.marker",
+  "agenda.1",
+  "agenda.2.marker",
+  "agenda.2",
+  "agenda.3.marker",
+  "agenda.3",
+  "agenda.4.marker",
+  "agenda.4",
+  "inc.heading",
+  "inc.heading.underline",
+  "inc.1.marker",
+  "inc.1",
+  "inc.1.1.marker",
+  "inc.1.1",
+  "inc.1.2.marker",
+  "inc.1.2",
+  "inc.2.marker",
+  "inc.2",
+  "inc.3.marker",
+  "inc.3",
+  "dec.heading",
+  "dec.heading.underline",
+  "dec_idem.marker",
+  "dec_idem",
+  "dec_idem.1.marker",
+  "dec_idem.1",
+  "dec_idem.2.marker",
+  "dec_idem.2",
+  "dec.2.marker",
+  "dec.2",
+  "dec.3.marker",
+  "dec.3",
+  "backoff",
+  "backoff_sum",
+  "risks.heading",
+  "risks.heading.underline",
+  "risks.1.marker",
+  "risks.1",
+  "risks.1.1.marker",
+  "risks.1.1",
+  "risks.2.marker",
+  "risks.2",
+  "risks.3.marker",
+  "risks.3",
+  "openq.heading",
+  "openq.heading.underline",
+  "openq.1.marker",
+  "openq.1",
+  "openq.2.marker",
+  "openq.2",
+  "openq.3.marker",
+  "openq.3",
+  "actions.h0",
+  "actions.h1",
+  "actions.h2",
+  "actions.r0c0",
+  "actions.r1c0",
+  "actions.r2c0",
+  "actions.r3c0",
+  "actions.r4c0",
+  "actions.r0c1",
+  "actions.r1c1",
+  "actions.r2c1",
+  "actions.r3c1",
+  "actions.r4c1",
+  "actions.r0c2",
+  "actions.r1c2",
+  "actions.r2c2",
+  "ul_jen",
+  "actions.r3c2",
+  "actions.r4c2",
+  "actions.rule_h1",
+  "tl_h",
+  "tl_h.underline",
+  "timeline.h1",
+  "timeline.h2",
+  "timeline.h3",
+  "timeline.h4",
+  "timeline.r0c0",
+  "timeline.r0c1",
+  "timeline.r0c2",
+  "timeline.r0c3",
+  "timeline.r0c4",
+  "timeline.r1c0",
+  "timeline.r1c1",
+  "timeline.r1c2",
+  "timeline.r1c3",
+  "timeline.r1c4",
+  "timeline.r2c0",
+  "timeline.r2c1",
+  "timeline.r2c2",
+  "timeline.r2c3",
+  "timeline.r2c4",
+  "timeline.r3c0",
+  "timeline.r3c1",
+  "timeline.r3c2",
+  "timeline.r3c3",
+  "timeline.r3c4",
+  "timeline.rule_h1",
+  "flow_h",
+  "flow_h.underline",
+  "flow.start.box",
+  "flow.start.text",
+  "flow.haskey.box",
+  "flow.haskey.text.0",
+  "flow.haskey.text.1",
+  "flow.e1.arrow",
+  "flow.e3.arrow",
+  "flow.e3.label",
+  "flow.rej.box",
+  "flow.rej.text",
+  "flow.e2.arrow",
+  "flow.e2.label",
+  "flow.seen.box",
+  "flow.seen.text",
+  "flow.replay.box",
+  "flow.replay.text.0",
+  "flow.replay.text.1",
+  "flow.e4.arrow",
+  "flow.e4.label",
+  "flow.call.box",
+  "flow.call.text",
+  "flow.e5.arrow",
+  "flow.e5.label",
+  "flow.ok.box",
+  "flow.ok.text",
+  "flow.e6.arrow",
+  "flow.e7.arrow",
+  "flow.e7.label",
+  "flow.retry.box",
+  "flow.retry.text.0",
+  "flow.retry.text.1",
+  "flow.e9.arrow",
+  "flow.store.box",
+  "flow.store.text",
+  "flow.e8.arrow",
+  "flow.e8.label",
+  "flow.done.box",
+  "flow.done.text",
+  "flow.e10.arrow",
+  "box_dec"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "agenda",
+   "after": {
+    "id": "agenda.2"
+   },
+   "target": [
+    {
+     "id": "agenda.3.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_1",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "agenda",
+   "after": {
+    "id": "agenda.3"
+   },
+   "target": [
+    {
+     "id": "agenda.4.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_2",
+   "kind": "header_sequence",
+   "tier": "structural",
+   "element": "timeline",
+   "after": {
+    "id": "timeline.h2"
+   },
+   "target": [
+    {
+     "id": "timeline.h3"
+    },
+    {
+     "id": "timeline.h4"
+    }
+   ]
+  },
+  {
+   "id": "tgt_3",
+   "kind": "header_sequence",
+   "tier": "structural",
+   "element": "timeline",
+   "after": {
+    "id": "timeline.h3"
+   },
+   "target": [
+    {
+     "id": "timeline.h4"
+    }
+   ]
+  },
+  {
+   "id": "tgt_4",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "flow",
+   "after": {
+    "id": "flow.e3.label"
+   },
+   "target": [
+    {
+     "id": "flow.e2.label"
+    }
+   ]
+  },
+  {
+   "id": "tgt_5",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "flow",
+   "after": {
+    "id": "flow.e4.label"
+   },
+   "target": [
+    {
+     "id": "flow.e5.label"
+    }
+   ]
+  },
+  {
+   "id": "tgt_6",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "flow",
+   "after": {
+    "id": "flow.e7.label"
+   },
+   "target": [
+    {
+     "id": "flow.e8.label"
+    }
+   ]
+  }
+ ],
+ "layout_attempt": 10
+}

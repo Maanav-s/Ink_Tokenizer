@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink Demo</title>
+<style>
+  :root { --bg: #f6f6f4; --panel: #fff; --ink: #1b1b1b; --muted: #6b6b6b; --line: #d9d9d4; --accent: #2457c5; --suggestion: #1f6feb; --error: #b3261e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--ink); font: 15px/1.4 system-ui, sans-serif; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  canvas { display: block; width: 100%; height: 480px; border: 1px dashed var(--line); border-radius: 6px; touch-action: none; }
+  .controls { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  input[type=text] { flex: 1; min-width: 200px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+  input[type=text]:disabled { opacity: 0.5; }
+  .toggle { display: flex; align-items: center; gap: 6px; }
+  button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font: inherit; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .latex { margin-top: 8px; font-family: ui-monospace, monospace; font-size: 13px; min-height: 1.4em; word-break: break-all; }
+  #reply { color: var(--suggestion); }
+  #status { margin-top: 12px; color: var(--muted); min-height: 1.4em; }
+  #status.error { color: var(--error); }
+</style>
+</head>
+<body>
+<div class="box">
+  <canvas id="board"></canvas>
+  <div class="latex">read: <span id="read"></span></div>
+  <div class="latex">claude: <span id="reply"></span></div>
+</div>
+<div class="controls">
+  <label class="toggle"><input type="checkbox" id="autocomplete"> Autocomplete</label>
+  <input type="text" id="instruction" value="Simplify this expression.">
+  <button id="clear">Clear</button>
+  <button id="send" class="primary">Send</button>
+</div>
+<div id="status"></div>
+
+<script>
+const board = document.getElementById("board");
+const status = document.getElementById("status");
+const autocomplete = document.getElementById("autocomplete");
+const instruction = document.getElementById("instruction");
+autocomplete.onchange = () => { instruction.disabled = autocomplete.checked; };
+let strokes = [];
+let current = null;
+// {strokes, box}: the student's ink, drawn into the box Claude chose.
+let suggestion = null;
+
+function fit(canvas) {
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = canvas.clientWidth * ratio;
+  canvas.height = canvas.clientHeight * ratio;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.lineCap = ctx.lineJoin = "round";
+  ctx.lineWidth = 2.5;
+  return ctx;
+}
+
+function drawStrokes(ctx, list, transform = p => p) {
+  for (const stroke of list) {
+    ctx.beginPath();
+    const [x0, y0] = transform(stroke[0]);
+    ctx.moveTo(x0, y0);
+    if (stroke.length === 1) ctx.lineTo(x0 + 0.1, y0);
+    for (const p of stroke.slice(1)) ctx.lineTo(...transform(p));
+    ctx.stroke();
+  }
+}
+
+function bounds(list) {
+  const points = list.flat();
+  const xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+  return { left: Math.min(...xs), top: Math.min(...ys), right: Math.max(...xs), bottom: Math.max(...ys) };
+}
+
+// Scaled to the box's height only: Claude judges the line height from the writing well, but
+// cannot know how wide the student's ink comes out, and fitting the width shrank the symbols.
+// It starts at the box's left edge, so a right-hand side begins where Claude put it.
+function drawSuggestion(ctx, { strokes: list, box }) {
+  const ink = bounds(list);
+  const scale = (box.bottom - box.top) / (ink.bottom - ink.top || 1);
+  drawStrokes(ctx, list, ([x, y]) => [box.left + (x - ink.left) * scale, box.top + (y - ink.top) * scale]);
+}
+
+function redraw() {
+  const ctx = fit(board);
+  const style = getComputedStyle(document.body);
+  ctx.strokeStyle = style.color;
+  drawStrokes(ctx, strokes);
+  if (suggestion) {
+    ctx.strokeStyle = style.getPropertyValue("--suggestion");
+    drawSuggestion(ctx, suggestion);
+  }
+}
+
+function point(e) {
+  const r = board.getBoundingClientRect();
+  return [e.clientX - r.left, e.clientY - r.top];
+}
+
+board.addEventListener("pointerdown", e => {
+  board.setPointerCapture(e.pointerId);
+  // Writing on dismisses the suggestion, as typing past an autocomplete does.
+  suggestion = null;
+  current = [point(e)];
+  strokes.push(current);
+  redraw();
+});
+board.addEventListener("pointermove", e => {
+  if (!current) return;
+  const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  for (const ev of events) current.push(point(ev));
+  redraw();
+});
+const end = () => { current = null; };
+board.addEventListener("pointerup", end);
+board.addEventListener("pointercancel", end);
+
+document.getElementById("clear").onclick = () => {
+  strokes = [];
+  suggestion = null;
+  redraw();
+  document.getElementById("read").textContent = "";
+  document.getElementById("reply").textContent = "";
+  setStatus("");
+};
+
+function setStatus(text, error = false) {
+  status.textContent = text;
+  status.className = error ? "error" : "";
+}
+
+async function post(path, body) {
+  const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error);
+  return data;
+}
+
+document.getElementById("send").onclick = async () => {
+  if (!strokes.length) return;
+  const button = document.getElementById("send");
+  button.disabled = true;
+  suggestion = null;
+  redraw();
+  try {
+    setStatus("reading…");
+    const { latex } = await post("/api/read", { strokes });
+    document.getElementById("read").textContent = latex;
+    setStatus("asking Claude…");
+    const request = { latex, box: bounds(strokes), board: { width: board.clientWidth, height: board.clientHeight } };
+    if (!autocomplete.checked) request.instruction = instruction.value;
+    const reply = await post("/api/claude", request);
+    document.getElementById("reply").textContent = reply.latex;
+    if (!reply.latex) {
+      setStatus("no suggestion");
+      return;
+    }
+    setStatus("writing…");
+    const written = await post("/api/write", { latex: reply.latex });
+    suggestion = { strokes: written.strokes, box: reply.box };
+    redraw();
+    setStatus("");
+  } catch (err) {
+    setStatus(err.message, true);
+  } finally {
+    button.disabled = false;
+  }
+};
+
+window.addEventListener("resize", redraw);
+redraw();
+</script>
+</body>
+</html>

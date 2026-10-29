@@ -1,0 +1,2066 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0005",
+ "layout_seed": 2,
+ "unit": "mm",
+ "page": {
+  "width": 1200.0,
+  "height": 800.0,
+  "origin": "top-left",
+  "y_axis": "down"
+ },
+ "style": {
+  "h": 19.095,
+  "title": 23.145,
+  "heading": 20.131,
+  "subbullet": 17.112,
+  "note": 17.069,
+  "table": 18.022,
+  "diagram": 17.014,
+  "math": 19.23,
+  "line_gap": 1.727,
+  "block_gap": 1.174,
+  "col_gap": 2.698,
+  "margin_x": 35.907,
+  "margin_y": 31.004,
+  "indent": 1.722,
+  "dash": "-",
+  "numbered": "{}.",
+  "title_underline": false,
+  "title_center": true,
+  "heading_underline": false,
+  "table_style": "grid",
+  "table_rules": "after_header",
+  "table_left_align": false,
+  "row_h": 1.922,
+  "cell_pad": 0.851,
+  "side_by_side": 0.472,
+  "fill": 0.748,
+  "multi_writer": false,
+  "correction_rate": 0.06,
+  "scale": 1.0,
+  "page_w": 1200.0,
+  "page_h": 800.0,
+  "blocks": {
+   "h_mux": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "grid"
+   },
+   "eq_y": {},
+   "eq_y_nand": {},
+   "h_par": {}
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "title": {
+   "kind": "text",
+   "text": "Design review - 2:1 MUX + 4b even parity chk",
+   "bbox": [
+    267.91,
+    31.0,
+    932.09,
+    54.15
+   ],
+   "text_height": 23.14,
+   "role": "title",
+   "bold": true,
+   "element": "title",
+   "writer": "writer_0"
+  },
+  "h_mux": {
+   "kind": "text",
+   "text": "1) 2:1 MUX (S=0 → A, S=1 → B)",
+   "bbox": [
+    35.91,
+    76.57,
+    448.76,
+    96.7
+   ],
+   "text_height": 20.13,
+   "role": "heading",
+   "element": "h_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.h0": {
+   "kind": "text",
+   "text": "S",
+   "bbox": [
+    51.24,
+    116.61,
+    64.69,
+    134.63
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.h1": {
+   "kind": "text",
+   "text": "A",
+   "bbox": [
+    95.36,
+    116.61,
+    115.34,
+    134.63
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.h2": {
+   "kind": "text",
+   "text": "B",
+   "bbox": [
+    146.01,
+    116.61,
+    162.2,
+    134.63
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.h3": {
+   "kind": "text",
+   "text": "Y",
+   "bbox": [
+    192.86,
+    116.61,
+    207.66,
+    134.63
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.border": {
+   "kind": "rect",
+   "bbox": [
+    35.91,
+    106.25,
+    222.99,
+    464.68
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     146.07
+    ],
+    [
+     222.99,
+     146.07
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h2": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     185.9
+    ],
+    [
+     222.99,
+     185.9
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h3": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     225.72
+    ],
+    [
+     222.99,
+     225.72
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h4": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     265.55
+    ],
+    [
+     222.99,
+     265.55
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h5": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     305.37
+    ],
+    [
+     222.99,
+     305.37
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h6": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     345.2
+    ],
+    [
+     222.99,
+     345.2
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h7": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     385.03
+    ],
+    [
+     222.99,
+     385.03
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_h8": {
+   "kind": "polyline",
+   "points": [
+    [
+     35.91,
+     424.85
+    ],
+    [
+     222.99,
+     424.85
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     80.03,
+     106.25
+    ],
+    [
+     80.03,
+     464.68
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     130.67,
+     106.25
+    ],
+    [
+     130.67,
+     464.68
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.rule_c2": {
+   "kind": "polyline",
+   "points": [
+    [
+     177.53,
+     106.25
+    ],
+    [
+     177.53,
+     464.68
+    ]
+   ],
+   "role": "rule",
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r0c0": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    51.52,
+    156.43,
+    64.42,
+    174.46
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r0c1": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    98.9,
+    156.43,
+    111.8,
+    174.46
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r0c2": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    147.65,
+    156.43,
+    160.55,
+    174.46
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r0c3": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    193.81,
+    156.43,
+    206.71,
+    174.46
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r1c0": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    51.52,
+    196.26,
+    64.42,
+    214.28
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r1c1": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    98.9,
+    196.26,
+    111.8,
+    214.28
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r1c2": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    147.66,
+    196.26,
+    160.54,
+    214.28
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r1c3": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    193.81,
+    196.26,
+    206.71,
+    214.28
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r2c0": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    51.52,
+    236.08,
+    64.42,
+    254.11
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r2c1": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    98.91,
+    236.08,
+    111.79,
+    254.11
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r2c2": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    147.65,
+    236.08,
+    160.55,
+    254.11
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r2c3": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    193.82,
+    236.08,
+    206.7,
+    254.11
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r3c0": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    51.52,
+    275.91,
+    64.42,
+    293.93
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r3c1": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    98.91,
+    275.91,
+    111.79,
+    293.93
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r3c2": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    147.66,
+    275.91,
+    160.54,
+    293.93
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r3c3": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    193.82,
+    275.91,
+    206.7,
+    293.93
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 3,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r4c0": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    51.53,
+    315.74,
+    64.4,
+    333.76
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r4c1": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    98.9,
+    315.74,
+    111.8,
+    333.76
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r4c2": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    147.65,
+    315.74,
+    160.55,
+    333.76
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r4c3": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    193.81,
+    315.74,
+    206.71,
+    333.76
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 4,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r5c0": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    51.53,
+    355.56,
+    64.4,
+    373.58
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 5,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r5c1": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    98.9,
+    355.56,
+    111.8,
+    373.58
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 5,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r5c2": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    147.66,
+    355.56,
+    160.54,
+    373.58
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 5,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r5c3": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    193.82,
+    355.56,
+    206.7,
+    373.58
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 5,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r6c0": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    51.53,
+    395.39,
+    64.4,
+    413.41
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 6,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r6c1": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    98.91,
+    395.39,
+    111.79,
+    413.41
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 6,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r6c2": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    147.65,
+    395.39,
+    160.55,
+    413.41
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 6,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r6c3": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    193.81,
+    395.39,
+    206.71,
+    413.41
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 6,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r7c0": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    51.53,
+    435.21,
+    64.4,
+    453.23
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 7,
+   "col": 0,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r7c1": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    98.91,
+    435.21,
+    111.79,
+    453.23
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 7,
+   "col": 1,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r7c2": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    147.66,
+    435.21,
+    160.54,
+    453.23
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 7,
+   "col": 2,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "tt_mux.r7c3": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    193.82,
+    435.21,
+    206.7,
+    453.23
+   ],
+   "text_height": 18.02,
+   "align": "center",
+   "role": "cell",
+   "row": 7,
+   "col": 3,
+   "element": "tt_mux",
+   "writer": "writer_0"
+  },
+  "eq_y": {
+   "kind": "math",
+   "latex": "Y = \\overline{S}\\,A + S\\,B",
+   "bbox": [
+    500.28,
+    76.57,
+    643.98,
+    101.76
+   ],
+   "baseline": 92.92,
+   "text_height": 19.23,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "eq_y",
+   "writer": "writer_0"
+  },
+  "eq_y_nand": {
+   "kind": "math",
+   "latex": "= \\overline{\\overline{\\overline{S}\\,A} \\cdot \\overline{S\\,B}}",
+   "bbox": [
+    521.46,
+    119.7,
+    631.89,
+    144.7
+   ],
+   "baseline": 139.89,
+   "text_height": 19.23,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "eq_y_nand",
+   "writer": "writer_0"
+  },
+  "n_nand": {
+   "kind": "text",
+   "text": "NAND-only form → 4 gates (+1 inv on S)",
+   "bbox": [
+    500.28,
+    167.12,
+    943.03,
+    184.19
+   ],
+   "text_height": 17.07,
+   "role": "note",
+   "element": "n_nand",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pS": {
+   "kind": "pin",
+   "point": [
+    526.05,
+    230.43
+   ],
+   "radius": 2.65076520522425,
+   "element": "ckt_mux",
+   "role": "pin",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pS.label": {
+   "kind": "text",
+   "text": "S",
+   "bbox": [
+    506.44,
+    223.96,
+    519.15,
+    240.98
+   ],
+   "text_height": 17.01,
+   "align": "right",
+   "element": "ckt_mux",
+   "role": "pin_label",
+   "writer": "writer_0"
+  },
+  "ckt_mux.inv": {
+   "kind": "gate",
+   "gate": "not",
+   "bbox": [
+    571.05,
+    215.43,
+    601.05,
+    245.43
+   ],
+   "element": "ckt_mux",
+   "role": "gate",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w1": {
+   "kind": "wire",
+   "points": [
+    [
+     526.05,
+     230.43
+    ],
+    [
+     571.05,
+     230.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "S",
+   "from": "pS.y",
+   "to": "inv.a",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pB": {
+   "kind": "pin",
+   "point": [
+    526.05,
+    305.43
+   ],
+   "radius": 2.65076520522425,
+   "element": "ckt_mux",
+   "role": "pin",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pB.label": {
+   "kind": "text",
+   "text": "B",
+   "bbox": [
+    503.86,
+    298.96,
+    519.15,
+    315.98
+   ],
+   "text_height": 17.01,
+   "align": "right",
+   "element": "ckt_mux",
+   "role": "pin_label",
+   "writer": "writer_0"
+  },
+  "ckt_mux.g2": {
+   "kind": "gate",
+   "gate": "and2",
+   "bbox": [
+    571.05,
+    275.43,
+    616.05,
+    315.43
+   ],
+   "element": "ckt_mux",
+   "role": "gate",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w4": {
+   "kind": "wire",
+   "points": [
+    [
+     551.05,
+     230.43
+    ],
+    [
+     551.05,
+     285.43
+    ],
+    [
+     571.05,
+     285.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "S",
+   "from": "pS.y",
+   "to": "g2.a",
+   "dots": [
+    [
+     551.05,
+     230.43
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "ckt_mux.w5": {
+   "kind": "wire",
+   "points": [
+    [
+     526.05,
+     305.43
+    ],
+    [
+     571.05,
+     305.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "B",
+   "from": "pB.y",
+   "to": "g2.b",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pA.label": {
+   "kind": "text",
+   "text": "A",
+   "bbox": [
+    500.28,
+    253.96,
+    519.15,
+    270.98
+   ],
+   "text_height": 17.01,
+   "align": "right",
+   "element": "ckt_mux",
+   "role": "pin_label",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pA": {
+   "kind": "pin",
+   "point": [
+    526.05,
+    260.43
+   ],
+   "radius": 2.65076520522425,
+   "element": "ckt_mux",
+   "role": "pin",
+   "writer": "writer_0"
+  },
+  "ckt_mux.g1": {
+   "kind": "gate",
+   "gate": "and2",
+   "bbox": [
+    661.05,
+    220.43,
+    706.05,
+    260.43
+   ],
+   "element": "ckt_mux",
+   "role": "gate",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w2": {
+   "kind": "wire",
+   "points": [
+    [
+     601.05,
+     230.43
+    ],
+    [
+     661.05,
+     230.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "nS",
+   "from": "inv.y",
+   "to": "g1.a",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w3": {
+   "kind": "wire",
+   "points": [
+    [
+     526.05,
+     260.43
+    ],
+    [
+     621.05,
+     260.43
+    ],
+    [
+     621.05,
+     250.43
+    ],
+    [
+     661.05,
+     250.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "A",
+   "from": "pA.y",
+   "to": "g1.b",
+   "writer": "writer_0"
+  },
+  "ckt_mux.g3": {
+   "kind": "gate",
+   "gate": "or2",
+   "bbox": [
+    746.05,
+    265.43,
+    791.05,
+    305.43
+   ],
+   "element": "ckt_mux",
+   "role": "gate",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w6": {
+   "kind": "wire",
+   "points": [
+    [
+     706.05,
+     240.43
+    ],
+    [
+     726.05,
+     240.43
+    ],
+    [
+     726.05,
+     275.43
+    ],
+    [
+     746.05,
+     275.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "t1",
+   "from": "g1.y",
+   "to": "g3.a",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w7": {
+   "kind": "wire",
+   "points": [
+    [
+     616.05,
+     295.43
+    ],
+    [
+     746.05,
+     295.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "t2",
+   "from": "g2.y",
+   "to": "g3.b",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pY": {
+   "kind": "pin",
+   "point": [
+    826.05,
+    285.43
+   ],
+   "radius": 2.65076520522425,
+   "element": "ckt_mux",
+   "role": "pin",
+   "writer": "writer_0"
+  },
+  "ckt_mux.pY.label": {
+   "kind": "text",
+   "text": "Y",
+   "bbox": [
+    832.95,
+    278.96,
+    846.93,
+    295.98
+   ],
+   "text_height": 17.01,
+   "element": "ckt_mux",
+   "role": "pin_label",
+   "writer": "writer_0"
+  },
+  "ckt_mux.w8": {
+   "kind": "wire",
+   "points": [
+    [
+     791.05,
+     285.43
+    ],
+    [
+     826.05,
+     285.43
+    ]
+   ],
+   "element": "ckt_mux",
+   "role": "wire",
+   "net": "Y",
+   "from": "g3.y",
+   "to": "pY.a",
+   "writer": "writer_0"
+  },
+  "ckt_mux.lab_ns": {
+   "kind": "text",
+   "text": "S'",
+   "bbox": [
+    608.55,
+    206.61,
+    627.33,
+    223.62
+   ],
+   "text_height": 17.01,
+   "element": "ckt_mux",
+   "role": "net_label",
+   "writer": "writer_0"
+  },
+  "n_hazard": {
+   "kind": "text",
+   "text": "static-1 hazard when A=B=1, S toggles → add AB term?",
+   "bbox": [
+    500.28,
+    338.4,
+    1090.46,
+    355.47
+   ],
+   "text_height": 17.07,
+   "role": "note",
+   "element": "n_hazard",
+   "writer": "writer_0"
+  },
+  "h_par": {
+   "kind": "text",
+   "text": "2) 4b even-parity checker (b3..b0 incl. P bit)",
+   "bbox": [
+    500.28,
+    377.89,
+    1046.73,
+    398.02
+   ],
+   "text_height": 20.13,
+   "role": "heading",
+   "element": "h_par",
+   "writer": "writer_0"
+  },
+  "eq_e": {
+   "kind": "math",
+   "latex": "E = b_3 \\oplus b_2 \\oplus b_1 \\oplus b_0",
+   "bbox": [
+    500.28,
+    407.57,
+    711.4,
+    428.91
+   ],
+   "baseline": 424.1,
+   "text_height": 19.23,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "eq_e",
+   "writer": "writer_0"
+  },
+  "n_par1": {
+   "kind": "text",
+   "text": "E=1 → odd # of 1s → error flag",
+   "bbox": [
+    500.28,
+    451.33,
+    835.87,
+    468.4
+   ],
+   "text_height": 17.07,
+   "role": "note",
+   "element": "n_par1",
+   "writer": "writer_0"
+  },
+  "n_par2": {
+   "kind": "text",
+   "text": "tree of 3 XOR2: (b3⊕b2)⊕(b1⊕b0), depth 2 vs 3 chained",
+   "bbox": [
+    500.28,
+    490.82,
+    1082.83,
+    507.89
+   ],
+   "text_height": 17.07,
+   "role": "note",
+   "element": "n_par2",
+   "writer": "writer_0"
+  },
+  "n_par3": {
+   "kind": "text",
+   "text": "t_pd ≈ 2 × t_XOR ≈ 2 × 120 ps = 240 ps",
+   "bbox": [
+    500.28,
+    530.31,
+    927.23,
+    547.38
+   ],
+   "text_height": 17.07,
+   "role": "note",
+   "element": "n_par3",
+   "writer": "writer_0"
+  },
+  "next.heading": {
+   "kind": "text",
+   "text": "Next steps",
+   "bbox": [
+    500.28,
+    569.8,
+    626.28,
+    589.93
+   ],
+   "text_height": 20.13,
+   "role": "heading",
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns1.marker": {
+   "kind": "text",
+   "text": "1.",
+   "bbox": [
+    500.28,
+    614.89,
+    519.39,
+    633.99
+   ],
+   "text_height": 19.1,
+   "role": "list_marker",
+   "list": "next",
+   "level": 0,
+   "index": 0,
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns1": {
+   "kind": "text",
+   "text": "sim MUX vs TT (all 8 rows) - exhaustive",
+   "bbox": [
+    526.43,
+    614.89,
+    1004.11,
+    633.99
+   ],
+   "text_height": 19.1,
+   "role": "bullet",
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns2.marker": {
+   "kind": "text",
+   "text": "2.",
+   "bbox": [
+    500.28,
+    647.88,
+    519.75,
+    666.97
+   ],
+   "text_height": 19.1,
+   "role": "list_marker",
+   "list": "next",
+   "level": 0,
+   "index": 1,
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns2": {
+   "kind": "text",
+   "text": "decide: add AB hazard term? (async path only)",
+   "bbox": [
+    526.43,
+    647.88,
+    1070.13,
+    666.97
+   ],
+   "text_height": 19.1,
+   "role": "bullet",
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns3.marker": {
+   "kind": "text",
+   "text": "3.",
+   "bbox": [
+    500.28,
+    680.86,
+    519.39,
+    699.96
+   ],
+   "text_height": 19.1,
+   "role": "list_marker",
+   "list": "next",
+   "level": 0,
+   "index": 2,
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns3": {
+   "kind": "text",
+   "text": "parity: tree vs chain → check timing @ 500 MHz",
+   "bbox": [
+    526.43,
+    680.86,
+    1083.79,
+    699.96
+   ],
+   "text_height": 19.1,
+   "role": "bullet",
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns4.marker": {
+   "kind": "text",
+   "text": "4.",
+   "bbox": [
+    500.28,
+    713.85,
+    519.39,
+    732.94
+   ],
+   "text_height": 19.1,
+   "role": "list_marker",
+   "list": "next",
+   "level": 0,
+   "index": 3,
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ns4": {
+   "kind": "text",
+   "text": "write TB for parity: 16 vectors, inject 1-bit err",
+   "bbox": [
+    526.43,
+    713.85,
+    1071.38,
+    732.94
+   ],
+   "text_height": 19.1,
+   "role": "bullet",
+   "element": "next",
+   "writer": "writer_0"
+  },
+  "ul_e": {
+   "kind": "rect",
+   "bbox": [
+    498.18,
+    405.46,
+    713.5,
+    431.01
+   ],
+   "corner_radius": 0,
+   "role": "annotation_box",
+   "element": "ul_e",
+   "target": "eq_e",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "title",
+  "h_mux",
+  "tt_mux.h0",
+  "tt_mux.h1",
+  "tt_mux.h2",
+  "tt_mux.h3",
+  "tt_mux.border",
+  "tt_mux.rule_h1",
+  "tt_mux.rule_h2",
+  "tt_mux.rule_h3",
+  "tt_mux.rule_h4",
+  "tt_mux.rule_h5",
+  "tt_mux.rule_h6",
+  "tt_mux.rule_h7",
+  "tt_mux.rule_h8",
+  "tt_mux.rule_c0",
+  "tt_mux.rule_c1",
+  "tt_mux.rule_c2",
+  "tt_mux.r0c0",
+  "tt_mux.r0c1",
+  "tt_mux.r0c2",
+  "tt_mux.r0c3",
+  "tt_mux.r1c0",
+  "tt_mux.r1c1",
+  "tt_mux.r1c2",
+  "tt_mux.r1c3",
+  "tt_mux.r2c0",
+  "tt_mux.r2c1",
+  "tt_mux.r2c2",
+  "tt_mux.r2c3",
+  "tt_mux.r3c0",
+  "tt_mux.r3c1",
+  "tt_mux.r3c2",
+  "tt_mux.r3c3",
+  "tt_mux.r4c0",
+  "tt_mux.r4c1",
+  "tt_mux.r4c2",
+  "tt_mux.r4c3",
+  "tt_mux.r5c0",
+  "tt_mux.r5c1",
+  "tt_mux.r5c2",
+  "tt_mux.r5c3",
+  "tt_mux.r6c0",
+  "tt_mux.r6c1",
+  "tt_mux.r6c2",
+  "tt_mux.r6c3",
+  "tt_mux.r7c0",
+  "tt_mux.r7c1",
+  "tt_mux.r7c2",
+  "tt_mux.r7c3",
+  "eq_y",
+  "eq_y_nand",
+  "n_nand",
+  "ckt_mux.pS",
+  "ckt_mux.pS.label",
+  "ckt_mux.inv",
+  "ckt_mux.w1",
+  "ckt_mux.pB",
+  "ckt_mux.pB.label",
+  "ckt_mux.g2",
+  "ckt_mux.w4",
+  "ckt_mux.w5",
+  "ckt_mux.pA.label",
+  "ckt_mux.pA",
+  "ckt_mux.g1",
+  "ckt_mux.w2",
+  "ckt_mux.w3",
+  "ckt_mux.g3",
+  "ckt_mux.w6",
+  "ckt_mux.w7",
+  "ckt_mux.pY",
+  "ckt_mux.pY.label",
+  "ckt_mux.w8",
+  "ckt_mux.lab_ns",
+  "n_hazard",
+  "h_par",
+  "eq_e",
+  "n_par1",
+  "n_par2",
+  "n_par3",
+  "next.heading",
+  "ns1.marker",
+  "ns1",
+  "ns2.marker",
+  "ns2",
+  "ns3.marker",
+  "ns3",
+  "ns4.marker",
+  "ns4",
+  "ul_e"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r1c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r2c0"
+    },
+    {
+     "id": "tt_mux.r2c1"
+    },
+    {
+     "id": "tt_mux.r2c2"
+    }
+   ],
+   "span": "next"
+  },
+  {
+   "id": "tgt_1",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r1c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r2c0"
+    },
+    {
+     "id": "tt_mux.r2c1"
+    },
+    {
+     "id": "tt_mux.r2c2"
+    },
+    {
+     "id": "tt_mux.r3c0"
+    },
+    {
+     "id": "tt_mux.r3c1"
+    },
+    {
+     "id": "tt_mux.r3c2"
+    },
+    {
+     "id": "tt_mux.r4c0"
+    },
+    {
+     "id": "tt_mux.r4c1"
+    },
+    {
+     "id": "tt_mux.r4c2"
+    },
+    {
+     "id": "tt_mux.r5c0"
+    },
+    {
+     "id": "tt_mux.r5c1"
+    },
+    {
+     "id": "tt_mux.r5c2"
+    },
+    {
+     "id": "tt_mux.r6c0"
+    },
+    {
+     "id": "tt_mux.r6c1"
+    },
+    {
+     "id": "tt_mux.r6c2"
+    },
+    {
+     "id": "tt_mux.r7c0"
+    },
+    {
+     "id": "tt_mux.r7c1"
+    },
+    {
+     "id": "tt_mux.r7c2"
+    }
+   ],
+   "span": "remaining"
+  },
+  {
+   "id": "tgt_2",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r2c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r3c0"
+    },
+    {
+     "id": "tt_mux.r3c1"
+    },
+    {
+     "id": "tt_mux.r3c2"
+    }
+   ],
+   "span": "next"
+  },
+  {
+   "id": "tgt_3",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r2c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r3c0"
+    },
+    {
+     "id": "tt_mux.r3c1"
+    },
+    {
+     "id": "tt_mux.r3c2"
+    },
+    {
+     "id": "tt_mux.r4c0"
+    },
+    {
+     "id": "tt_mux.r4c1"
+    },
+    {
+     "id": "tt_mux.r4c2"
+    },
+    {
+     "id": "tt_mux.r5c0"
+    },
+    {
+     "id": "tt_mux.r5c1"
+    },
+    {
+     "id": "tt_mux.r5c2"
+    },
+    {
+     "id": "tt_mux.r6c0"
+    },
+    {
+     "id": "tt_mux.r6c1"
+    },
+    {
+     "id": "tt_mux.r6c2"
+    },
+    {
+     "id": "tt_mux.r7c0"
+    },
+    {
+     "id": "tt_mux.r7c1"
+    },
+    {
+     "id": "tt_mux.r7c2"
+    }
+   ],
+   "span": "remaining"
+  },
+  {
+   "id": "tgt_4",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r3c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r4c0"
+    },
+    {
+     "id": "tt_mux.r4c1"
+    },
+    {
+     "id": "tt_mux.r4c2"
+    }
+   ],
+   "span": "next"
+  },
+  {
+   "id": "tgt_5",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r3c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r4c0"
+    },
+    {
+     "id": "tt_mux.r4c1"
+    },
+    {
+     "id": "tt_mux.r4c2"
+    },
+    {
+     "id": "tt_mux.r5c0"
+    },
+    {
+     "id": "tt_mux.r5c1"
+    },
+    {
+     "id": "tt_mux.r5c2"
+    },
+    {
+     "id": "tt_mux.r6c0"
+    },
+    {
+     "id": "tt_mux.r6c1"
+    },
+    {
+     "id": "tt_mux.r6c2"
+    },
+    {
+     "id": "tt_mux.r7c0"
+    },
+    {
+     "id": "tt_mux.r7c1"
+    },
+    {
+     "id": "tt_mux.r7c2"
+    }
+   ],
+   "span": "remaining"
+  },
+  {
+   "id": "tgt_6",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r4c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r5c0"
+    },
+    {
+     "id": "tt_mux.r5c1"
+    },
+    {
+     "id": "tt_mux.r5c2"
+    }
+   ],
+   "span": "next"
+  },
+  {
+   "id": "tgt_7",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r4c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r5c0"
+    },
+    {
+     "id": "tt_mux.r5c1"
+    },
+    {
+     "id": "tt_mux.r5c2"
+    },
+    {
+     "id": "tt_mux.r6c0"
+    },
+    {
+     "id": "tt_mux.r6c1"
+    },
+    {
+     "id": "tt_mux.r6c2"
+    },
+    {
+     "id": "tt_mux.r7c0"
+    },
+    {
+     "id": "tt_mux.r7c1"
+    },
+    {
+     "id": "tt_mux.r7c2"
+    }
+   ],
+   "span": "remaining"
+  },
+  {
+   "id": "tgt_8",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r5c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r6c0"
+    },
+    {
+     "id": "tt_mux.r6c1"
+    },
+    {
+     "id": "tt_mux.r6c2"
+    }
+   ],
+   "span": "next"
+  },
+  {
+   "id": "tgt_9",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r5c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r6c0"
+    },
+    {
+     "id": "tt_mux.r6c1"
+    },
+    {
+     "id": "tt_mux.r6c2"
+    },
+    {
+     "id": "tt_mux.r7c0"
+    },
+    {
+     "id": "tt_mux.r7c1"
+    },
+    {
+     "id": "tt_mux.r7c2"
+    }
+   ],
+   "span": "remaining"
+  },
+  {
+   "id": "tgt_10",
+   "kind": "truth_table_inputs",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.r6c3"
+   },
+   "target": [
+    {
+     "id": "tt_mux.r7c0"
+    },
+    {
+     "id": "tt_mux.r7c1"
+    },
+    {
+     "id": "tt_mux.r7c2"
+    }
+   ],
+   "span": "next"
+  },
+  {
+   "id": "tgt_11",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "tt_mux",
+   "after": {
+    "id": "tt_mux.border"
+   },
+   "target": [
+    {
+     "id": "tt_mux.rule_h1"
+    },
+    {
+     "id": "tt_mux.rule_h2"
+    },
+    {
+     "id": "tt_mux.rule_h3"
+    },
+    {
+     "id": "tt_mux.rule_h4"
+    },
+    {
+     "id": "tt_mux.rule_h5"
+    },
+    {
+     "id": "tt_mux.rule_h6"
+    },
+    {
+     "id": "tt_mux.rule_h7"
+    },
+    {
+     "id": "tt_mux.rule_h8"
+    },
+    {
+     "id": "tt_mux.rule_c0"
+    },
+    {
+     "id": "tt_mux.rule_c1"
+    },
+    {
+     "id": "tt_mux.rule_c2"
+    }
+   ]
+  },
+  {
+   "id": "tgt_12",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "next",
+   "after": {
+    "id": "ns2"
+   },
+   "target": [
+    {
+     "id": "ns3.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_13",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "next",
+   "after": {
+    "id": "ns3"
+   },
+   "target": [
+    {
+     "id": "ns4.marker"
+    }
+   ],
+   "speculative": true
+  }
+ ],
+ "layout_attempt": 4
+}

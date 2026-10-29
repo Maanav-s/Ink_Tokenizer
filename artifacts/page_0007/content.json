@@ -1,0 +1,79 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0007",
+  "topic": "power budget and LED driver sizing for a battery sensor node",
+  "provenance": {"generator": "claude-opus-5-5 / content_prompt.md v1", "automated": true},
+  "elements": [
+    {"id": "title", "type": "text", "role": "title", "text": "Sensor node: power budget + LED sizing"},
+    {"id": "given", "type": "list", "style": "dash", "heading": "Given", "items": [
+      {"text": "V_BAT = 3.6 V (LiSOCl2, AA, 2400 mAh)"},
+      {"text": "LED red: V_F ≈ 2.0 V @ 2 mA"},
+      {"text": "ADC ref 1.8 V → need V_ADC < 1.8 V"},
+      {"text": "target life ≥ 5 yr"}
+    ]},
+    {"id": "h_div", "type": "text", "role": "heading", "text": "Batt sense divider"},
+    {"id": "m_vadc", "type": "math", "latex": "V_{ADC} = V_{BAT} \\cdot \\frac{R_2}{R_1 + R_2}", "text": "V_ADC = V_BAT*R2/(R1 + R2)", "defines": "V_ADC",
+     "check": {"vars": {"V_BAT": 3.6, "R1": 2e6, "R2": 1e6, "V_ADC": 1.2}}},
+    {"id": "m_vadc2", "type": "math", "latex": "= 3.6 \\cdot \\frac{1\\,M\\Omega}{2\\,M\\Omega + 1\\,M\\Omega}", "text": "= 3.6*1e6/(2e6 + 1e6)", "continues": "m_vadc",
+     "check": {"vars": {"V_BAT": 3.6, "R1": 2e6, "R2": 1e6}}},
+    {"id": "m_vadc3", "type": "math", "latex": "= 1.2\\,\\mathrm{V} < 1.8\\,\\mathrm{V}", "text": "= 1.2", "continues": "m_vadc2",
+     "check": {"vars": {}}},
+    {"id": "m_idiv", "type": "math", "latex": "I_{div} = \\frac{V_{BAT}}{R_1 + R_2} = \\frac{3.6}{3\\,M\\Omega} = 1.2\\,\\mu A", "text": "I_div = V_BAT/(R1 + R2) = 3.6/3e6 = 1.2e-6", "defines": "I_div",
+     "check": {"vars": {"V_BAT": 3.6, "R1": 2e6, "R2": 1e6, "I_div": 1.2e-6}}},
+    {"id": "m_noise", "type": "math", "latex": "v_n = \\sqrt{4 k T R_{th} B} \\approx 3.3\\,\\mu V", "text": "v_n = sqrt(4*k*T*R_th*B) = 3.32e-6", "defines": "v_n",
+     "check": {"vars": {"k": 1.380649e-23, "T": 300, "R1": 2e6, "R2": 1e6, "R_th": "R1*R2/(R1 + R2)", "B": 1000, "v_n": "sqrt(4*k*T*R_th*B)"}, "rel_tol": 0.01}},
+    {"id": "n_noise", "type": "text", "role": "note", "text": "R_th = R1||R2 ≈ 667 kΩ, B = 1 kHz → noise ok vs 1 LSB"},
+    {"id": "h_led", "type": "text", "role": "heading", "text": "LED current limit"},
+    {"id": "m_rled", "type": "math", "latex": "R_{LED} = \\frac{V_{BAT} - V_F}{I_{LED}}", "text": "R_LED = (V_BAT - V_F)/I_LED", "defines": "R_LED",
+     "check": {"vars": {"V_BAT": 3.6, "V_F": 2.0, "I_LED": 0.002, "R_LED": 800}}},
+    {"id": "m_rled2", "type": "math", "latex": "= \\frac{3.6 - 2.0}{2\\,mA} = 800\\,\\Omega", "text": "= (3.6 - 2.0)/0.002 = 800", "continues": "m_rled",
+     "check": {"vars": {"V_BAT": 3.6, "V_F": 2.0, "I_LED": 0.002}}},
+    {"id": "n_e12", "type": "text", "role": "note", "text": "→ pick 820 Ω (E12), I a bit lower = fine"},
+    {"id": "m_iled", "type": "math", "latex": "I_{LED} = \\frac{1.6\\,V}{820\\,\\Omega} \\approx 1.95\\,mA", "text": "I_LED = 1.6/820 = 0.00195", "defines": "I_LED",
+     "check": {"vars": {"I_LED": "1.6/820"}, "rel_tol": 0.01}},
+    {"id": "m_pr", "type": "math", "latex": "P_R = I_{LED}^2 R_{LED} \\approx 3.1\\,mW", "text": "P_R = I_LED**2*R_LED = 0.00312", "defines": "P_R",
+     "check": {"vars": {"I_LED": "1.6/820", "R_LED": 820, "P_R": "I_LED**2*R_LED"}, "rel_tol": 0.01}},
+    {"id": "sch", "type": "schematic",
+     "components": [
+       {"id": "B1", "type": "battery", "label": "$V_{BAT}$", "value": "3.6 V", "at": [0, 1], "orient": "v"},
+       {"id": "R1", "type": "resistor", "label": "$R_1$", "value": "2 MΩ", "at": [1, 0], "orient": "v"},
+       {"id": "R2", "type": "resistor", "label": "$R_2$", "value": "1 MΩ", "at": [1, 2], "orient": "v"},
+       {"id": "ADC", "type": "terminal", "label": "ADC", "at": [2, 1]},
+       {"id": "RL", "type": "resistor", "label": "$R_{LED}$", "value": "820 Ω", "at": [3, 0], "orient": "v"},
+       {"id": "D1", "type": "diode", "label": "LED", "at": [3, 1], "orient": "v"},
+       {"id": "GPIO", "type": "terminal", "label": "GPIO (sink)", "at": [3, 2]},
+       {"id": "G1", "type": "ground", "at": [1, 3]}
+     ],
+     "nets": [
+       {"id": "vbat", "connects": ["B1.a", "R1.a", "RL.a"]},
+       {"id": "vmid", "connects": ["R1.b", "R2.a", "ADC.a"]},
+       {"id": "led_a", "connects": ["RL.b", "D1.a"]},
+       {"id": "led_k", "connects": ["D1.b", "GPIO.a"]},
+       {"id": "gnd", "connects": ["B1.b", "R2.b", "G1.a"]}
+     ]},
+    {"id": "h_budget", "type": "text", "role": "heading", "text": "Current draw per mode"},
+    {"id": "t_budget", "type": "table", "kind": "power_budget", "header": ["mode", "I", "duty", "avg"], "rows": [
+      ["sleep", "2.5 μA", "99.0%", "2.48 μA"],
+      ["sense", "1.5 mA", "0.5%", "7.5 μA"],
+      ["radio TX", "18 mA", "0.1%", "18 μA"],
+      ["LED blink", "2 mA", "0.4%", "8 μA"],
+      ["divider", "1.2 μA", "100%", "1.2 μA"]
+    ]},
+    {"id": "m_iavg", "type": "math", "latex": "I_{avg} = \\sum_{k} I_k D_k = 2.48 + 7.5 + 18 + 8 + 1.2", "text": "I_avg = 2.5*0.99 + 1500*0.005 + 18000*0.001 + 2000*0.004 + 1.2*1.0", "defines": "I_avg",
+     "check": {"vars": {"I_avg": 37.175}}},
+    {"id": "m_iavg2", "type": "math", "latex": "= 37.2\\,\\mu A", "text": "= 37.2", "continues": "m_iavg",
+     "check": {"vars": {}, "rel_tol": 0.01}},
+    {"id": "m_life", "type": "math", "latex": "t = \\frac{C}{I_{avg}} = \\frac{2400\\,mAh}{37.2\\,\\mu A}", "text": "t = C/I_avg = 2400/0.0372", "defines": "t",
+     "check": {"vars": {"C": 2400, "I_avg": 0.0372, "t": "C/I_avg"}}},
+    {"id": "m_life2", "type": "math", "latex": "= \\boxed{6.45 \\times 10^4\\,h \\approx 7.4\\,yr}", "text": "= 64500 = 7.36*8760", "continues": "m_life",
+     "check": {"vars": {}, "rel_tol": 0.01}},
+    {"id": "notes", "type": "list", "style": "dash", "heading": "Notes", "items": [
+      {"id": "n_tx", "text": "TX ≈ 48% of I_avg → batch packets?"},
+      {"text": "derate C -20% for cold → ≈ 5.9 yr, still ≥ 5 yr"},
+      {"text": "3 MΩ divider: add 100 nF at ADC pin?"},
+      {"text": "LED dimmer? 1 mA → R ≈ 1.6 kΩ"}
+    ]},
+    {"id": "a_tx", "type": "annotation", "kind": "arrow", "from": "n_tx", "to": "t_budget.r2"},
+    {"id": "a_rl", "type": "annotation", "kind": "underline", "target": "n_e12"}
+  ]
+}
