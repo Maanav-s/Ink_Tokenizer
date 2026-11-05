@@ -1,7 +1,8 @@
 r"""Train the ink-to-LaTeX recognizer (scripts/recognizer_model.py) on a
 MathWriting corpus (scripts/mathwriting_corpus.py, or font_corpus.py's, whose
 rendered inks it reads like any other: `\typeset{label}` is trained on
-`label`).
+`label`), or on IAMonDo's handwritten text lines (scripts/iamondo_corpus.py).
+Labels are split with the corpus's own tokenizer.
 
 On a font corpus built over the mixed corpus (font_corpus.py --base
 data/mixed_corpus), it also reads the teacher's plain text. Those lines keep
@@ -13,18 +14,19 @@ transform and point jitter, so it reads the shape rather than one writer's
 proportions.
 
 Every --eval-every steps each validation source is evaluated on its own:
-human math (`val_*`), teacher text (`val_text_*`) and font renders of
+human ink (`val_*`: MathWriting's math or IAMonDo's text), teacher text (`val_text_*`) and font renders of
 MathWriting's valid labels (`val_font_*`, from font_corpus.py's
 font_valid.npz). Each gets the losses, then --read-lines inks read greedily
 for the token error rate (edit distance / label tokens) and the fraction read
 exactly, and its --worst worst reads are drawn into <run-dir>/reads/ and W&B.
-The rate on human math is how far it can be trusted as a judge of generated
+The rate on human ink is how far it can be trusted as a judge of generated
 ink.
 
 The run directory, resuming and W&B work as in scripts/train_flow.py.
 
 Usage: python scripts/train_recognizer.py --run-dir models/recognizer/<name>
-           [--corpus data/font_corpus | data/font_mixed_corpus] [--steps 100000] [--max-points 65536]
+           [--corpus data/font_corpus | data/font_mixed_corpus | data/iamondo_corpus] [--steps 100000]
+           [--max-points 65536]
            [--wandb-project P [--wandb-entity E] [--artifact none]]
 """
 import argparse
@@ -47,7 +49,7 @@ LOSSES = ("ce", "ctc", "token_acc")
 TEXT_PREFIX = "\\text{"  # mixed_corpus.py's wrapper for teacher lines
 TYPESET_PREFIX = "\\typeset{"  # font_corpus.WRAPPER; importing it would need the fonts
 FONT_VALID = "font_valid.npz"  # font_corpus.VALID_FILE
-SOURCES = {"val_": "human math", "val_text_": "teacher text", "val_font_": "font renders"}
+SOURCES = {"val_": "human ink", "val_text_": "teacher text", "val_font_": "font renders"}
 
 
 def unwrap(text):
@@ -86,7 +88,7 @@ def inputs(batch, mu, std):
 
 def validation_groups(texts):
     """Validation line indices by metric prefix, from the labels before
-    unwrap(): human math under `val_` (its name before the other sources were
+    unwrap(): human ink under `val_` (its name before the other sources were
     added), teacher text under `val_text_`, font renders under `val_font_`.
     Empty groups are left out."""
     groups = {prefix: [] for prefix in SOURCES}
@@ -141,7 +143,7 @@ def evaluate(model, corpus, indices, args, mu, std, device, limit=200):
         with torch.autocast("cuda", dtype=torch.bfloat16):
             read = model.read(ink, ink_len)
         for k, (i, ids) in enumerate(zip(picks[b:b + 64], read)):
-            label = split_text(corpus.texts[i], "latex")
+            label = split_text(corpus.texts[i], corpus.tokenizer)
             target = [corpus.token[t] for t in label]
             d = edit_distance(ids, target)
             errors, tokens, exact = errors + d, tokens + len(target), exact + (d == 0)
@@ -172,8 +174,6 @@ def main(args):
             run.config.update({"artifact": args.artifact}, allow_val_change=True)
             names = shard_names(artifact)
     train, val = Corpus.split(args.corpus, args.val_shards, names)
-    if train.tokenizer != "latex":
-        raise SystemExit(f"{args.corpus} does not use the latex tokenizer")
     font_valid = os.path.join(args.corpus, FONT_VALID)
     if os.path.exists(font_valid):
         val = Corpus(args.corpus, val.shards + [font_valid])

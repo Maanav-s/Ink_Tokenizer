@@ -153,6 +153,15 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     to stop on this data, and `char_acc` measures that.
     [fetch_mathwriting.sh](scripts/fetch_mathwriting.sh) downloads the
     dataset and runs the conversion. Train on it with `--artifact none`.
+  - [iamondo_corpus.py](scripts/iamondo_corpus.py) — converts IAMonDo
+    (`data/IAMonDo-db-1.0`, real handwritten documents with text, tables,
+    diagrams and markings) into the same shard format, one Textline per
+    entry, one shard per official fold with `--held-out` (default 4) last.
+    Labels are per word, not per character (`chars` = -1); extra shard keys
+    map every point to its element (`elements`, `element_types`,
+    `element_spans` as token ranges) and back to page millimetres
+    (`origins`, `units`). `read_document()` parses a whole page (strokes in
+    mm, upright, plus the annotation tree) for page-level work.
   - [mixed_corpus.py](scripts/mixed_corpus.py) — merges the MathWriting and
     teacher corpora into `data/mixed_corpus`, so one model writes formulas and
     plain text. A teacher line becomes `\text{...}` (MathWriting has no
@@ -288,6 +297,12 @@ CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_student.py --run-dir models/s
     --corpus data/mathwriting_corpus --artifact none $WB
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/sample_student.py \
     --checkpoint models/student/<name>/checkpoint.pt --eval 1000 $WB
+# IAMonDo: real handwritten documents, word-aligned text lines.
+curl -fL http://www.iapr-tc11.org/dataset/IAMonDo/IAMonDo-db-1.0.tar.gz | tar xz -C data
+uv run python scripts/iamondo_corpus.py          # data/IAMonDo-db-1.0 -> data/iamondo_corpus
+# A recognizer on it: an epoch is about 80 batches, so far fewer steps than on MathWriting.
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
+    --corpus data/iamondo_corpus --steps 20000 --eval-every 500 $WB
 # Formulas and plain text in one flow student, continuing from a MathWriting one.
 uv run python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \
