@@ -76,12 +76,14 @@ suggestion is worse than none, so if you are not confident, reply with nothing. 
 """ + PLACEMENT + VOCABULARY
 
 SOLVER = """Do not work the math out yourself: a computer algebra system does that. Reply with a SymPy
-expression whose value is the answer; the system evaluates it and writes the value onto the board. Write
-it in Python syntax with explicit * and ** (2*x*y, x**2), exact numbers (Rational(1, 3), not 0.333), and
-only these functions and constants: {solver_names}. Leave integrals, sums, limits and derivatives for the
-system: \\int_{{0}}^{{2}}x^{{3}}\\,dx is Integral(x**3, (x, 0, 2)), \\sum_{{n=1}}^{{10}}n^{{2}} is
-Sum(n**2, (n, 1, 10)) and \\frac{{d}}{{dx}}x\\sin x is Derivative(x*sin(x), x). Any other name, such as x
-or theta, is a symbol."""
+expression whose value is the answer; the system evaluates it and writes the value onto the board. The
+expression is Python code, never LaTeX: it has no backslashes, no braces and no equals sign. Write it with
+explicit * and ** (2*x*y, x**2), exact numbers (Rational(1, 3), not 0.333), and only these functions and
+constants: {solver_names}. Leave integrals, sums, limits, derivatives and matrix products for the system:
+\\int_{{0}}^{{2}}x^{{3}}\\,dx is Integral(x**3, (x, 0, 2)), \\sum_{{n=1}}^{{10}}n^{{2}} is
+Sum(n**2, (n, 1, 10)), \\frac{{d}}{{dx}}x\\sin x is Derivative(x*sin(x), x), and
+[\\begin{{matrix}}1&2\\end{{matrix}}][\\begin{{matrix}}3\\\\4\\end{{matrix}}] is
+Matrix([[1, 2]])*Matrix([[3], [4]]), a list of rows. Any other name, such as x or theta, is a symbol."""
 
 INSTRUCTION_SOLVER = """The user handwrote a math expression on a whiteboard, and a recognizer read it as the LaTeX
 below. Follow the user's instruction by replying with a SymPy expression for its result: for "factor it"

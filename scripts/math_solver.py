@@ -29,9 +29,11 @@ SOLVER_NAMES = [
     "Rational", "sqrt", "root", "exp", "log", "sin", "cos", "tan", "sec", "csc", "cot",
     "asin", "acos", "atan", "sinh", "cosh", "tanh", "factorial", "binomial", "Abs", "floor", "ceiling",
     "gcd", "lcm", "Mod", "Eq", "solve", "simplify", "expand", "factor", "cancel", "apart", "together",
-    "pi", "E", "I", "oo",
+    "Matrix", "det", "transpose", "trace", "pi", "E", "I", "oo",
 ]
-NAMESPACE = {"__builtins__": {}, **{name: getattr(sympy, name) for name in SOLVER_NAMES}}
+# Matrix is the immutable kind, the only one that is a SymPy expression with doit() and has().
+NAMESPACE = {"__builtins__": {}, **{name: getattr(sympy, name) for name in SOLVER_NAMES},
+             "Matrix": sympy.ImmutableMatrix}
 # The parser's transformations rewrite names and numbers into calls to these.
 PARSER_NAMES = {name: getattr(sympy, name) for name in ("Symbol", "Integer", "Float")}
 TRANSFORMATIONS = standard_transformations + (convert_xor,)
