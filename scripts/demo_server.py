@@ -108,6 +108,10 @@ SOLVER_FORMAT = {"type": "json_schema", "schema": {"type": "object",
                                                    "required": ["expr", "box"], "additionalProperties": False}}
 
 
+def log(message):
+    print(message, flush=True)
+
+
 def load_env(path):
     """KEY=value lines of a .env file into os.environ, without overriding the shell."""
     if not os.path.exists(path):
@@ -179,7 +183,11 @@ class Demo:
         if not autocomplete:
             content = f"Instruction: {instruction}\n\n{content}"
         complete = self.complete_local if self.llm_url else self.complete_claude
-        reply = json.loads(complete(system, content, reply_format))
+        backend = (self.llm_model or self.llm_url) if self.llm_url else self.model
+        log(f"ask [{backend}, solver {'on' if self.solver else 'off'}] latex={latex!r} instruction={instruction!r}")
+        raw = complete(system, content, reply_format)
+        log(f"  model replied: {raw}")
+        reply = json.loads(raw)
         if not self.solver:
             reply["latex"] = re.sub(r"^\$+|\$+$", "", reply["latex"].strip().strip("`").strip()).strip()
             return reply
@@ -187,17 +195,21 @@ class Demo:
         expr = reply["expr"].strip()
         reply = {"latex": "", "box": reply["box"], "expr": expr}
         if not expr:
+            log("  empty expression: no suggestion")
             return reply
         try:
             answer = self.solver(expr)
+            log(f"  solver: {expr} -> {answer!r}")
             self.check_writable(answer)
         except Exception as e:
+            log(f"  solver failed on {expr}: {e}")
             if not autocomplete:
                 raise ValueError(f"the solver could not use {expr}: {e}") from e
             # In autocomplete no suggestion is the safe answer; the error is only for debugging.
             return {**reply, "error": str(e)}
         # Evaluating what is written to itself, as with x^{2}-1=, suggests nothing new.
         if autocomplete and answer.replace(" ", "") == latex.rstrip()[:-1].replace(" ", ""):
+            log("  value is what is already written: no suggestion")
             return reply
         return {**reply, "latex": answer}
 
@@ -313,5 +325,6 @@ if __name__ == "__main__":
     args = ap.parse_args()
     load_env(ENV_FILE)
     demo = Demo(args)
+    print(f"model: {args.llm_url or args.model}, solver: {'on' if args.solver else 'off'}", flush=True)
     print(f"serving on http://{args.host}:{args.port}", flush=True)
     HTTPServer((args.host, args.port), handler(demo)).serve_forever()
