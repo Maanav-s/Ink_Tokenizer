@@ -20,6 +20,7 @@ model = [
 ]
 demo = [
     "anthropic",
+    "sympy>=1.14",
 ]
 
 # PyPI only has source tarballs for these, which compile CUDA kernels at install

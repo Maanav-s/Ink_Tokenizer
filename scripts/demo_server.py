@@ -19,22 +19,30 @@ the written ink into.
 
 /api/claude needs the `demo` extra and ANTHROPIC_API_KEY, from the shell or
 from a .env at the repository root (see .env.example). Claude is told the student's vocabulary, and a
-reply that uses other tokens is refused rather than written.
+reply that uses other tokens is refused rather than written. With --llm-url, /api/claude asks a local
+OpenAI-compatible server instead (scripts/serve_llm.sh runs one with vLLM), with the same prompts.
+
+With --solver, the model does no math: it translates what is written (or the instruction) into a
+SymPy expression, and scripts/math_solver.py evaluates it and writes the value as LaTeX. The reply
+then also carries "expr", and in autocomplete "error" when the solver gave no suggestion. Small
+models translate notation far more reliably than they do arithmetic.
 
 Usage: python scripts/demo_server.py --student models/student/spline_flow/checkpoint.pt
            --recognizer models/recognizer/<run>/checkpoint.pt [--port 8000] [--device cuda]
-           [--model claude-opus-5-5]
+           [--model claude-opus-5-5 | --llm-url http://localhost:8001/v1] [--solver] [--steps 32]
 """
 import argparse
 import json
 import os
 import re
+import urllib.request
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import numpy as np
 import torch
 
 from ink_corpus import MAX_TEXT, char_tokens, split_text
+from math_solver import SOLVER_NAMES, Solver
 from mathwriting_corpus import to_offsets
 from recognizer_model import Recognizer, ink_positions
 from sample_student import load_model
@@ -67,12 +75,37 @@ suggestion is worse than none, so if you are not confident, reply with nothing. 
 \\int_{{0}}^{{2}}x^{{3}}\\,dx= the whole reply is: 4
 """ + PLACEMENT + VOCABULARY
 
+SOLVER = """Do not work the math out yourself: a computer algebra system does that. Reply with a SymPy
+expression whose value is the answer; the system evaluates it and writes the value onto the board. Write
+it in Python syntax with explicit * and ** (2*x*y, x**2), exact numbers (Rational(1, 3), not 0.333), and
+only these functions and constants: {solver_names}. Leave integrals, sums, limits and derivatives for the
+system: \\int_{{0}}^{{2}}x^{{3}}\\,dx is Integral(x**3, (x, 0, 2)), \\sum_{{n=1}}^{{10}}n^{{2}} is
+Sum(n**2, (n, 1, 10)) and \\frac{{d}}{{dx}}x\\sin x is Derivative(x*sin(x), x). Any other name, such as x
+or theta, is a symbol."""
+
+INSTRUCTION_SOLVER = """The user handwrote a math expression on a whiteboard, and a recognizer read it as the LaTeX
+below. Follow the user's instruction by replying with a SymPy expression for its result: for "factor it"
+with x^{{2}}-1 the expression is factor(x**2 - 1), and for "solve for x" with 2x+3=7 it is
+solve(Eq(2*x + 3, 7), x). If the instruction can't be done with the functions below, reply with an empty
+expression. """ + PLACEMENT + SOLVER
+
+AUTOCOMPLETE_SOLVER = """The user is handwriting math on a whiteboard, and a recognizer read what they have written so far
+as the LaTeX below. It ends with an equals sign. The value of your expression is suggested as the
+right-hand side, the way code autocomplete would, so translate what is written before the equals sign.
+If the user would most likely write another form next, such as an expanded or factored one, wrap it in
+expand or factor. A wrong suggestion is worse than none, so if what is written is not something to
+evaluate, or you are not sure what it says, reply with an empty expression.
+""" + PLACEMENT + SOLVER
+
 BOX = {"type": "object", "properties": {edge: {"type": "number"} for edge in ("left", "top", "right", "bottom")},
        "required": ["left", "top", "right", "bottom"], "additionalProperties": False}
 # At low effort Claude sometimes works the answer out in its reply; fixed fields leave no room for that.
 REPLY_FORMAT = {"type": "json_schema", "schema": {"type": "object",
                                                   "properties": {"latex": {"type": "string"}, "box": BOX},
                                                   "required": ["latex", "box"], "additionalProperties": False}}
+SOLVER_FORMAT = {"type": "json_schema", "schema": {"type": "object",
+                                                   "properties": {"expr": {"type": "string"}, "box": BOX},
+                                                   "required": ["expr", "box"], "additionalProperties": False}}
 
 
 def load_env(path):
@@ -90,6 +123,10 @@ class Demo:
     def __init__(self, args):
         self.device = args.device
         self.model = args.model
+        self.llm_url = args.llm_url.rstrip("/") if args.llm_url else None
+        self.llm_model = None
+        self.solver = Solver() if args.solver else None
+        self.steps = args.steps
 
         rec_ckpt = torch.load(args.recognizer, map_location=self.device, weights_only=False)
         self.recognizer = Recognizer(**rec_ckpt["config"]).to(self.device)
@@ -123,21 +160,52 @@ class Demo:
         return "".join(self.rec_charset[t - 2] for t in ids)
 
     def ask_claude(self, latex, instruction, box, board):
-        """The reply's LaTeX and the box Claude puts it in. With no instruction, Claude suggests the
-        right-hand side of LaTeX that ends in =, and may reply with nothing."""
-        import anthropic
-
-        if instruction is None and not latex.rstrip().endswith("="):
+        """The reply's LaTeX and the box the model puts it in. With no instruction, the model suggests
+        the right-hand side of LaTeX that ends in =, and may reply with nothing."""
+        autocomplete = instruction is None
+        if autocomplete and not latex.rstrip().endswith("="):
             return {"latex": "", "box": None}
-        if self.client is None:
-            self.client = anthropic.Anthropic()
-        prompt = AUTOCOMPLETE if instruction is None else INSTRUCTION
-        system = prompt.format(max_text=MAX_TEXT, vocabulary="\n".join(self.student_token))
+        if self.solver:
+            prompt = AUTOCOMPLETE_SOLVER if autocomplete else INSTRUCTION_SOLVER
+            reply_format = SOLVER_FORMAT
+        else:
+            prompt = AUTOCOMPLETE if autocomplete else INSTRUCTION
+            reply_format = REPLY_FORMAT
+        system = prompt.format(max_text=MAX_TEXT, vocabulary="\n".join(self.student_token),
+                               solver_names=", ".join(SOLVER_NAMES))
         content = (f"Board: {board['width']:.0f} x {board['height']:.0f}\n"
                    f"Writing's box: left {box['left']:.0f}, top {box['top']:.0f}, "
                    f"right {box['right']:.0f}, bottom {box['bottom']:.0f}\n\nLaTeX: {latex}")
-        if instruction is not None:
+        if not autocomplete:
             content = f"Instruction: {instruction}\n\n{content}"
+        complete = self.complete_local if self.llm_url else self.complete_claude
+        reply = json.loads(complete(system, content, reply_format))
+        if not self.solver:
+            reply["latex"] = re.sub(r"^\$+|\$+$", "", reply["latex"].strip().strip("`").strip()).strip()
+            return reply
+
+        expr = reply["expr"].strip()
+        reply = {"latex": "", "box": reply["box"], "expr": expr}
+        if not expr:
+            return reply
+        try:
+            answer = self.solver(expr)
+            self.check_writable(answer)
+        except Exception as e:
+            if not autocomplete:
+                raise ValueError(f"the solver could not use {expr}: {e}") from e
+            # In autocomplete no suggestion is the safe answer; the error is only for debugging.
+            return {**reply, "error": str(e)}
+        # Evaluating what is written to itself, as with x^{2}-1=, suggests nothing new.
+        if autocomplete and answer.replace(" ", "") == latex.rstrip()[:-1].replace(" ", ""):
+            return reply
+        return {**reply, "latex": answer}
+
+    def complete_claude(self, system, content, reply_format):
+        import anthropic
+
+        if self.client is None:
+            self.client = anthropic.Anthropic()
         # Haiku has no server-side refusal fallback.
         fallback = {} if self.model.startswith("claude-haiku") else {
             "betas": ["server-side-fallback-2026-07-01"], "fallbacks": "default"}
@@ -145,28 +213,49 @@ class Demo:
             model=self.model,
             max_tokens=16000,
             **fallback,
-            output_config={"effort": "low", "format": REPLY_FORMAT},
+            output_config={"effort": "low", "format": reply_format},
             system=system,
             messages=[{"role": "user", "content": content}],
         )
         if response.stop_reason == "refusal":
             raise ValueError("Claude declined to answer")
-        reply = json.loads("".join(b.text for b in response.content if b.type == "text"))
-        reply["latex"] = re.sub(r"^\$+|\$+$", "", reply["latex"].strip().strip("`").strip()).strip()
-        return reply
+        return "".join(b.text for b in response.content if b.type == "text")
 
-    @torch.no_grad()
-    def write(self, latex):
+    def complete_local(self, system, content, reply_format):
+        # The server serves one model; asking for its name saves passing it twice.
+        if self.llm_model is None:
+            with urllib.request.urlopen(f"{self.llm_url}/models") as r:
+                self.llm_model = json.load(r)["data"][0]["id"]
+        # No max_tokens or temperature: a thinking model needs room to reason before the JSON, and the
+        # server then uses the model's own sampling defaults (greedy decoding makes Qwen's thinking loop).
+        body = {"model": self.llm_model,
+                "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
+                "response_format": {"type": "json_schema",
+                                    "json_schema": {"name": "reply", "schema": reply_format["schema"]}}}
+        request = urllib.request.Request(f"{self.llm_url}/chat/completions", json.dumps(body).encode(),
+                                         {"Content-Type": "application/json"})
+        with urllib.request.urlopen(request) as r:
+            choice = json.load(r)["choices"][0]
+        if not choice["message"].get("content"):
+            raise ValueError(f"the model gave no answer (finish reason: {choice['finish_reason']})")
+        return choice["message"]["content"]
+
+    def check_writable(self, latex):
         tokens = split_text(latex, self.tokenizer)
         unknown = sorted({t for t in tokens if t not in self.student_token})
         if unknown:
             raise ValueError(f"the student cannot write {' '.join(unknown)}")
         if not tokens or len(tokens) > MAX_TEXT:
             raise ValueError(f"the student writes 1 to {MAX_TEXT} tokens, not {len(tokens)}")
+        return tokens
+
+    @torch.no_grad()
+    def write(self, latex):
+        tokens = self.check_writable(latex)
         text = torch.tensor([[self.student_token[t] for t in tokens]], device=self.device)
         text_len = torch.tensor([len(tokens)], device=self.device)
         with self.autocast():
-            offsets, _, _ = self.student.sample(text, text_len, 0.0)[0]
+            offsets, _, _ = self.student.sample(text, text_len, 0.0, steps=self.steps)[0]
         offsets = offsets.float().numpy()
         xy = np.cumsum(offsets[:, :2] * self.std[:2] + self.mu[:2], axis=0)
         ends = np.flatnonzero(offsets[:, 2] > 0.5) + 1
@@ -216,6 +305,11 @@ if __name__ == "__main__":
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--model", default="claude-opus-5-5", help="Claude model for /api/claude")
+    ap.add_argument("--llm-url", help="OpenAI-compatible server to use instead of Claude, "
+                                      "e.g. http://localhost:8001/v1 (see scripts/serve_llm.sh)")
+    ap.add_argument("--solver", action="store_true",
+                    help="have the model write a SymPy expression and evaluate it with scripts/math_solver.py")
+    ap.add_argument("--steps", type=int, help="the student's Euler steps (default: the checkpoint's)")
     args = ap.parse_args()
     load_env(ENV_FILE)
     demo = Demo(args)
