@@ -125,7 +125,8 @@ def decode_weights(pen, points_per_control):
 
 
 def convert_shard(path, out_dir, points_per_control, mu, std):
-    d = np.load(path)
+    # Indexing an NpzFile decompresses the whole array again, so load each one once.
+    d = dict(np.load(path))
     starts = np.concatenate([[0], np.cumsum(d["lengths"])[:-1]])
     offsets, chars, lengths, error = [], [], [], 0.0
     for s, k in zip(starts, d["lengths"]):
@@ -134,7 +135,7 @@ def convert_shard(path, out_dir, points_per_control, mu, std):
         chars.append(ch)
         lengths.append(len(off))
         error += e
-    out = {k: d[k] for k in d.files}
+    out = dict(d)
     out.update(offsets=np.concatenate(offsets), chars=np.concatenate(chars),
                lengths=np.array(lengths, dtype=d["lengths"].dtype))
     np.savez(os.path.join(out_dir, os.path.basename(path)), **out)
