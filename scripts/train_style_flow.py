@@ -9,11 +9,23 @@ a random window of at most --ref-points control points); otherwise a crop of
 lines only, and DeepWriting's and BRUSH's validation writers are unseen in
 training, so val_flow_null - val_flow is what a new writer's style is worth.
 
-The trained loss adds --kl-weight times the free-bits KL, warmed up from 0
-over --kl-warmup steps, and --contrastive-weight times the supervised
-contrastive loss. Sample images show, per held-out writer, the real line, the
-student without a style, and the student with the style of that writer's
-other lines.
+The trained loss adds beta times the KL and --contrastive-weight times the
+supervised contrastive loss. beta is not a setting: it adapts every step so
+the KL, the nats z carries, stays near --kl-target (log beta moves by
+--beta-lr times the KL's relative excess over the target), as in a
+constrained VAE. Too low a target leaves no room for style (val_style_gain
+stays near 0); too high lets z copy the references' content.
+
+Each evaluation also reports:
+- val_id_acc: of held-out lines embedded on their own, how often the nearest
+  other line of the same source (cosine of z's means) is by the same writer,
+  and val_id_chance, what picking at random would score;
+- grad_flow, grad_kl, grad_contrastive: the norm of each weighted term's
+  gradient on the style encoder, for one training batch, to see which term
+  drives it.
+
+Sample images show, per held-out writer, the real line, the student without
+a style, and the student with the style of that writer's other lines.
 
 --init-from starts from a plain spline flow checkpoint (train_spline_flow.py)
 on the same normalization: its weights and architecture, with the style
@@ -35,6 +47,7 @@ import time
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 import wandb
 
 from corpus_artifact import add_wandb_args
@@ -46,7 +59,8 @@ from text_to_ink import ink_extent, render, to_line
 from train_flow import DIVERGED, LOSSES, total_loss
 from train_student import lr_at, start_wandb_run, to_device
 
-STYLE_LOSSES = (*LOSSES, "kl", "kl_train", "contrastive")
+STYLE_LOSSES = (*LOSSES, "kl", "contrastive")
+LOG_BETA_RANGE = (math.log(1e-6), math.log(10.0))
 
 
 def pad(inks):
@@ -107,9 +121,58 @@ class References:
                 "writer": torch.tensor(writer), "source": torch.tensor(source)}
 
 
-def style_total_loss(losses, args, step):
-    beta = args.kl_weight * min(1.0, step / max(1, args.kl_warmup))
-    return total_loss(losses, args) + beta * losses["kl_train"] + args.contrastive_weight * losses["contrastive"]
+def style_total_loss(losses, args, beta):
+    return total_loss(losses, args) + beta * losses["kl"] + args.contrastive_weight * losses["contrastive"]
+
+
+def update_log_beta(log_beta, kl, args):
+    log_beta += args.beta_lr * (kl - args.kl_target) / args.kl_target
+    return min(max(log_beta, LOG_BETA_RANGE[0]), LOG_BETA_RANGE[1])
+
+
+@torch.no_grad()
+def identification(model, corpus, references, device, limit=2000, batch=256):
+    """{"id_acc", "id_chance"} over up to `limit` lines whose writer has
+    other lines in the corpus (see the module docstring), or {} if none."""
+    lines = [i for idx in references.lines.values() if len(idx) > 1 for i in idx]
+    if not lines:
+        return {}
+    rng = np.random.default_rng(0)
+    lines = [lines[k] for k in sorted(rng.permutation(len(lines))[:limit])]
+    model.eval()
+    embedded = []
+    for b in range(0, len(lines), batch):
+        offsets, ink_len = pad([references.window(i, references.max_points, rng) for i in lines[b:b + batch]])
+        embedded.append(model.embed_lines(offsets.to(device), ink_len.to(device)))
+    model.train()
+    e = F.normalize(torch.cat(embedded), dim=-1)
+    writers = [corpus.writers[i] for i in lines]
+    writer = torch.tensor([references.writer_id[w] for w in writers], device=device)
+    source = torch.tensor([references.source_id[w.split("/")[0]] for w in writers], device=device)
+    eye = torch.eye(len(e), dtype=torch.bool, device=device)
+    candidate = (source.unsqueeze(0) == source.unsqueeze(1)) & ~eye
+    same = (writer.unsqueeze(0) == writer.unsqueeze(1)) & ~eye
+    scored = same.any(dim=1)
+    if not scored.any():
+        return {}
+    nearest = (e @ e.T).masked_fill(~candidate, -torch.inf).argmax(dim=1)
+    accuracy = (writer[nearest] == writer)[scored].float().mean().item()
+    chance = (same.sum(1) / candidate.sum(1).clamp(min=1))[scored].mean().item()
+    return {"id_acc": accuracy, "id_chance": chance}
+
+
+def encoder_grad_norms(model, batch, args, beta):
+    """Norm of each weighted loss term's gradient on the style encoder."""
+    params = list(model.style_encoder.parameters())
+    with torch.autocast("cuda", dtype=torch.bfloat16):
+        losses = model.loss(batch)
+    terms = {"flow": total_loss(losses, args), "kl": beta * losses["kl"],
+             "contrastive": args.contrastive_weight * losses["contrastive"]}
+    out = {}
+    for name, term in terms.items():
+        grads = torch.autograd.grad(term, params, retain_graph=True, allow_unused=True)
+        out[f"grad_{name}"] = math.sqrt(sum(g.float().pow(2).sum().item() for g in grads if g is not None))
+    return out
 
 
 @torch.no_grad()
@@ -173,7 +236,7 @@ def style_samples(model, corpus, source, references, n, seed=0):
 
 def build_config(args, train):
     style = dict(z_dim=args.z_dim, style_d_model=args.style_d_model, style_layers=args.style_layers,
-                 style_dropout=args.style_dropout, free_bits=args.free_bits, temperature=args.temperature)
+                 style_dropout=args.style_dropout, temperature=args.temperature)
     if args.init_from:
         plain = torch.load(args.init_from, map_location="cpu", weights_only=False)
         if plain.get("architecture") != "spline_flow":
@@ -226,18 +289,20 @@ def main(args):
     if plain_state is not None:
         print(f"initialized from {args.init_from}; new: {model.init_from_plain(plain_state)}", flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01, betas=(0.9, 0.95))
-    step, epoch, pos, best_val = 0, 0, 0, math.inf
+    step, epoch, pos, best_val, log_beta = 0, 0, 0, math.inf, math.log(args.beta_init)
     if ckpt is not None:
         model.load_state_dict(ckpt["model"])
         opt.load_state_dict(ckpt["opt"])
         step, epoch, pos, best_val = ckpt["step"], ckpt["epoch"], ckpt["pos"], ckpt["best_val"]
+        log_beta = ckpt["log_beta"]
         print(f"resumed at step {step}", flush=True)
     print(f"{sum(p.numel() for p in model.parameters()) / 1e6:.2f}M parameters; {model.config}", flush=True)
 
     def save():
         tmp = ckpt_path + ".tmp"
         torch.save({"architecture": "style_spline_flow", "model": model.state_dict(), "opt": opt.state_dict(),
-                    "step": step, "epoch": epoch, "pos": pos, "best_val": best_val, "config": model.config,
+                    "step": step, "epoch": epoch, "pos": pos, "best_val": best_val, "log_beta": log_beta,
+                    "config": model.config,
                     "charset": train.charset, "meta": train.meta, "args": vars(args)}, tmp)
         os.replace(tmp, ckpt_path)
 
@@ -257,7 +322,7 @@ def main(args):
                 batch = {**train.batch(idx), **train_refs(idx, rng)}
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     batch_losses = model.loss(to_device(batch, device))
-                loss = style_total_loss(batch_losses, args, step)
+                loss = style_total_loss(batch_losses, args, math.exp(log_beta))
                 if not torch.isfinite(loss):
                     raise RuntimeError(f"non-finite loss at step {step}")
                 (loss / len(micro)).backward()
@@ -267,16 +332,20 @@ def main(args):
             if not torch.isfinite(grad_norm):
                 raise RuntimeError(f"non-finite gradient at step {step}")
             opt.step()
+            log_beta = update_log_beta(log_beta, float(losses["kl"]), args)
             step += 1
             pos += len(micro)
 
             if step % args.log_every == 0 or step % args.eval_every == 0:
                 rec = {"step": step, "epoch": epoch, **{k: float(losses[k]) for k in STYLE_LOSSES},
-                       "grad_norm": grad_norm.item(), "lr": opt.param_groups[0]["lr"],
+                       "grad_norm": grad_norm.item(), "lr": opt.param_groups[0]["lr"], "beta": math.exp(log_beta),
                        "elapsed_s": round(time.time() - start)}
                 diverged = False
                 if step % args.eval_every == 0:
                     v = evaluate(model, val, val_refs, args.max_points, device)
+                    v.update(identification(model, val, val_refs, device))
+                    probe = {**train.batch(micro[-1]), **train_refs(micro[-1], np.random.default_rng(step))}
+                    rec.update(encoder_grad_norms(model, to_device(probe, device), args, math.exp(log_beta)))
                     rec.update({f"val_{k}": x for k, x in v.items()})
                     diverged = v["flow"] > DIVERGED * best_val
                     if not diverged:
@@ -322,15 +391,16 @@ if __name__ == "__main__":
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)
-    ap.add_argument("--kl-weight", type=float, default=1e-3)
-    ap.add_argument("--kl-warmup", type=int, default=5000, help="steps over which the KL weight rises from 0")
+    ap.add_argument("--kl-target", type=float, default=16.0, help="nats z should carry; beta adapts to hold it")
+    ap.add_argument("--beta-init", type=float, default=1e-3, help="the KL weight at step 0")
+    ap.add_argument("--beta-lr", type=float, default=1e-3,
+                    help="how fast log beta moves per step, per unit of relative KL error")
     ap.add_argument("--contrastive-weight", type=float, default=0.05)
     ap.add_argument("--z-dim", type=int, default=32)
     ap.add_argument("--style-d-model", type=int, default=256)
     ap.add_argument("--style-layers", type=int, default=4)
     ap.add_argument("--style-dropout", type=float, default=0.1,
                     help="fraction of lines trained with no style, which is how the student writes without one")
-    ap.add_argument("--free-bits", type=float, default=0.25, help="nats per z dimension the KL does not penalize")
     ap.add_argument("--temperature", type=float, default=0.1, help="of the contrastive loss")
     ap.add_argument("--refs", type=int, default=4, help="other lines by the same writer per line")
     ap.add_argument("--crop", type=float, default=0.3,

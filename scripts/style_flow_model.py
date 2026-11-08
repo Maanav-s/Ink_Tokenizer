@@ -13,9 +13,9 @@ known writer gets a short crop of itself, which leaks some content, so the
 KL term and z's small size must keep that crop from being copied.
 
 Losses on top of SplineFlowStudent's:
-- kl: KL(q(z | references) || N(0, I)), summed over z's dimensions. The term
-  trained is "free bits": each dimension's KL averaged over the batch, but no
-  less than free_bits nats, so the flow cannot switch z off entirely.
+- kl: KL(q(z | references) || N(0, I)), summed over z's dimensions: the
+  information z carries, in nats. The trainer (scripts/train_style_flow.py)
+  holds it near a target by adapting its weight, rather than fixing one.
 - contrastive: supervised contrastive loss on the normalized means, for lines
   with a known writer. Every such line is also encoded on its own, so each has
   a positive (its references' mean); negatives are only lines from the same
@@ -86,13 +86,11 @@ def supervised_contrastive(embedding, writer, source, temperature):
 
 
 class StyleSplineFlowStudent(SplineFlowStudent):
-    def __init__(self, z_dim=32, style_d_model=256, style_layers=4, style_dropout=0.1, free_bits=0.25,
-                 temperature=0.1, **config):
+    def __init__(self, z_dim=32, style_d_model=256, style_layers=4, style_dropout=0.1, temperature=0.1, **config):
         super().__init__(**config)
         self.config.update(z_dim=z_dim, style_d_model=style_d_model, style_layers=style_layers,
-                           style_dropout=style_dropout, free_bits=free_bits, temperature=temperature)
+                           style_dropout=style_dropout, temperature=temperature)
         self.style_dropout = style_dropout
-        self.free_bits = free_bits
         self.temperature = temperature
         self.style_encoder = StyleEncoder(z_dim, style_d_model, style_layers)
         self.style_in = nn.Linear(z_dim, self.d_model)
@@ -123,6 +121,11 @@ class StyleSplineFlowStudent(SplineFlowStudent):
         """Corpus offsets of reference inks -> mean and log variance of z."""
         return self.style_encoder(self.to_positions(offsets, ink_len), ink_len, owner, n_sets)
 
+    def embed_lines(self, offsets, ink_len):
+        """The mean of z for each ink on its own (B, z_dim)."""
+        return self.encode_style(offsets, ink_len, torch.arange(len(ink_len), device=offsets.device),
+                                 len(ink_len))[0]
+
     def style_cond(self, z):
         """z (B, z_dim) -> what denoise() adds to the time embedding."""
         return self.style_in(z)
@@ -133,8 +136,7 @@ class StyleSplineFlowStudent(SplineFlowStudent):
         return super().denoise(x, t, ink_len, memory, memory_pad, cond)
 
     def loss(self, batch, generator=None):
-        """SplineFlowStudent's losses, plus kl (summed over z, unclamped),
-        kl_train (with free bits, the term to train), contrastive and, when
+        """SplineFlowStudent's losses, plus kl (summed over z), contrastive and, when
         evaluating (generator given), flow_null: the flow loss with the same
         noise and times but null_style, so flow_null - flow is what the style
         is worth. Evaluation uses z's mean and never drops the style."""
@@ -155,13 +157,10 @@ class StyleSplineFlowStudent(SplineFlowStudent):
 
         kl = 0.5 * (mu.pow(2) + logvar.exp() - 1 - logvar)
         losses["kl"] = kl.sum(dim=1).mean()
-        losses["kl_train"] = kl.mean(dim=0).clamp(min=self.free_bits).sum()
 
         labeled = batch["writer"] >= 0
         if labeled.sum() > 0:
-            anchor_mu, _ = self.encode_style(batch["anchor_offsets"], batch["anchor_len"],
-                                             torch.arange(len(batch["anchor_len"]), device=device),
-                                             len(batch["anchor_len"]))
+            anchor_mu = self.embed_lines(batch["anchor_offsets"], batch["anchor_len"])
             losses["contrastive"] = supervised_contrastive(
                 torch.cat([mu[labeled], anchor_mu]), batch["writer"][labeled].repeat(2),
                 batch["source"][labeled].repeat(2), self.temperature)

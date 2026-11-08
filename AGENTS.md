@@ -288,12 +288,14 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     [style_flow_model.py](scripts/style_flow_model.py) adds a writer style:
     a VAE-style latent z from reference inks (other lines by the same
     writer, or a crop of the line itself when the writer is unknown), added
-    to the time embedding of every block, with a free-bits KL and a
-    supervised contrastive loss on z's mean (negatives from the same source
-    only). [train_style_flow.py](scripts/train_style_flow.py) trains it,
+    to the time embedding of every block, with a KL held near `--kl-target`
+    nats by an adaptive weight and a supervised contrastive loss on z's mean
+    (negatives from the same source only). [train_style_flow.py](scripts/train_style_flow.py) trains it,
     optionally `--init-from` a plain spline flow checkpoint (it starts out
     writing exactly as that one). `val_style_gain` is the validation flow
-    loss without a style minus with one, on writers unseen in training.
+    loss without a style minus with one, on writers unseen in training;
+    `val_id_acc` (against `val_id_chance`) is how well z tells those writers
+    apart, and `grad_*` show which loss term drives the style encoder.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
