@@ -19,7 +19,7 @@ and math is typeset by math_typeset.py. Completion targets are added by
 targets.py. The same (content, seed) always gives the same layout.
 
 Usage: uv run --extra render python scripts/layout_engine.py page_dir
-           [--seed N] [--out FILE] [--no-check]
+           [--seed N] [--out FILE] [--no-check] [--paper letter|a4]
 Without --out, seed 0 writes <page_dir>/layout.json and other seeds write
 <page_dir>/layouts/layout_s<N>.json.
 """
@@ -37,6 +37,11 @@ from fonts import BASE
 CONTENT_SCHEMA = "ink_tokenizer.synthetic_page.content/v1"
 LAYOUT_SCHEMA = "ink_tokenizer.synthetic_page.layout/v1"
 PAGE_W, PAGE_H = 1200.0, 800.0  # the default whiteboard; dense content gets a bigger one
+# Paper pages (as on an iPad note app) are laid out and rendered at whiteboard scale on a canvas of the
+# paper's proportions, and render_inkml scales the ink down to paper mm. The sizes, pen width, noise and
+# checks elsewhere are tuned in whiteboard mm, so they all stay consistent; 0.25 gives ~5.5 mm text.
+PAPER_MM = {"letter": (215.9, 279.4), "a4": (210.0, 297.0)}
+PAPER_SCALE = 0.25
 TEXT_ROLES = ("title", "heading", "bullet", "subbullet", "note", "caption", "text")
 
 
@@ -430,6 +435,62 @@ def pack(blocks, content_blocks, st, rng):
     return {k: (v[0], v[1]) for k, v in placed.items()}
 
 
+def pack_flow(blocks, content_blocks, st, n_cols, col_w):
+    """Paper pages: blocks in reading order down fixed columns, filled one after another, as a student
+    writes an assignment. Returns {block id: (x, y)}, or None if the blocks do not fit."""
+    mx, my = st["margin_x"], st["margin_y"]
+    gap, cgap = st["block_gap"] * st["h"], st["col_gap"] * st["h"]
+    by_id = {c["id"]: c for c in content_blocks}
+    bottom = st["page_h"] - my
+    placed, col, top, y, prev = {}, 0, my, my, None
+
+    def joined(i):
+        """Whether blocks[i + 1] belongs with blocks[i] in one column: a continuation line, or what a
+        short heading or note introduces."""
+        if i + 1 >= len(blocks):
+            return False
+        if any(by_id[x].get("continues") in blocks[i].ids for x in blocks[i + 1].ids if x in by_id):
+            return True
+        c = by_id[blocks[i].id]
+        return (c["type"] == "text" and c.get("role") in ("heading", "note", "text")
+                and blocks[i].h < 2.5 * st["line_gap"] * st["h"])
+
+    # span[i]: the height from block i to the end of the group it starts.
+    span = [0.0] * len(blocks)
+    for i in reversed(range(len(blocks))):
+        span[i] = blocks[i].h + (gap + span[i + 1] if joined(i) else 0.0)
+    for i, b in enumerate(blocks):
+        if by_id[b.id].get("role") == "title" and prev is None:
+            if b.w > st["page_w"] - 2 * mx:
+                return None
+            x = (st["page_w"] - b.w) / 2 if st["title_center"] else mx
+            placed[b.id] = (x, my, b.w, b.h)
+            top = y = my + b.h + gap * 1.2
+            prev = b.id
+            continue
+        if b.w > col_w:
+            return None
+        col_x = mx + col * (col_w + cgap)
+        x, step = col_x, gap
+        cont = next((ob.id for ob in blocks if by_id[b.id].get("continues") in ob.ids), None)
+        if cont in placed and cont == prev and "rel_x" in b.meta and "rel_x" in blocks_meta(blocks, cont):
+            # A continuation line: its relation sits under the previous line's, if the column allows.
+            x = min(max(col_x, placed[cont][0] + blocks_meta(blocks, cont)["rel_x"] - b.meta["rel_x"]),
+                    col_x + col_w - b.w)
+            step = 0.8 * gap
+        if prev is not None and placed[prev][1] >= top:
+            y = placed[prev][1] + placed[prev][3] + step
+        starts_group = i == 0 or not joined(i - 1)
+        if y + b.h > bottom or (starts_group and y > top and y + span[i] > bottom and span[i] <= bottom - top):
+            col += 1
+            if col == n_cols:
+                return None
+            x, y = mx + col * (col_w + cgap), top
+        placed[b.id] = (x, y, b.w, b.h)
+        prev = b.id
+    return {k: (v[0], v[1]) for k, v in placed.items()}
+
+
 def blocks_meta(blocks, bid):
     return next(b.meta for b in blocks if bid in b.ids)
 
@@ -616,7 +677,7 @@ def segment_hits(p, q, box, n=40):
 
 # ------------------------------------------------------------------ page
 
-def layout_page(content, seed, metrics=None, check=None):
+def layout_page(content, seed, metrics=None, check=None, paper=None):
     """Lay out a content.json (v1) dict. `check(layout) -> list of problems` may
     reject a layout; the engine then retries with smaller text and new draws.
     Raises LayoutError if nothing works."""
@@ -630,7 +691,13 @@ def layout_page(content, seed, metrics=None, check=None):
         # New draws first, then smaller text, then a bigger board.
         scale = 0.92 ** min(max(0, attempt - 2), 3)
         board = 1.0 if attempt < 6 else 1.25 if attempt < 9 else 1.5
-        st["page_w"], st["page_h"] = PAGE_W * board, PAGE_H * board
+        if paper:
+            # A bigger canvas on the same sheet means smaller writing, not a bigger sheet.
+            paper_w, paper_h = PAPER_MM[paper]
+            st["page_w"], st["page_h"] = paper_w / PAPER_SCALE * board, paper_h / PAPER_SCALE * board
+            st["flow"] = True
+        else:
+            st["page_w"], st["page_h"] = PAGE_W * board, PAGE_H * board
         for k in ("h", "title", "heading", "subbullet", "note", "table", "diagram", "math"):
             st[k] *= scale
         try:
@@ -641,8 +708,24 @@ def layout_page(content, seed, metrics=None, check=None):
         problems = check(layout) if check else []
         if not problems:
             layout["layout_attempt"] = attempt
+            if paper:
+                layout["page"].update(paper=paper, scale=round(PAPER_MM[paper][0] / st["page_w"], 6))
             return layout
     raise LayoutError(f"no valid layout for {content['page_id']} seed {seed}: " + "; ".join(problems[:5]))
+
+
+def make_blocks(blocks_c, st, rng, metrics, max_w, title_w=None):
+    blocks = []
+    for k, c in enumerate(blocks_c):
+        w = title_w if title_w and c.get("role") == "title" else max_w
+        b = BUILDERS[c["type"]](c, st, rng, metrics, w)
+        prev = blocks_c[k - 1] if k else None
+        lead_in = prev and prev["type"] == "text" and (prev.get("role") == "heading" or
+                                                       prev.get("role") != "title" and prev["text"].rstrip().endswith(":"))
+        if lead_in and blocks[-1].id == prev["id"]:
+            b = keep_with_next(blocks.pop(), b, 0.5 * st["h"])
+        blocks.append(b)
+    return blocks
 
 
 def build(content, seed, st, rng, metrics):
@@ -652,16 +735,17 @@ def build(content, seed, st, rng, metrics):
     if unknown:
         raise LayoutError(f"unknown element types {unknown}")
     max_w = st["page_w"] - 2 * st["margin_x"]
-    blocks = []
-    for k, c in enumerate(blocks_c):
-        b = BUILDERS[c["type"]](c, st, rng, metrics, max_w)
-        prev = blocks_c[k - 1] if k else None
-        lead_in = prev and prev["type"] == "text" and (prev.get("role") == "heading" or
-                                                       prev.get("role") != "title" and prev["text"].rstrip().endswith(":"))
-        if lead_in and blocks[-1].id == prev["id"]:
-            b = keep_with_next(blocks.pop(), b, 0.5 * st["h"])
-        blocks.append(b)
-    pos = pack(blocks, blocks_c, st, rng)
+    blocks = make_blocks(blocks_c, st, rng, metrics, max_w)
+    if st.get("flow"):
+        pos = pack_flow(blocks, blocks_c, st, 1, max_w)
+        if pos is None:
+            col_w = (max_w - st["col_gap"] * st["h"]) / 2
+            blocks = make_blocks(blocks_c, st, rng, metrics, col_w, title_w=max_w)
+            pos = pack_flow(blocks, blocks_c, st, 2, col_w)
+        if pos is None:
+            raise LayoutError("content does not fit in two columns")
+    else:
+        pos = pack(blocks, blocks_c, st, rng)
     layout = {"schema": LAYOUT_SCHEMA, "page_id": content["page_id"], "layout_seed": seed, "unit": "mm",
               "page": {"width": st["page_w"], "height": st["page_h"], "origin": "top-left", "y_axis": "down"},
               "style": {k: (round(v, 3) if isinstance(v, float) else v) for k, v in st.items()},
@@ -688,7 +772,7 @@ def default_path(page_dir, seed):
     return os.path.join(page_dir, "layouts", f"layout_s{seed}.json")
 
 
-def write_layout(page_dir, seed, out=None, check=True, quiet=False):
+def write_layout(page_dir, seed, out=None, check=True, quiet=False, paper=None):
     import validate_page
     content = json.load(open(os.path.join(page_dir, "content.json")))
     errs = validate_page.check_content(content)
@@ -696,7 +780,7 @@ def write_layout(page_dir, seed, out=None, check=True, quiet=False):
         raise LayoutError("content errors: " + "; ".join(errs))
     checker = (lambda lay: validate_page.check_layout(lay, content) + validate_page.check_ink_clean(lay)) \
         if check else None
-    layout = layout_page(content, seed, check=checker)
+    layout = layout_page(content, seed, check=checker, paper=paper)
     out = out or default_path(page_dir, seed)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     with open(out, "w") as f:
@@ -713,5 +797,6 @@ if __name__ == "__main__":
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--no-check", action="store_true", help="skip the layout and clean-ink checks")
+    ap.add_argument("--paper", choices=sorted(PAPER_MM), help="a portrait paper page instead of the whiteboard")
     a = ap.parse_args()
-    write_layout(a.page_dir, a.seed, a.out, check=not a.no_check)
+    write_layout(a.page_dir, a.seed, a.out, check=not a.no_check, paper=a.paper)

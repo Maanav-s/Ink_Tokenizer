@@ -61,7 +61,8 @@ reading order:
   short word. A truth table also has `input_columns` and `output_columns`
   (column indices that together cover every column), `row_order:
   "binary_counting_msb_first"` when its input rows count up in binary (all
-  2^n rows), and only `0`, `1` or `x` cells. Rules (lines) are chosen by
+  2^n rows) or `"gray_code"` when they follow the reflected Gray code (00,
+  01, 11, 10, ...; all 2^n rows), and only `0`, `1` or `x` cells. Rules (lines) are chosen by
   the layout.
 - **math**: `{"id", "type": "math", "latex", "text", "defines"?,
   "continues"?, "check"?}`. One line of 2-D math in the LaTeX subset below.

@@ -20,7 +20,7 @@ docs/synthetic_data.md, without any handwriting model:
 
 Usage: uv run --extra render python scripts/render_inkml.py [page_dir]
            [--layout FILE] [--font NAME[,NAME...]] [--noise LEVEL] [--seed N]
-           [--out FILE] [--no-device]
+           [--out FILE] [--no-device] [--student CHECKPOINT]
 --font takes one font per writer, in the layout's writer order (cycled).
 """
 import argparse
@@ -219,8 +219,9 @@ def math_units(item, font, hand, wid):
 
 # --------------------------------------------------------------- shapes
 
-def item_units(item, fonts, hand):
-    """Units for one layout item, in drawing order. fonts: writer id -> TextRenderer."""
+def item_units(item, fonts, hand, eid=None, student=None):
+    """Units for one layout item, in drawing order. fonts: writer id -> TextRenderer. student: a
+    student_text.StudentText that writes text items in place of the font."""
     kind, wid = item["kind"], item["writer"]
     font = fonts[wid]
 
@@ -231,7 +232,8 @@ def item_units(item, fonts, hand):
         return Unit({"truth": part}, [hand.deform(pts, DIAGRAM_SCALE, wid, "line")])
 
     if kind == "text":
-        return text_units(item, font, hand, wid)
+        units = text_units(item, font, hand, wid)
+        return student.replace(units, item, eid) if student else units
     if kind == "math":
         return math_units(item, font, hand, wid)
     if kind == "polyline":
@@ -294,7 +296,7 @@ def default_out(page_dir, layout, fonts, noise, seed):
 
 
 def render(page_dir, fonts, noise, seed, out=None, layout_path=None, device=True, quiet=False, layout=None,
-           write=True):
+           write=True, student=None):
     """Render one page. fonts: one font name per writer (cycled). `layout` may
     be given as a dict instead of a file. With write=False nothing is written.
 
@@ -311,6 +313,8 @@ def render(page_dir, fonts, noise, seed, out=None, layout_path=None, device=True
     hand = Hand(seed, noise)
     dev = Device(seed, noise if device else 0)
     items = layout["items"]
+    if student:
+        student.prepare(layout)
 
     clock, pen, end_time, unit_end = {}, {}, {}, {}
     traces, groups = [], []  # traces: (start, pts, brush); groups: (eid, item, [(label, [trace idx])])
@@ -323,7 +327,7 @@ def render(page_dir, fonts, noise, seed, out=None, layout_path=None, device=True
         t = clock[wid]
         brush = "bold" if item.get("bold") else "pen"
         group = []
-        for unit in item_units(item, wfont, hand):
+        for unit in item_units(item, wfont, hand, eid, student):
             refs = []
             for stroke in unit.strokes:
                 stroke = [tuple(p) for p in stroke]
@@ -354,22 +358,24 @@ def render(page_dir, fonts, noise, seed, out=None, layout_path=None, device=True
     fmt = ET.SubElement(ctx, q("traceFormat"))
     for name, units in (("X", "mm"), ("Y", "mm"), ("T", "s")):
         ET.SubElement(fmt, q("channel"), {"name": name, "type": "decimal", "units": units})
+    page = layout["page"]
+    scale = page.get("scale", 1.0)  # paper pages: whiteboard-scale layout -> paper mm
     for bid, width in (("pen", PEN_WIDTH), ("bold", BOLD_WIDTH)):
         brush = ET.SubElement(defs, q("brush"), {XML_ID: bid})
         for prop in ("width", "height"):
-            ET.SubElement(brush, q("brushProperty"), {"name": prop, "value": f"{width:g}", "units": "mm"})
-    page = layout["page"]
-    for k, v in (("page_id", layout["page_id"]), ("page_width_mm", page["width"]),
-                 ("page_height_mm", page["height"]), ("y_axis", page["y_axis"]),
+            ET.SubElement(brush, q("brushProperty"), {"name": prop, "value": f"{width * scale:g}", "units": "mm"})
+    paper = [("paper", page["paper"]), ("layout_scale", scale)] if "paper" in page else []
+    for k, v in [("page_id", layout["page_id"]), ("page_width_mm", round(page["width"] * scale, 2)),
+                 ("page_height_mm", round(page["height"] * scale, 2)), ("y_axis", page["y_axis"]), *paper,
                  ("generator", "scripts/render_inkml.py"), ("layout_seed", layout.get("layout_seed", 0)),
                  ("writer_fonts", ",".join(f"{w}:{f}" for w, f in font_of.items())),
-                 ("noise_level", noise), ("noise_seed", seed), ("device", json.dumps(dev.profile()))):
+                 ("noise_level", noise), ("noise_seed", seed), ("device", json.dumps(dev.profile()))]:
         ET.SubElement(ink, q("annotation"), {"type": k}).text = str(v)
 
     for i in order:
         _, pts, brush = traces[i]
         el = ET.SubElement(ink, q("trace"), {XML_ID: tid[i], "contextRef": "#ctx0", "brushRef": f"#{brush}"})
-        el.text = ", ".join(f"{x:.2f} {y:.2f} {tt:.3f}" for x, y, tt in pts)
+        el.text = ", ".join(f"{x * scale:.2f} {y * scale:.2f} {tt:.3f}" for x, y, tt in pts)
     root = ET.SubElement(ink, q("traceGroup"), {XML_ID: "elements"})
     first = lambda g: min((traces[r][0] for _, refs in g[2] for r in refs), default=0.0)
     for eid, item, group in sorted(groups, key=first):
@@ -455,8 +461,15 @@ if __name__ == "__main__":
                     help="handwriting variation level: 0 = clean geometry, 1 = deliberately messy")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--no-device", action="store_true", help="no digitizer artefacts")
+    ap.add_argument("--student", help="text-to-ink student checkpoint to write text items with, a few "
+                    "characters at a time (scripts/student_text.py); math stays in the font")
+    ap.add_argument("--student-device", default="cpu")
     ap.add_argument("--out", help="output path (default: page.inkml for a clean futural render of "
                          "layout seed 0, else renders/L<layout>_<fonts>_noise<L>_seed<N>.inkml)")
     args = ap.parse_args()
+    student = None
+    if args.student:
+        from student_text import StudentText
+        student = StudentText(args.student, args.student_device, args.seed)
     render(args.page_dir, args.font.split(","), args.noise, args.seed, args.out, args.layout,
-           not args.no_device)
+           not args.no_device, student=student)

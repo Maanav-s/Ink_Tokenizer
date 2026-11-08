@@ -1,0 +1,10 @@
+ENGL 101 - Assignment 4: Planning an Argumentative Essay (fake assignment for synthetic pages)
+
+Prompt: "Should universities require every student to take an introductory programming course?"
+
+1. Brainstorm: list arguments for and against, at least four each.
+2. Write a one-sentence thesis statement taking a clear position.
+3. Outline a five-paragraph essay: intro, three body paragraphs (topic sentence plus two supporting points each),
+   and a conclusion.
+4. Draft the opening lines of the introduction, ending with the thesis.
+5. Note two counterarguments and a one-line rebuttal for each.

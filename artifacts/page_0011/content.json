@@ -1,0 +1,236 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0011",
+  "topic": "calculus homework derivatives and integrals",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1 (math)",
+    "automated": true
+  },
+  "elements": [
+    {
+      "id": "t0",
+      "type": "text",
+      "role": "title",
+      "text": "Homework 9 - Derivatives"
+    },
+    {
+      "id": "h1",
+      "type": "text",
+      "role": "heading",
+      "text": "1. Product rule"
+    },
+    {
+      "id": "n1",
+      "type": "text",
+      "role": "note",
+      "text": "product rule"
+    },
+    {
+      "id": "m1",
+      "type": "math",
+      "latex": "f'(x) = 2x\\sin x + x^2\\cos x",
+      "text": "fp = 2*x*sin(x) + x**2*cos(x)",
+      "defines": "fp",
+      "check": {
+        "vars": {
+          "x": 0.7,
+          "fp": 1.276677433902167
+        }
+      }
+    },
+    {
+      "id": "m1a",
+      "type": "math",
+      "latex": "= 2x\\sin x + x^2\\cos x",
+      "text": "= 2*x*sin(x) + x**2*cos(x)",
+      "continues": "m1"
+    },
+    {
+      "id": "m1b",
+      "type": "math",
+      "latex": "= x(2\\sin x + x\\cos x)",
+      "text": "= x*(2*sin(x) + x*cos(x))",
+      "continues": "m1a"
+    },
+    {
+      "id": "m1c",
+      "type": "math",
+      "latex": "f'(0) = 0",
+      "text": "2*0*sin(0) + 0**2*cos(0) = 0",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "m1d",
+      "type": "math",
+      "latex": "f'(\\pi) = -\\pi^2",
+      "text": "2*pi*sin(pi) + pi**2*cos(pi) = -pi**2",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "h2",
+      "type": "text",
+      "role": "heading",
+      "text": "2. Chain rule"
+    },
+    {
+      "id": "n2",
+      "type": "text",
+      "role": "note",
+      "text": "chain rule"
+    },
+    {
+      "id": "m2",
+      "type": "math",
+      "latex": "g'(x) = \\frac{6x}{2\\sqrt{3x^2+1}}",
+      "text": "gp = 6*x/(2*sqrt(3*x**2+1))",
+      "defines": "gp",
+      "check": {
+        "vars": {
+          "x": 0.7,
+          "gp": 1.3361980086
+        }
+      }
+    },
+    {
+      "id": "m2a",
+      "type": "math",
+      "latex": "= \\frac{6x}{2\\sqrt{3x^2+1}}",
+      "text": "= 6*x/(2*sqrt(3*x**2+1))",
+      "continues": "m2"
+    },
+    {
+      "id": "m2b",
+      "type": "math",
+      "latex": "= \\frac{3x}{\\sqrt{3x^2+1}}",
+      "text": "= 3*x/sqrt(3*x**2+1)",
+      "continues": "m2a"
+    },
+    {
+      "id": "m2c",
+      "type": "math",
+      "latex": "g'(1) = \\frac{3}{2}",
+      "text": "3*1/sqrt(3*1**2+1) = 3/2",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "h3",
+      "type": "text",
+      "role": "heading",
+      "text": "3. Definite integral"
+    },
+    {
+      "id": "n3",
+      "type": "text",
+      "role": "note",
+      "text": "power rule"
+    },
+    {
+      "id": "m3",
+      "type": "math",
+      "latex": "\\int_0^2 (3x^2-4x+1)\\,dx = \\left[x^3-2x^2+x\\right]_0^2",
+      "text": "I = (2**3-2*2**2+2) - 0",
+      "defines": "I",
+      "check": {
+        "vars": {
+          "I": 2
+        }
+      }
+    },
+    {
+      "id": "m3a",
+      "type": "math",
+      "latex": "= (8-8+2)-0",
+      "text": "= (8-8+2)-0 = 2",
+      "continues": "m3"
+    },
+    {
+      "id": "m3b",
+      "type": "math",
+      "latex": "= 2",
+      "text": "= 2",
+      "continues": "m3a"
+    },
+    {
+      "id": "h4",
+      "type": "text",
+      "role": "heading",
+      "text": "4. Parts integral"
+    },
+    {
+      "id": "n4",
+      "type": "text",
+      "role": "note",
+      "text": "u = x, dv = exp(x) dx"
+    },
+    {
+      "id": "m4",
+      "type": "math",
+      "latex": "\\int_0^1 x e^x\\,dx = \\left[xe^x\\right]_0^1-\\int_0^1 e^x\\,dx",
+      "text": "J = (1*exp(1)-0) - (exp(1)-exp(0))",
+      "defines": "J",
+      "check": {
+        "vars": {
+          "J": 1
+        }
+      }
+    },
+    {
+      "id": "m4a",
+      "type": "math",
+      "latex": "= e-(e-1)",
+      "text": "= exp(1)-(exp(1)-1) = 1",
+      "continues": "m4"
+    },
+    {
+      "id": "m4b",
+      "type": "math",
+      "latex": "= 1",
+      "text": "= 1",
+      "continues": "m4a"
+    },
+    {
+      "id": "h5",
+      "type": "text",
+      "role": "heading",
+      "text": "5. Limit"
+    },
+    {
+      "id": "n5",
+      "type": "text",
+      "role": "note",
+      "text": "l'Hopital"
+    },
+    {
+      "id": "m5",
+      "type": "math",
+      "latex": "\\lim_{x\\to 0}\\frac{e^{2x}-1}{x} = \\lim_{x\\to 0}2e^{2x}",
+      "text": "L = 2*exp(2*0)",
+      "defines": "L",
+      "check": {
+        "vars": {
+          "L": 2
+        }
+      }
+    },
+    {
+      "id": "m5a",
+      "type": "math",
+      "latex": "= 2e^{0}",
+      "text": "= 2*exp(0)",
+      "continues": "m5"
+    },
+    {
+      "id": "m5b",
+      "type": "math",
+      "latex": "= 2",
+      "text": "= 2",
+      "continues": "m5a"
+    }
+  ]
+}

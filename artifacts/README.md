@@ -28,6 +28,13 @@ Commands).
 | page_0005 | 2:1 mux and 4-bit parity design review: truth table, Boolean algebra, gate circuit, numbered list |
 | page_0006 | payments API sprint planning + incident retro: dense lists, action-item and timeline tables, retry flowchart |
 | page_0007 | sensor-node power budget and LED sizing: derivation with checks, schematic, current table |
+| page_0008 | probability problem set (US Letter): outcome list, PMF table, Bayes flowchart, binomial |
+| page_0009 | circuits homework (Letter): series-parallel, RC step, nodal analysis, schematics, node tables |
+| page_0010 | digital logic problem set (Letter): truth tables, SOP, gate circuits, half adder, binary/hex |
+| page_0011 | calculus homework (Letter): multi-line derivations for derivatives, integrals and a limit |
+| page_0012 | English essay planning worksheet (Letter): for/against table, thesis, outline, draft prose |
+| page_0015 | physics homework (Letter): kinematics, projectile, energy with friction, collision |
+| page_0016 | digital logic (Letter) drawn with Gray-code truth tables, x/y/z inputs and boxed answers |
 
 **Provenance:**
 - **Pages 1–4:** an LLM agent (Claude) wrote their content by hand. They
@@ -36,6 +43,10 @@ Commands).
 - **Pages 5–7:** written by LLM subagents given only
   [docs/content_prompt.md](../docs/content_prompt.md) and a topic, then
   checked with `validate_page.py`. All three passed on the first try.
+- **Pages 8–12, 15, 16:** written by Muse Spark (Contributor mode) through
+  `scripts/muse_page.py` with a sample assignment from docs/prompts/ and a
+  subject variant (provenance names the model, variant and style draws),
+  then laid out on US Letter.
 - **Checks:** every page's truth tables, Boolean expressions, circuits and
   numeric equations are checked by `scripts/validate_page.py`.
 

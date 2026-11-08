@@ -1,0 +1,1075 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0012",
+ "layout_seed": 0,
+ "unit": "mm",
+ "page": {
+  "width": 863.6,
+  "height": 1117.6,
+  "origin": "top-left",
+  "y_axis": "down",
+  "paper": "letter",
+  "scale": 0.25
+ },
+ "style": {
+  "h": 17.415,
+  "title": 23.039,
+  "heading": 17.807,
+  "subbullet": 15.158,
+  "note": 15.707,
+  "table": 16.074,
+  "diagram": 15.142,
+  "math": 18.354,
+  "line_gap": 1.806,
+  "block_gap": 1.56,
+  "col_gap": 2.357,
+  "margin_x": 41.515,
+  "margin_y": 26.79,
+  "indent": 1.434,
+  "dash": "-",
+  "numbered": "{}.",
+  "title_underline": true,
+  "title_center": false,
+  "heading_underline": false,
+  "table_style": "open",
+  "table_rules": "after_header",
+  "table_left_align": false,
+  "row_h": 1.856,
+  "cell_pad": 0.839,
+  "side_by_side": 0.317,
+  "fill": 0.622,
+  "multi_writer": true,
+  "correction_rate": 0.1,
+  "scale": 1.0,
+  "page_w": 863.6,
+  "page_h": 1117.6,
+  "flow": true,
+  "blocks": {
+   "h1": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "open"
+   }
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "t1": {
+   "kind": "text",
+   "text": "ENGL 101 A4: Should all take coding?",
+   "bbox": [
+    44.8,
+    26.79,
+    574.26,
+    49.83
+   ],
+   "text_height": 23.04,
+   "role": "title",
+   "bold": true,
+   "element": "t1",
+   "writer": "writer_0"
+  },
+  "t1.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     41.51,
+     53.28
+    ],
+    [
+     578.05,
+     54.09
+    ]
+   ],
+   "element": "t1",
+   "writer": "writer_0"
+  },
+  "h1": {
+   "kind": "text",
+   "text": "1. Brainstorm for / against",
+   "bbox": [
+    41.51,
+    86.68,
+    337.07,
+    104.49
+   ],
+   "text_height": 17.81,
+   "role": "heading",
+   "element": "h1",
+   "writer": "writer_0"
+  },
+  "tbl1.h0": {
+   "kind": "text",
+   "text": "For",
+   "bbox": [
+    57.7,
+    120.66,
+    90.99,
+    136.74
+   ],
+   "text_height": 16.07,
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.h1": {
+   "kind": "text",
+   "text": "Against",
+   "bbox": [
+    366.62,
+    120.66,
+    439.05,
+    136.74
+   ],
+   "text_height": 16.07,
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     41.51,
+     144.1
+    ],
+    [
+     713.03,
+     144.1
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     353.13,
+     113.2
+    ],
+    [
+     353.13,
+     265.17
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r0c0": {
+   "kind": "text",
+   "text": "builds logic + problem solving",
+   "bbox": [
+    57.7,
+    150.49,
+    339.63,
+    166.57
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r0c1": {
+   "kind": "text",
+   "text": "takes time from major",
+   "bbox": [
+    366.62,
+    150.49,
+    584.33,
+    166.57
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r1c0": {
+   "kind": "text",
+   "text": "useful for jobs in all fields",
+   "bbox": [
+    57.7,
+    180.32,
+    316.97,
+    196.39
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r1c1": {
+   "kind": "text",
+   "text": "hard for non-STEM, lowers GPA",
+   "bbox": [
+    366.62,
+    180.32,
+    696.33,
+    196.39
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r2c0": {
+   "kind": "text",
+   "text": "digital literacy for citizens",
+   "bbox": [
+    57.7,
+    210.15,
+    307.64,
+    226.22
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r2c1": {
+   "kind": "text",
+   "text": "cost + need more staff",
+   "bbox": [
+    366.62,
+    210.15,
+    596.96,
+    226.22
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r3c0": {
+   "kind": "text",
+   "text": "helps research + data skills",
+   "bbox": [
+    57.7,
+    239.98,
+    321.68,
+    256.05
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 3,
+   "col": 0,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "tbl1.r3c1": {
+   "kind": "text",
+   "text": "one size fits all is unfair",
+   "bbox": [
+    366.62,
+    239.98,
+    604.35,
+    256.05
+   ],
+   "text_height": 16.07,
+   "role": "cell",
+   "row": 3,
+   "col": 1,
+   "element": "tbl1",
+   "writer": "writer_0"
+  },
+  "h2": {
+   "kind": "text",
+   "text": "2. Thesis",
+   "bbox": [
+    41.51,
+    292.33,
+    133.02,
+    310.14
+   ],
+   "text_height": 17.81,
+   "role": "heading",
+   "element": "h2",
+   "writer": "writer_0"
+  },
+  "thesis1.l0": {
+   "kind": "text",
+   "text": "Universities should require intro programming for all students because it",
+   "bbox": [
+    41.51,
+    318.85,
+    792.88,
+    336.26
+   ],
+   "text_height": 17.42,
+   "role": "text",
+   "line_of": "thesis1",
+   "element": "thesis1",
+   "writer": "writer_0"
+  },
+  "thesis1.l1": {
+   "kind": "text",
+   "text": "builds logic, career, and literacy skills.",
+   "bbox": [
+    41.51,
+    350.3,
+    447.76,
+    367.72
+   ],
+   "text_height": 17.42,
+   "role": "text",
+   "line_of": "thesis1",
+   "element": "thesis1",
+   "corrections": [
+    {
+     "index": 22,
+     "wrong": "a",
+     "style": "scribble"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "h3": {
+   "kind": "text",
+   "text": "3. Outline - 5 paragraphs",
+   "bbox": [
+    41.51,
+    394.88,
+    315.59,
+    412.68
+   ],
+   "text_height": 17.81,
+   "role": "heading",
+   "element": "h3",
+   "writer": "writer_0"
+  },
+  "ol1.1.marker": {
+   "kind": "text",
+   "text": "1.",
+   "bbox": [
+    41.51,
+    421.39,
+    58.94,
+    438.81
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 0,
+   "index": 0,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.1": {
+   "kind": "text",
+   "text": "Intro - tech in daily life -> thesis",
+   "bbox": [
+    65.37,
+    421.39,
+    430.08,
+    438.81
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.2.marker": {
+   "kind": "text",
+   "text": "2.",
+   "bbox": [
+    41.51,
+    452.84,
+    59.27,
+    470.26
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 0,
+   "index": 1,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.2": {
+   "kind": "text",
+   "text": "Body 1: coding teaches thinking",
+   "bbox": [
+    65.37,
+    452.84,
+    389.5,
+    470.26
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.2.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    482.48,
+    80.56,
+    497.63
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 1,
+   "index": 0,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.2.1": {
+   "kind": "text",
+   "text": "logic + stepwise problem solving",
+   "bbox": [
+    85.87,
+    482.48,
+    447.48,
+    497.63
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "ol1",
+   "corrections": [
+    {
+     "index": 25,
+     "wrong": "solvingg",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "ol1.2.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    509.85,
+    80.56,
+    525.01
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 1,
+   "index": 1,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.2.2": {
+   "kind": "text",
+   "text": "persistence via debugging",
+   "bbox": [
+    85.87,
+    509.85,
+    311.59,
+    525.01
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.3.marker": {
+   "kind": "text",
+   "text": "3.",
+   "bbox": [
+    41.51,
+    539.05,
+    58.94,
+    556.46
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 0,
+   "index": 2,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.3": {
+   "kind": "text",
+   "text": "Body 2: coding aids careers",
+   "bbox": [
+    65.37,
+    539.05,
+    353.35,
+    556.46
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.3.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    568.68,
+    80.56,
+    583.84
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 1,
+   "index": 0,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.3.1": {
+   "kind": "text",
+   "text": "jobs want data + automation",
+   "bbox": [
+    85.87,
+    568.68,
+    344.71,
+    583.84
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.3.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    596.05,
+    80.56,
+    611.21
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 1,
+   "index": 1,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.3.2": {
+   "kind": "text",
+   "text": "helps bio, bus, arts tools",
+   "bbox": [
+    85.87,
+    596.05,
+    329.17,
+    611.21
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "ol1",
+   "corrections": [
+    {
+     "index": 6,
+     "wrong": "bo",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "ol1.4.marker": {
+   "kind": "text",
+   "text": "4.",
+   "bbox": [
+    41.51,
+    625.25,
+    58.94,
+    642.66
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 0,
+   "index": 3,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.4": {
+   "kind": "text",
+   "text": "Body 3: coding builds citizenship",
+   "bbox": [
+    65.37,
+    625.25,
+    396.2,
+    642.66
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.4.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    654.88,
+    80.56,
+    670.04
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 1,
+   "index": 0,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.4.1": {
+   "kind": "text",
+   "text": "understand AI, privacy, bias",
+   "bbox": [
+    85.87,
+    654.88,
+    339.99,
+    670.04
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.4.2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    682.26,
+    80.56,
+    697.41
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 1,
+   "index": 1,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.4.2": {
+   "kind": "text",
+   "text": "informed voters + creators",
+   "bbox": [
+    85.87,
+    682.26,
+    334.38,
+    697.41
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.5.marker": {
+   "kind": "text",
+   "text": "5.",
+   "bbox": [
+    41.51,
+    711.45,
+    58.94,
+    728.87
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "ol1",
+   "level": 0,
+   "index": 4,
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "ol1.5": {
+   "kind": "text",
+   "text": "Conclusion - restate + call to act",
+   "bbox": [
+    65.37,
+    711.45,
+    419.97,
+    728.87
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "ol1",
+   "writer": "writer_0"
+  },
+  "h4": {
+   "kind": "text",
+   "text": "4. Intro draft",
+   "bbox": [
+    41.51,
+    756.03,
+    187.87,
+    773.83
+   ],
+   "text_height": 17.81,
+   "role": "heading",
+   "element": "h4",
+   "writer": "writer_0"
+  },
+  "intro1.l0": {
+   "kind": "text",
+   "text": "From phones to banks, code runs modern life, yet most grads cannot read",
+   "bbox": [
+    41.51,
+    782.54,
+    818.27,
+    799.96
+   ],
+   "text_height": 17.42,
+   "role": "text",
+   "line_of": "intro1",
+   "element": "intro1",
+   "writer": "writer_0"
+  },
+  "intro1.l1": {
+   "kind": "text",
+   "text": "it.",
+   "bbox": [
+    41.51,
+    813.99,
+    59.64,
+    831.41
+   ],
+   "text_height": 17.42,
+   "role": "text",
+   "line_of": "intro1",
+   "element": "intro1",
+   "writer": "writer_0"
+  },
+  "intro2.l0": {
+   "kind": "text",
+   "text": "Universities should require intro programming for all students because it",
+   "bbox": [
+    41.51,
+    858.57,
+    792.88,
+    875.99
+   ],
+   "text_height": 17.42,
+   "role": "text",
+   "line_of": "intro2",
+   "element": "intro2",
+   "writer": "writer_0"
+  },
+  "intro2.l1": {
+   "kind": "text",
+   "text": "builds logic, career, and literacy skills.",
+   "bbox": [
+    41.51,
+    890.02,
+    431.59,
+    907.44
+   ],
+   "text_height": 17.42,
+   "role": "text",
+   "line_of": "intro2",
+   "element": "intro2",
+   "writer": "writer_0"
+  },
+  "h5": {
+   "kind": "text",
+   "text": "5. Counterarguments + rebuttals",
+   "bbox": [
+    41.51,
+    934.6,
+    386.44,
+    952.41
+   ],
+   "text_height": 17.81,
+   "role": "heading",
+   "element": "h5",
+   "writer": "writer_0"
+  },
+  "c1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    41.51,
+    961.11,
+    57.69,
+    978.53
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "cl1",
+   "level": 0,
+   "index": 0,
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c1": {
+   "kind": "text",
+   "text": "Unfair to arts majors",
+   "bbox": [
+    63.78,
+    961.11,
+    288.6,
+    978.53
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c1.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    990.75,
+    80.56,
+    1005.9
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "cl1",
+   "level": 1,
+   "index": 0,
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c1.1": {
+   "kind": "text",
+   "text": "Rebuttal: intro is basic, no math -> fair",
+   "bbox": [
+    85.87,
+    990.75,
+    451.72,
+    1005.9
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c2.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    41.51,
+    1019.94,
+    57.69,
+    1037.36
+   ],
+   "text_height": 17.42,
+   "role": "list_marker",
+   "list": "cl1",
+   "level": 0,
+   "index": 1,
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c2": {
+   "kind": "text",
+   "text": "Cost + staff shortage",
+   "bbox": [
+    63.78,
+    1019.94,
+    295.61,
+    1037.36
+   ],
+   "text_height": 17.42,
+   "role": "bullet",
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c2.1.marker": {
+   "kind": "text",
+   "text": "-",
+   "bbox": [
+    66.49,
+    1049.57,
+    80.56,
+    1064.73
+   ],
+   "text_height": 15.16,
+   "role": "list_marker",
+   "list": "cl1",
+   "level": 1,
+   "index": 0,
+   "element": "cl1",
+   "writer": "writer_0"
+  },
+  "c2.1": {
+   "kind": "text",
+   "text": "Rebuttal: big lectures + labs -> low cost",
+   "bbox": [
+    85.87,
+    1049.57,
+    507.87,
+    1064.73
+   ],
+   "text_height": 15.16,
+   "role": "subbullet",
+   "element": "cl1",
+   "corrections": [
+    {
+     "index": 37,
+     "wrong": "cosst",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "a1": {
+   "kind": "polyline",
+   "points": [
+    [
+     41.51,
+     373.81
+    ],
+    [
+     792.88,
+     373.81
+    ]
+   ],
+   "role": "annotation_underline",
+   "element": "a1",
+   "target": "thesis1",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "t1",
+  "t1.underline",
+  "h1",
+  "tbl1.h0",
+  "tbl1.h1",
+  "tbl1.rule_h1",
+  "tbl1.rule_c0",
+  "tbl1.r0c0",
+  "tbl1.r0c1",
+  "tbl1.r1c0",
+  "tbl1.r1c1",
+  "tbl1.r2c0",
+  "tbl1.r2c1",
+  "tbl1.r3c0",
+  "tbl1.r3c1",
+  "h2",
+  "thesis1.l0",
+  "thesis1.l1",
+  "h3",
+  "ol1.1.marker",
+  "ol1.1",
+  "ol1.2.marker",
+  "ol1.2",
+  "ol1.2.1.marker",
+  "ol1.2.1",
+  "ol1.2.2.marker",
+  "ol1.2.2",
+  "ol1.3.marker",
+  "ol1.3",
+  "ol1.3.1.marker",
+  "ol1.3.1",
+  "ol1.3.2.marker",
+  "ol1.3.2",
+  "ol1.4.marker",
+  "ol1.4",
+  "ol1.4.1.marker",
+  "ol1.4.1",
+  "ol1.4.2.marker",
+  "ol1.4.2",
+  "ol1.5.marker",
+  "ol1.5",
+  "h4",
+  "intro1.l0",
+  "intro1.l1",
+  "intro2.l0",
+  "intro2.l1",
+  "h5",
+  "c1.marker",
+  "c1",
+  "c1.1.marker",
+  "c1.1",
+  "c2.marker",
+  "c2",
+  "c2.1.marker",
+  "c2.1",
+  "a1"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "tbl1",
+   "after": {
+    "id": "tbl1.rule_h1"
+   },
+   "target": [
+    {
+     "id": "tbl1.rule_c0"
+    }
+   ]
+  },
+  {
+   "id": "tgt_1",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "ol1",
+   "after": {
+    "id": "ol1.2"
+   },
+   "target": [
+    {
+     "id": "ol1.3.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_2",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "ol1",
+   "after": {
+    "id": "ol1.3"
+   },
+   "target": [
+    {
+     "id": "ol1.4.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_3",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "ol1",
+   "after": {
+    "id": "ol1.4"
+   },
+   "target": [
+    {
+     "id": "ol1.5.marker"
+    }
+   ],
+   "speculative": true
+  }
+ ],
+ "layout_attempt": 4
+}

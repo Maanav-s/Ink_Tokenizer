@@ -1,0 +1,169 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0012",
+  "topic": "ENGL 101 essay plan - require programming",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1 (writing)",
+    "automated": true
+  },
+  "elements": [
+    {
+      "id": "t1",
+      "type": "text",
+      "role": "title",
+      "text": "ENGL 101 A4: Should all take coding?"
+    },
+    {
+      "id": "h1",
+      "type": "text",
+      "role": "heading",
+      "text": "1. Brainstorm for / against"
+    },
+    {
+      "id": "tbl1",
+      "type": "table",
+      "kind": "comparison",
+      "header": [
+        "For",
+        "Against"
+      ],
+      "rows": [
+        [
+          "builds logic + problem solving",
+          "takes time from major"
+        ],
+        [
+          "useful for jobs in all fields",
+          "hard for non-STEM, lowers GPA"
+        ],
+        [
+          "digital literacy for citizens",
+          "cost + need more staff"
+        ],
+        [
+          "helps research + data skills",
+          "one size fits all is unfair"
+        ]
+      ]
+    },
+    {
+      "id": "h2",
+      "type": "text",
+      "role": "heading",
+      "text": "2. Thesis"
+    },
+    {
+      "id": "thesis1",
+      "type": "text",
+      "role": "text",
+      "text": "Universities should require intro programming for all students because it builds logic, career, and literacy skills."
+    },
+    {
+      "id": "h3",
+      "type": "text",
+      "role": "heading",
+      "text": "3. Outline - 5 paragraphs"
+    },
+    {
+      "id": "ol1",
+      "type": "list",
+      "style": "numbered",
+      "items": [
+        {
+          "text": "Intro - tech in daily life -> thesis"
+        },
+        {
+          "text": "Body 1: coding teaches thinking",
+          "items": [
+            {
+              "text": "logic + stepwise problem solving"
+            },
+            {
+              "text": "persistence via debugging"
+            }
+          ]
+        },
+        {
+          "text": "Body 2: coding aids careers",
+          "items": [
+            {
+              "text": "jobs want data + automation"
+            },
+            {
+              "text": "helps bio, bus, arts tools"
+            }
+          ]
+        },
+        {
+          "text": "Body 3: coding builds citizenship",
+          "items": [
+            {
+              "text": "understand AI, privacy, bias"
+            },
+            {
+              "text": "informed voters + creators"
+            }
+          ]
+        },
+        {
+          "text": "Conclusion - restate + call to act"
+        }
+      ]
+    },
+    {
+      "id": "h4",
+      "type": "text",
+      "role": "heading",
+      "text": "4. Intro draft"
+    },
+    {
+      "id": "intro1",
+      "type": "text",
+      "role": "text",
+      "text": "From phones to banks, code runs modern life, yet most grads cannot read it."
+    },
+    {
+      "id": "intro2",
+      "type": "text",
+      "role": "text",
+      "text": "Universities should require intro programming for all students because it builds logic, career, and literacy skills."
+    },
+    {
+      "id": "h5",
+      "type": "text",
+      "role": "heading",
+      "text": "5. Counterarguments + rebuttals"
+    },
+    {
+      "id": "cl1",
+      "type": "list",
+      "style": "dash",
+      "items": [
+        {
+          "id": "c1",
+          "text": "Unfair to arts majors",
+          "items": [
+            {
+              "text": "Rebuttal: intro is basic, no math -> fair"
+            }
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Cost + staff shortage",
+          "items": [
+            {
+              "text": "Rebuttal: big lectures + labs -> low cost"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1",
+      "type": "annotation",
+      "kind": "underline",
+      "target": "thesis1"
+    }
+  ]
+}

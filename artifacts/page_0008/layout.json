@@ -1,0 +1,1672 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0008",
+ "layout_seed": 0,
+ "unit": "mm",
+ "page": {
+  "width": 863.6,
+  "height": 1117.6,
+  "origin": "top-left",
+  "y_axis": "down",
+  "paper": "letter",
+  "scale": 0.25
+ },
+ "style": {
+  "h": 16.834,
+  "title": 21.054,
+  "heading": 16.844,
+  "subbullet": 14.681,
+  "note": 13.725,
+  "table": 15.023,
+  "diagram": 14.532,
+  "math": 18.119,
+  "line_gap": 1.693,
+  "block_gap": 0.944,
+  "col_gap": 3.086,
+  "margin_x": 31.647,
+  "margin_y": 35.417,
+  "indent": 1.63,
+  "dash": "-",
+  "numbered": "{})",
+  "title_underline": true,
+  "title_center": true,
+  "heading_underline": true,
+  "table_style": "open",
+  "table_rules": "after_header",
+  "table_left_align": false,
+  "row_h": 1.853,
+  "cell_pad": 0.632,
+  "side_by_side": 0.529,
+  "fill": 0.859,
+  "multi_writer": false,
+  "correction_rate": 0.0,
+  "scale": 1.0,
+  "page_w": 863.6,
+  "page_h": 1117.6,
+  "blocks": {
+   "tbl_pmf": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "open"
+   },
+   "m_ex": {},
+   "m_ex2": {},
+   "m_var": {},
+   "m_flag": {},
+   "m_bayes": {},
+   "h3": {},
+   "m_indep": {},
+   "tbl_joint": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "open"
+   },
+   "h4": {},
+   "m_ge1": {}
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "t_title": {
+   "kind": "text",
+   "text": "ECE 313 PS4 - Probability - worked solns",
+   "bbox": [
+    155.53,
+    35.42,
+    704.33,
+    56.47
+   ],
+   "text_height": 21.05,
+   "role": "title",
+   "bold": true,
+   "element": "t_title",
+   "writer": "writer_0"
+  },
+  "t_title.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     154.79,
+     59.63
+    ],
+    [
+     708.81,
+     59.19
+    ]
+   ],
+   "element": "t_title",
+   "writer": "writer_0"
+  },
+  "t_intro": {
+   "kind": "text",
+   "text": "Binomial, Bayes, joint, indep → check sums = 1",
+   "bbox": [
+    31.65,
+    75.51,
+    413.98,
+    89.24
+   ],
+   "text_height": 13.72,
+   "role": "note",
+   "element": "t_intro",
+   "writer": "writer_0"
+  },
+  "h1": {
+   "kind": "text",
+   "text": "1. Coin x3 fair, X = #heads, n=3 p=0.5",
+   "bbox": [
+    35.01,
+    105.12,
+    436.55,
+    121.97
+   ],
+   "text_height": 16.84,
+   "role": "heading",
+   "element": "h1",
+   "writer": "writer_0"
+  },
+  "h1.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     31.65,
+     124.49
+    ],
+    [
+     436.93,
+     125.29
+    ]
+   ],
+   "element": "h1",
+   "writer": "writer_0"
+  },
+  "l_out.heading": {
+   "kind": "text",
+   "text": "all 8 outcomes:",
+   "bbox": [
+    31.93,
+    133.71,
+    182.42,
+    150.55
+   ],
+   "text_height": 16.84,
+   "role": "heading",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "l_out.heading.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     31.65,
+     153.08
+    ],
+    [
+     184.68,
+     152.91
+    ]
+   ],
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o1.marker": {
+   "kind": "text",
+   "text": "1)",
+   "bbox": [
+    31.93,
+    171.48,
+    54.8,
+    188.32
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 0,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o1": {
+   "kind": "text",
+   "text": "HHH → X=3",
+   "bbox": [
+    61.18,
+    171.48,
+    184.67,
+    188.32
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o2.marker": {
+   "kind": "text",
+   "text": "2)",
+   "bbox": [
+    31.93,
+    199.99,
+    55.12,
+    216.82
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 1,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o2": {
+   "kind": "text",
+   "text": "HHT → X=2",
+   "bbox": [
+    61.18,
+    199.99,
+    180.64,
+    216.82
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o3.marker": {
+   "kind": "text",
+   "text": "3)",
+   "bbox": [
+    31.93,
+    228.49,
+    54.8,
+    245.33
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 2,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o3": {
+   "kind": "text",
+   "text": "HTH → X=2",
+   "bbox": [
+    61.18,
+    228.49,
+    180.64,
+    245.33
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o4.marker": {
+   "kind": "text",
+   "text": "4)",
+   "bbox": [
+    31.93,
+    257.0,
+    54.8,
+    273.83
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 3,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o4": {
+   "kind": "text",
+   "text": "THH → X=2",
+   "bbox": [
+    61.18,
+    257.0,
+    180.64,
+    273.83
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o5.marker": {
+   "kind": "text",
+   "text": "5)",
+   "bbox": [
+    31.93,
+    285.5,
+    54.8,
+    302.34
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 4,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o5": {
+   "kind": "text",
+   "text": "HTT → X=1",
+   "bbox": [
+    61.18,
+    285.5,
+    175.96,
+    302.34
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o6.marker": {
+   "kind": "text",
+   "text": "6)",
+   "bbox": [
+    31.93,
+    314.01,
+    55.29,
+    330.84
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 5,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o6": {
+   "kind": "text",
+   "text": "THT → X=1",
+   "bbox": [
+    61.18,
+    314.01,
+    175.96,
+    330.84
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o7.marker": {
+   "kind": "text",
+   "text": "7)",
+   "bbox": [
+    31.93,
+    342.51,
+    54.8,
+    359.35
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 6,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o7": {
+   "kind": "text",
+   "text": "TTH → X=1",
+   "bbox": [
+    61.18,
+    342.51,
+    175.96,
+    359.35
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o8.marker": {
+   "kind": "text",
+   "text": "8)",
+   "bbox": [
+    31.93,
+    371.02,
+    55.05,
+    387.85
+   ],
+   "text_height": 16.83,
+   "role": "list_marker",
+   "list": "l_out",
+   "level": 0,
+   "index": 7,
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "o8": {
+   "kind": "text",
+   "text": "TTT → X=0",
+   "bbox": [
+    61.18,
+    371.02,
+    171.63,
+    387.85
+   ],
+   "text_height": 16.83,
+   "role": "bullet",
+   "element": "l_out",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.h0": {
+   "kind": "text",
+   "text": "X",
+   "bbox": [
+    61.42,
+    414.41,
+    74.3,
+    429.44
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.h1": {
+   "kind": "text",
+   "text": "0",
+   "bbox": [
+    119.97,
+    414.41,
+    130.72,
+    429.44
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.h2": {
+   "kind": "text",
+   "text": "1",
+   "bbox": [
+    172.47,
+    414.41,
+    183.2,
+    429.44
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.h3": {
+   "kind": "text",
+   "text": "2",
+   "bbox": [
+    224.82,
+    414.41,
+    235.84,
+    429.44
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 3,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.h4": {
+   "kind": "text",
+   "text": "3",
+   "bbox": [
+    277.45,
+    414.41,
+    288.18,
+    429.44
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 4,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     31.65,
+     436.3
+    ],
+    [
+     314.04,
+     436.3
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     99.1,
+     403.74
+    ],
+    [
+     99.1,
+     466.97
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     151.59,
+     405.8
+    ],
+    [
+     151.59,
+     467.88
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.rule_c2": {
+   "kind": "polyline",
+   "points": [
+    [
+     204.08,
+     404.38
+    ],
+    [
+     204.08,
+     465.97
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.rule_c3": {
+   "kind": "polyline",
+   "points": [
+    [
+     256.57,
+     405.03
+    ],
+    [
+     256.57,
+     468.9
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.r0c0": {
+   "kind": "text",
+   "text": "P(X)",
+   "bbox": [
+    46.12,
+    442.26,
+    89.6,
+    457.28
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.r0c1": {
+   "kind": "text",
+   "text": "1/8",
+   "bbox": [
+    108.61,
+    442.26,
+    142.09,
+    457.28
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.r0c2": {
+   "kind": "text",
+   "text": "3/8",
+   "bbox": [
+    161.1,
+    442.26,
+    194.58,
+    457.28
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.r0c3": {
+   "kind": "text",
+   "text": "3/8",
+   "bbox": [
+    213.58,
+    442.26,
+    247.07,
+    457.28
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 3,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "tbl_pmf.r0c4": {
+   "kind": "text",
+   "text": "1/8",
+   "bbox": [
+    266.07,
+    442.26,
+    299.56,
+    457.28
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 4,
+   "element": "tbl_pmf",
+   "writer": "writer_0"
+  },
+  "m_ex": {
+   "kind": "math",
+   "latex": "E[X] = 0\\cdot \\frac{1}{8}+1\\cdot \\frac{3}{8}+2\\cdot \\frac{3}{8}+3\\cdot \\frac{1}{8}",
+   "bbox": [
+    31.65,
+    484.78,
+    354.95,
+    513.94
+   ],
+   "baseline": 505.25,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_ex",
+   "writer": "writer_0"
+  },
+  "m_ex2": {
+   "kind": "math",
+   "latex": "= 1.5",
+   "bbox": [
+    89.86,
+    526.65,
+    142.83,
+    544.77
+   ],
+   "baseline": 540.24,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_ex2",
+   "writer": "writer_0"
+  },
+  "m_var": {
+   "kind": "math",
+   "latex": "Var(X) = E[X^2]-E[X]^2 = 3-2.25 = 0.75",
+   "bbox": [
+    31.65,
+    560.65,
+    461.27,
+    582.03
+   ],
+   "baseline": 577.5,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_var",
+   "writer": "writer_0"
+  },
+  "h2": {
+   "kind": "text",
+   "text": "2. Sensor: P(F)=0.01, P(flag|F)=0.95, P(flag|good)=0.02",
+   "bbox": [
+    34.87,
+    597.92,
+    606.31,
+    614.76
+   ],
+   "text_height": 16.84,
+   "role": "heading",
+   "element": "h2",
+   "writer": "writer_0"
+  },
+  "h2.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     31.65,
+     617.29
+    ],
+    [
+     609.73,
+     617.99
+    ]
+   ],
+   "element": "h2",
+   "writer": "writer_0"
+  },
+  "f_bayes.n0.text": {
+   "kind": "text",
+   "text": "chip in",
+   "bbox": [
+    51.62,
+    642.89,
+    107.62,
+    657.43
+   ],
+   "text_height": 14.53,
+   "align": "center",
+   "element": "f_bayes",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "f_bayes.n0.box": {
+   "kind": "ellipse",
+   "bbox": [
+    31.65,
+    631.85,
+    127.6,
+    666.73
+   ],
+   "element": "f_bayes",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "f_bayes.n1.text": {
+   "kind": "text",
+   "text": "faulty?",
+   "bbox": [
+    209.92,
+    642.89,
+    269.33,
+    657.43
+   ],
+   "text_height": 14.53,
+   "align": "center",
+   "element": "f_bayes",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "f_bayes.n1.box": {
+   "kind": "diamond",
+   "bbox": [
+    175.14,
+    626.41,
+    304.11,
+    672.17
+   ],
+   "element": "f_bayes",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "f_bayes.e1.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     127.6,
+     649.29
+    ],
+    [
+     175.14,
+     649.29
+    ]
+   ],
+   "head": 5.915905879110756,
+   "element": "f_bayes",
+   "role": "edge",
+   "from": "n0",
+   "to": "n1",
+   "writer": "writer_0"
+  },
+  "f_bayes.n2.box": {
+   "kind": "rect",
+   "bbox": [
+    174.57,
+    702.05,
+    304.67,
+    736.53
+   ],
+   "corner_radius": 3.632930403725706,
+   "element": "f_bayes",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "f_bayes.n2.text": {
+   "kind": "text",
+   "text": "flag p=0.95",
+   "bbox": [
+    189.21,
+    712.89,
+    290.03,
+    727.43
+   ],
+   "text_height": 14.53,
+   "align": "center",
+   "element": "f_bayes",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "f_bayes.e2.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     239.62,
+     672.17
+    ],
+    [
+     239.62,
+     702.05
+    ]
+   ],
+   "head": 5.915905879110756,
+   "element": "f_bayes",
+   "role": "edge",
+   "from": "n1",
+   "to": "n2",
+   "writer": "writer_0"
+  },
+  "f_bayes.e2.label": {
+   "kind": "text",
+   "text": "yes",
+   "bbox": [
+    203.98,
+    680.16,
+    231.63,
+    694.69
+   ],
+   "text_height": 14.53,
+   "element": "f_bayes",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "f_bayes.n4.box": {
+   "kind": "parallelogram",
+   "bbox": [
+    360.13,
+    702.05,
+    479.12,
+    736.53
+   ],
+   "skew": 13.804218296496726,
+   "element": "f_bayes",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "f_bayes.n4.text": {
+   "kind": "text",
+   "text": "P(flag)=?",
+   "bbox": [
+    376.48,
+    712.89,
+    462.77,
+    727.43
+   ],
+   "text_height": 14.53,
+   "align": "center",
+   "element": "f_bayes",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "f_bayes.e4.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     304.67,
+     719.29
+    ],
+    [
+     367.03,
+     719.29
+    ]
+   ],
+   "head": 5.915905879110756,
+   "element": "f_bayes",
+   "role": "edge",
+   "from": "n2",
+   "to": "n4",
+   "writer": "writer_0"
+  },
+  "f_bayes.n3.box": {
+   "kind": "rect",
+   "bbox": [
+    354.43,
+    632.05,
+    484.82,
+    666.53
+   ],
+   "corner_radius": 3.632930403725706,
+   "element": "f_bayes",
+   "role": "node_box",
+   "writer": "writer_0"
+  },
+  "f_bayes.n3.text": {
+   "kind": "text",
+   "text": "flag p=0.02",
+   "bbox": [
+    369.06,
+    642.89,
+    470.18,
+    657.43
+   ],
+   "text_height": 14.53,
+   "align": "center",
+   "element": "f_bayes",
+   "role": "node_text",
+   "writer": "writer_0"
+  },
+  "f_bayes.e3.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     304.11,
+     649.29
+    ],
+    [
+     354.43,
+     649.29
+    ]
+   ],
+   "head": 5.915905879110756,
+   "element": "f_bayes",
+   "role": "edge",
+   "from": "n1",
+   "to": "n3",
+   "writer": "writer_0"
+  },
+  "f_bayes.e3.label": {
+   "kind": "text",
+   "text": "no",
+   "bbox": [
+    312.1,
+    655.1,
+    331.82,
+    669.63
+   ],
+   "text_height": 14.53,
+   "element": "f_bayes",
+   "role": "edge_label",
+   "writer": "writer_0"
+  },
+  "f_bayes.e5.arrow": {
+   "kind": "arrow",
+   "points": [
+    [
+     419.62,
+     666.53
+    ],
+    [
+     419.62,
+     702.05
+    ]
+   ],
+   "head": 5.915905879110756,
+   "element": "f_bayes",
+   "role": "edge",
+   "from": "n3",
+   "to": "n4",
+   "writer": "writer_0"
+  },
+  "m_flag": {
+   "kind": "math",
+   "latex": "P[flag] = 0.95\\cdot 0.01+0.02\\cdot 0.99 = 0.0293",
+   "bbox": [
+    31.65,
+    752.41,
+    461.79,
+    777.6
+   ],
+   "baseline": 769.26,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_flag",
+   "writer": "writer_0"
+  },
+  "m_bayes": {
+   "kind": "math",
+   "latex": "P[faulty|flag] = \\frac{0.95\\cdot 0.01}{0.0293} \\approx 0.324",
+   "bbox": [
+    31.65,
+    793.48,
+    376.37,
+    822.64
+   ],
+   "baseline": 813.95,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_bayes",
+   "writer": "writer_0"
+  },
+  "h3": {
+   "kind": "text",
+   "text": "3. P(A)=0.4 P(B)=0.5 P(A and B)=0.2",
+   "bbox": [
+    33.47,
+    838.52,
+    437.28,
+    855.37
+   ],
+   "text_height": 16.84,
+   "role": "heading",
+   "element": "h3",
+   "writer": "writer_0"
+  },
+  "h3.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     31.65,
+     857.89
+    ],
+    [
+     441.78,
+     857.6
+    ]
+   ],
+   "element": "h3",
+   "writer": "writer_0"
+  },
+  "m_or": {
+   "kind": "math",
+   "latex": "P[A \\text{ or } B] = 0.4+0.5-0.2 = 0.7",
+   "bbox": [
+    31.65,
+    866.31,
+    367.42,
+    887.69
+   ],
+   "baseline": 883.16,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_or",
+   "writer": "writer_0"
+  },
+  "m_indep": {
+   "kind": "math",
+   "latex": "P[A]\\cdot P[B] = 0.4\\cdot 0.5 = 0.2 = P[A \\text{ and } B]",
+   "bbox": [
+    31.65,
+    903.58,
+    466.37,
+    924.96
+   ],
+   "baseline": 920.43,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_indep",
+   "writer": "writer_0"
+  },
+  "t_indep": {
+   "kind": "text",
+   "text": "indep? yes → product = joint, P(A|B)=P(A)",
+   "bbox": [
+    31.65,
+    940.84,
+    391.64,
+    954.57
+   ],
+   "text_height": 13.72,
+   "role": "note",
+   "element": "t_indep",
+   "writer": "writer_0"
+  },
+  "tbl_joint.h1": {
+   "kind": "text",
+   "text": "B",
+   "bbox": [
+    122.59,
+    981.31,
+    136.08,
+    996.34
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.h2": {
+   "kind": "text",
+   "text": "not B",
+   "bbox": [
+    161.37,
+    981.31,
+    210.82,
+    996.34
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 2,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     31.65,
+     1003.2
+    ],
+    [
+     222.76,
+     1003.2
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     106.8,
+     970.45
+    ],
+    [
+     106.8,
+     1059.0
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.rule_c1": {
+   "kind": "polyline",
+   "points": [
+    [
+     151.87,
+     972.52
+    ],
+    [
+     151.87,
+     1059.4
+    ]
+   ],
+   "role": "rule",
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.r0c0": {
+   "kind": "text",
+   "text": "A",
+   "bbox": [
+    62.66,
+    1009.16,
+    79.32,
+    1024.18
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.r0c1": {
+   "kind": "text",
+   "text": "0.2",
+   "bbox": [
+    116.3,
+    1009.16,
+    142.37,
+    1024.18
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.r0c2": {
+   "kind": "text",
+   "text": "0.2",
+   "bbox": [
+    173.06,
+    1009.16,
+    199.13,
+    1024.18
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 2,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.r1c0": {
+   "kind": "text",
+   "text": "not A",
+   "bbox": [
+    44.69,
+    1037.0,
+    97.3,
+    1052.02
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.r1c1": {
+   "kind": "text",
+   "text": "0.3",
+   "bbox": [
+    116.44,
+    1037.0,
+    142.23,
+    1052.02
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "tbl_joint.r1c2": {
+   "kind": "text",
+   "text": "0.3",
+   "bbox": [
+    173.2,
+    1037.0,
+    198.99,
+    1052.02
+   ],
+   "text_height": 15.02,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 2,
+   "element": "tbl_joint",
+   "writer": "writer_0"
+  },
+  "h4": {
+   "kind": "text",
+   "text": "4. Link Bin(n=5,p=0.1) drop, indep",
+   "bbox": [
+    277.24,
+    970.45,
+    620.15,
+    987.3
+   ],
+   "text_height": 16.84,
+   "role": "heading",
+   "element": "h4",
+   "writer": "writer_0"
+  },
+  "h4.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     274.72,
+     989.82
+    ],
+    [
+     624.32,
+     989.01
+    ]
+   ],
+   "element": "h4",
+   "writer": "writer_0"
+  },
+  "m_p2": {
+   "kind": "math",
+   "latex": "P_2 = 10\\cdot 0.1^2\\cdot 0.9^3 = 0.0729",
+   "bbox": [
+    274.72,
+    998.24,
+    556.37,
+    1018.81
+   ],
+   "baseline": 1014.28,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_p2",
+   "writer": "writer_0"
+  },
+  "m_ge1": {
+   "kind": "math",
+   "latex": "P[\\ge 1] = 1-0.9^5 = 0.40951",
+   "bbox": [
+    274.72,
+    1034.69,
+    555.37,
+    1056.07
+   ],
+   "baseline": 1051.54,
+   "text_height": 18.12,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_ge1",
+   "writer": "writer_0"
+  },
+  "t_end": {
+   "kind": "text",
+   "text": "check: 0.9^5=0.59049 → 1-that, E=np=1.5 ok",
+   "bbox": [
+    274.72,
+    1071.96,
+    648.5,
+    1085.68
+   ],
+   "text_height": 13.72,
+   "role": "note",
+   "element": "t_end",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "t_title",
+  "t_title.underline",
+  "t_intro",
+  "h1",
+  "h1.underline",
+  "l_out.heading",
+  "l_out.heading.underline",
+  "o1.marker",
+  "o1",
+  "o2.marker",
+  "o2",
+  "o3.marker",
+  "o3",
+  "o4.marker",
+  "o4",
+  "o5.marker",
+  "o5",
+  "o6.marker",
+  "o6",
+  "o7.marker",
+  "o7",
+  "o8.marker",
+  "o8",
+  "tbl_pmf.h0",
+  "tbl_pmf.h1",
+  "tbl_pmf.h2",
+  "tbl_pmf.h3",
+  "tbl_pmf.h4",
+  "tbl_pmf.rule_h1",
+  "tbl_pmf.rule_c0",
+  "tbl_pmf.rule_c1",
+  "tbl_pmf.rule_c2",
+  "tbl_pmf.rule_c3",
+  "tbl_pmf.r0c0",
+  "tbl_pmf.r0c1",
+  "tbl_pmf.r0c2",
+  "tbl_pmf.r0c3",
+  "tbl_pmf.r0c4",
+  "m_ex",
+  "m_ex2",
+  "m_var",
+  "h2",
+  "h2.underline",
+  "f_bayes.n0.text",
+  "f_bayes.n0.box",
+  "f_bayes.n1.text",
+  "f_bayes.n1.box",
+  "f_bayes.e1.arrow",
+  "f_bayes.n2.box",
+  "f_bayes.n2.text",
+  "f_bayes.e2.arrow",
+  "f_bayes.e2.label",
+  "f_bayes.n4.box",
+  "f_bayes.n4.text",
+  "f_bayes.e4.arrow",
+  "f_bayes.n3.box",
+  "f_bayes.n3.text",
+  "f_bayes.e3.arrow",
+  "f_bayes.e3.label",
+  "f_bayes.e5.arrow",
+  "m_flag",
+  "m_bayes",
+  "h3",
+  "h3.underline",
+  "m_or",
+  "m_indep",
+  "t_indep",
+  "tbl_joint.h1",
+  "tbl_joint.h2",
+  "tbl_joint.rule_h1",
+  "tbl_joint.rule_c0",
+  "tbl_joint.rule_c1",
+  "tbl_joint.r0c0",
+  "tbl_joint.r0c1",
+  "tbl_joint.r0c2",
+  "tbl_joint.r1c0",
+  "tbl_joint.r1c1",
+  "tbl_joint.r1c2",
+  "h4",
+  "h4.underline",
+  "m_p2",
+  "m_ge1",
+  "t_end"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "l_out",
+   "after": {
+    "id": "o2"
+   },
+   "target": [
+    {
+     "id": "o3.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_1",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "l_out",
+   "after": {
+    "id": "o3"
+   },
+   "target": [
+    {
+     "id": "o4.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_2",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "l_out",
+   "after": {
+    "id": "o4"
+   },
+   "target": [
+    {
+     "id": "o5.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_3",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "l_out",
+   "after": {
+    "id": "o5"
+   },
+   "target": [
+    {
+     "id": "o6.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_4",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "l_out",
+   "after": {
+    "id": "o6"
+   },
+   "target": [
+    {
+     "id": "o7.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_5",
+   "kind": "list_marker",
+   "tier": "structural",
+   "element": "l_out",
+   "after": {
+    "id": "o7"
+   },
+   "target": [
+    {
+     "id": "o8.marker"
+    }
+   ],
+   "speculative": true
+  },
+  {
+   "id": "tgt_6",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "tbl_pmf",
+   "after": {
+    "id": "tbl_pmf.rule_h1"
+   },
+   "target": [
+    {
+     "id": "tbl_pmf.rule_c0"
+    },
+    {
+     "id": "tbl_pmf.rule_c1"
+    },
+    {
+     "id": "tbl_pmf.rule_c2"
+    },
+    {
+     "id": "tbl_pmf.rule_c3"
+    }
+   ]
+  },
+  {
+   "id": "tgt_7",
+   "kind": "branch_label",
+   "tier": "structural",
+   "element": "f_bayes",
+   "after": {
+    "id": "f_bayes.e2.label"
+   },
+   "target": [
+    {
+     "id": "f_bayes.e3.label"
+    }
+   ]
+  },
+  {
+   "id": "tgt_8",
+   "kind": "node_outline",
+   "tier": "structural",
+   "element": "f_bayes",
+   "after": {
+    "id": "f_bayes.n0.text"
+   },
+   "target": [
+    {
+     "id": "f_bayes.n0.box"
+    }
+   ]
+  },
+  {
+   "id": "tgt_9",
+   "kind": "node_outline",
+   "tier": "structural",
+   "element": "f_bayes",
+   "after": {
+    "id": "f_bayes.n1.text"
+   },
+   "target": [
+    {
+     "id": "f_bayes.n1.box"
+    }
+   ]
+  },
+  {
+   "id": "tgt_10",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "tbl_joint",
+   "after": {
+    "id": "tbl_joint.rule_h1"
+   },
+   "target": [
+    {
+     "id": "tbl_joint.rule_c0"
+    },
+    {
+     "id": "tbl_joint.rule_c1"
+    }
+   ]
+  }
+ ],
+ "layout_attempt": 4
+}

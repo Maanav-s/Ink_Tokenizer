@@ -1,0 +1,340 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0015",
+  "topic": "PHYS 211 HW4 kinematics energy momentum",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1 (physics)",
+    "automated": true,
+    "style": {
+      "headings": "number problems as 1. 2. 3.",
+      "answers": "mark final answers with a short 'ans:' note or arrow",
+      "verbosity": "a short note naming the method before each problem's working",
+      "sanity": "no sanity checks",
+      "g": "g = 9.8 m/s^2",
+      "givens": "list givens first as a list",
+      "symbols": "Δx and v_0 notation"
+    }
+  },
+  "elements": [
+    {
+      "id": "t0",
+      "type": "text",
+      "role": "title",
+      "text": "PHYS 211 HW4 - Kin, Energy, Momentum"
+    },
+    {
+      "id": "h1",
+      "type": "text",
+      "role": "heading",
+      "text": "1. Dropped ball"
+    },
+    {
+      "id": "n1m",
+      "type": "text",
+      "role": "note",
+      "text": "method: const-a kinematics"
+    },
+    {
+      "id": "l1",
+      "type": "list",
+      "style": "dash",
+      "items": [
+        {
+          "text": "Δx = 20 m, v_0 = 0, g = 9.8 m/s^2"
+        }
+      ]
+    },
+    {
+      "id": "m1t",
+      "type": "math",
+      "latex": "t = \\sqrt{\\frac{2 \\Delta x}{g}}",
+      "text": "t = sqrt(2*Dx/g)",
+      "defines": "t",
+      "check": {
+        "vars": {
+          "Dx": 20,
+          "g": 9.8,
+          "t": 2.0207
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m1t2",
+      "type": "math",
+      "latex": "= \\sqrt{\\frac{2 \\cdot 20}{9.8}} \\approx 2.02 \\text{ s}",
+      "text": "= sqrt(2*20/9.8)",
+      "continues": "m1t"
+    },
+    {
+      "id": "m1v",
+      "type": "math",
+      "latex": "v = \\sqrt{2 g \\Delta x}",
+      "text": "v = sqrt(2*g*Dx)",
+      "defines": "v",
+      "check": {
+        "vars": {
+          "g": 9.8,
+          "Dx": 20,
+          "v": 19.799
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m1v2",
+      "type": "math",
+      "latex": "= \\sqrt{2 \\cdot 9.8 \\cdot 20} \\approx 19.8 \\text{ m/s}",
+      "text": "= sqrt(2*9.8*20)",
+      "continues": "m1v"
+    },
+    {
+      "id": "n1a",
+      "type": "text",
+      "role": "note",
+      "text": "ans: t → 2.02 s, v → 19.8 m/s"
+    },
+    {
+      "id": "h2",
+      "type": "text",
+      "role": "heading",
+      "text": "2. Projectile 30°"
+    },
+    {
+      "id": "n2m",
+      "type": "text",
+      "role": "note",
+      "text": "method: split v_0x, v_0y comps"
+    },
+    {
+      "id": "l2",
+      "type": "list",
+      "style": "dash",
+      "items": [
+        {
+          "text": "v_0 = 15 m/s, 30°, g = 9.8 m/s^2"
+        }
+      ]
+    },
+    {
+      "id": "m2H",
+      "type": "math",
+      "latex": "H = \\frac{v_{0y}^2}{2 g}",
+      "text": "H = v0y**2/(2*g)",
+      "defines": "H",
+      "check": {
+        "vars": {
+          "v0y": 7.5,
+          "g": 9.8,
+          "H": 2.8699
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m2H2",
+      "type": "math",
+      "latex": "= \\frac{7.5^2}{2 \\cdot 9.8} \\approx 2.87 \\text{ m}",
+      "text": "= 7.5**2/(2*9.8)",
+      "continues": "m2H"
+    },
+    {
+      "id": "m2T",
+      "type": "math",
+      "latex": "T = \\frac{2 v_{0y}}{g}",
+      "text": "T = 2*v0y/g",
+      "defines": "T",
+      "check": {
+        "vars": {
+          "v0y": 7.5,
+          "g": 9.8,
+          "T": 1.5306
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m2T2",
+      "type": "math",
+      "latex": "= \\frac{2 \\cdot 7.5}{9.8} \\approx 1.53 \\text{ s}",
+      "text": "= 2*7.5/9.8",
+      "continues": "m2T"
+    },
+    {
+      "id": "m2R",
+      "type": "math",
+      "latex": "R = v_{0x} T",
+      "text": "R = v0x*T",
+      "defines": "R",
+      "check": {
+        "vars": {
+          "v0x": 12.99,
+          "T": 1.53,
+          "R": 19.8747
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m2R2",
+      "type": "math",
+      "latex": "= 12.99 \\cdot 1.53 \\approx 19.9 \\text{ m}",
+      "text": "= 12.99*1.53",
+      "continues": "m2R"
+    },
+    {
+      "id": "n2a",
+      "type": "text",
+      "role": "note",
+      "text": "ans: H=2.87m, T=1.53s, R=19.9m"
+    },
+    {
+      "id": "h3",
+      "type": "text",
+      "role": "heading",
+      "text": "3. Ramp + friction"
+    },
+    {
+      "id": "n3m",
+      "type": "text",
+      "role": "note",
+      "text": "method: energy → friction work"
+    },
+    {
+      "id": "l3",
+      "type": "list",
+      "style": "dash",
+      "items": [
+        {
+          "text": "m=2.0kg, h=5m, μk=0.25, v_0=0"
+        }
+      ]
+    },
+    {
+      "id": "m3v",
+      "type": "math",
+      "latex": "v = \\sqrt{2 g h}",
+      "text": "v = sqrt(2*g*h)",
+      "defines": "v",
+      "check": {
+        "vars": {
+          "g": 9.8,
+          "h": 5,
+          "v": 9.8995
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m3v2",
+      "type": "math",
+      "latex": "= \\sqrt{2 \\cdot 9.8 \\cdot 5} \\approx 9.9 \\text{ m/s}",
+      "text": "= sqrt(2*9.8*5)",
+      "continues": "m3v"
+    },
+    {
+      "id": "m3d",
+      "type": "math",
+      "latex": "d = \\frac{v^2}{2 \\mu_k g}",
+      "text": "d = v**2/(2*muk*g)",
+      "defines": "d",
+      "check": {
+        "vars": {
+          "v": 9.9,
+          "muk": 0.25,
+          "g": 9.8,
+          "d": 20.002
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m3d2",
+      "type": "math",
+      "latex": "= \\frac{9.9^2}{2 \\cdot 0.25 \\cdot 9.8} \\approx 20 \\text{ m}",
+      "text": "= 9.9**2/(2*0.25*9.8)",
+      "continues": "m3d"
+    },
+    {
+      "id": "n3a",
+      "type": "text",
+      "role": "note",
+      "text": "ans: v=9.9m/s, d=20m → stop"
+    },
+    {
+      "id": "h4",
+      "type": "text",
+      "role": "heading",
+      "text": "4. Stick collision"
+    },
+    {
+      "id": "n4m",
+      "type": "text",
+      "role": "note",
+      "text": "method: p-cons, KE compare"
+    },
+    {
+      "id": "l4",
+      "type": "list",
+      "style": "dash",
+      "items": [
+        {
+          "text": "m1=1500kg, m2=1000kg, v1=20m/s, v2=0"
+        }
+      ]
+    },
+    {
+      "id": "m4V",
+      "type": "math",
+      "latex": "V = \\frac{m_1 v_1}{m_1 + m_2}",
+      "text": "V = m1*v1/(m1+m2)",
+      "defines": "V",
+      "check": {
+        "vars": {
+          "m1": 1500,
+          "m2": 1000,
+          "v1": 20,
+          "V": 12
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m4V2",
+      "type": "math",
+      "latex": "= \\frac{1500 \\cdot 20}{1500 + 1000} \\approx 12 \\text{ m/s}",
+      "text": "= 1500*20/(1500+1000)",
+      "continues": "m4V"
+    },
+    {
+      "id": "m4K",
+      "type": "math",
+      "latex": "\\Delta K = \\frac{1}{2} m_1 v_1^2 - \\frac{1}{2} (m_1 + m_2) V^2",
+      "text": "dK = 0.5*m1*v1**2 - 0.5*(m1+m2)*V**2",
+      "defines": "dK",
+      "check": {
+        "vars": {
+          "m1": 1500,
+          "v1": 20,
+          "m2": 1000,
+          "V": 12,
+          "dK": 120000
+        },
+        "rel_tol": 0.02
+      }
+    },
+    {
+      "id": "m4K2",
+      "type": "math",
+      "latex": "= \\frac{1}{2} \\cdot 1500 \\cdot 20^2 - \\frac{1}{2} \\cdot 2500 \\cdot 12^2 \\approx 120000 \\text{ J}",
+      "text": "= 0.5*1500*20**2 - 0.5*2500*12**2",
+      "continues": "m4K"
+    },
+    {
+      "id": "n4a",
+      "type": "text",
+      "role": "note",
+      "text": "ans: V=12m/s, lost KE=120kJ"
+    }
+  ]
+}

@@ -1,0 +1,551 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0009",
+  "topic": "circuits homework: worked solutions",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1 (circuits)",
+    "automated": true
+  },
+  "elements": [
+    {
+      "id": "t_title",
+      "type": "text",
+      "role": "title",
+      "text": "EE 201 HW6 - DC + first order"
+    },
+    {
+      "id": "h1",
+      "type": "text",
+      "role": "heading",
+      "text": "1. Req + divider"
+    },
+    {
+      "id": "n_rpar",
+      "type": "text",
+      "role": "text",
+      "text": "R2||R3 first → + R1"
+    },
+    {
+      "id": "m_req",
+      "type": "math",
+      "latex": "R_{eq} = R_1 + \\frac{R_2 R_3}{R_2 + R_3}",
+      "text": "Req = R1 + R2*R3/(R2 + R3)",
+      "defines": "Req",
+      "check": {
+        "vars": {
+          "R1": 2,
+          "R2": 4,
+          "R3": 4,
+          "Req": 4
+        }
+      }
+    },
+    {
+      "id": "m_req2",
+      "type": "math",
+      "latex": "= 2 + \\frac{4 \\cdot 4}{4+4} = 4\\,k\\Omega",
+      "text": "= 2 + 4*4/(4+4) = 4",
+      "continues": "m_req"
+    },
+    {
+      "id": "m_is",
+      "type": "math",
+      "latex": "I_s = V_s / R_{eq}",
+      "text": "Is = Vs/Req",
+      "defines": "Is",
+      "check": {
+        "vars": {
+          "Vs": 12,
+          "Req": 4,
+          "Is": 3
+        }
+      }
+    },
+    {
+      "id": "m_is2",
+      "type": "math",
+      "latex": "= 12/4 = 3\\,mA",
+      "text": "= 12/4 = 3",
+      "continues": "m_is"
+    },
+    {
+      "id": "m_vr1",
+      "type": "math",
+      "latex": "V_{R1} = I_s R_1",
+      "text": "VR1 = Is*R1",
+      "defines": "VR1",
+      "check": {
+        "vars": {
+          "Is": 3,
+          "R1": 2,
+          "VR1": 6
+        }
+      }
+    },
+    {
+      "id": "m_vr12",
+      "type": "math",
+      "latex": "= 3 \\cdot 2 = 6\\,V",
+      "text": "= 3*2 = 6",
+      "continues": "m_vr1"
+    },
+    {
+      "id": "n_vx",
+      "type": "text",
+      "role": "text",
+      "text": "Vx=Vs-VR1=6V → Vp=6V"
+    },
+    {
+      "id": "m_ir3",
+      "type": "math",
+      "latex": "I_{R3} = I_s \\frac{R_2}{R_2+R_3}",
+      "text": "IR3 = Is*R2/(R2+R3)",
+      "defines": "IR3",
+      "check": {
+        "vars": {
+          "Is": 3,
+          "R2": 4,
+          "R3": 4,
+          "IR3": 1.5
+        }
+      }
+    },
+    {
+      "id": "m_ir32",
+      "type": "math",
+      "latex": "= 3 \\cdot \\frac{4}{8} = 1.5\\,mA",
+      "text": "= 3*4/8 = 1.5",
+      "continues": "m_ir3"
+    },
+    {
+      "id": "h2",
+      "type": "text",
+      "role": "heading",
+      "text": "2. Circuit + nodes"
+    },
+    {
+      "id": "sch12",
+      "type": "schematic",
+      "components": [
+        {
+          "id": "s1Vs",
+          "type": "voltage_source",
+          "label": "Vs",
+          "value": "12V",
+          "at": [
+            0,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s1R1",
+          "type": "resistor",
+          "label": "R1",
+          "value": "2k",
+          "at": [
+            1,
+            1
+          ],
+          "orient": "h"
+        },
+        {
+          "id": "s1R2",
+          "type": "resistor",
+          "label": "R2",
+          "value": "4k",
+          "at": [
+            2,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s1R3",
+          "type": "resistor",
+          "label": "R3",
+          "value": "4k",
+          "at": [
+            3,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s1G",
+          "type": "ground",
+          "at": [
+            0,
+            2
+          ]
+        }
+      ],
+      "nets": [
+        {
+          "id": "s1n1",
+          "connects": [
+            "s1Vs.a",
+            "s1R1.a"
+          ]
+        },
+        {
+          "id": "s1n2",
+          "connects": [
+            "s1R1.b",
+            "s1R2.a",
+            "s1R3.a"
+          ]
+        },
+        {
+          "id": "s1n3",
+          "connects": [
+            "s1Vs.b",
+            "s1R2.b",
+            "s1R3.b",
+            "s1G.a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n_nod",
+      "type": "text",
+      "role": "text",
+      "text": "Vs+ 12V → Vx 6V → 0V"
+    },
+    {
+      "id": "tabN",
+      "type": "table",
+      "kind": "node_voltages",
+      "header": [
+        "node",
+        "V"
+      ],
+      "rows": [
+        [
+          "Vs+",
+          "12V"
+        ],
+        [
+          "Vx",
+          "6V"
+        ],
+        [
+          "GND",
+          "0V"
+        ]
+      ]
+    },
+    {
+      "id": "h3",
+      "type": "text",
+      "role": "heading",
+      "text": "3. RC step"
+    },
+    {
+      "id": "schRC",
+      "type": "schematic",
+      "components": [
+        {
+          "id": "s3Vs",
+          "type": "voltage_source",
+          "label": "Vs",
+          "value": "5V",
+          "at": [
+            0,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s3R",
+          "type": "resistor",
+          "label": "R",
+          "value": "10k",
+          "at": [
+            1,
+            0
+          ],
+          "orient": "h"
+        },
+        {
+          "id": "s3C",
+          "type": "capacitor",
+          "label": "C",
+          "value": "100uF",
+          "at": [
+            2,
+            0
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s3G",
+          "type": "ground",
+          "at": [
+            0,
+            2
+          ]
+        }
+      ],
+      "nets": [
+        {
+          "id": "s3n1",
+          "connects": [
+            "s3Vs.a",
+            "s3R.a"
+          ]
+        },
+        {
+          "id": "s3n2",
+          "connects": [
+            "s3R.b",
+            "s3C.a"
+          ]
+        },
+        {
+          "id": "s3n3",
+          "connects": [
+            "s3Vs.b",
+            "s3C.b",
+            "s3G.a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_tau",
+      "type": "math",
+      "latex": "\\tau = R C",
+      "text": "Tau = R*C",
+      "defines": "Tau",
+      "check": {
+        "vars": {
+          "R": 10000,
+          "C": 0.0001,
+          "Tau": 1
+        }
+      }
+    },
+    {
+      "id": "m_tau2",
+      "type": "math",
+      "latex": "= 10000 \\cdot 0.0001 = 1\\,s",
+      "text": "= 10000*0.0001 = 1",
+      "continues": "m_tau"
+    },
+    {
+      "id": "n_init",
+      "type": "text",
+      "role": "text",
+      "text": "vc(0)=0 uncharged"
+    },
+    {
+      "id": "m_vc",
+      "type": "math",
+      "latex": "v_C(t) = 5(1-e^{-t/\\tau})",
+      "text": "Vc = 5*(1 - exp(-t/Tau))",
+      "defines": "Vc",
+      "check": {
+        "vars": {
+          "t": 1,
+          "Tau": 1,
+          "Vc": 3.1606
+        },
+        "rel_tol": 0.01
+      }
+    },
+    {
+      "id": "m_vc2",
+      "type": "math",
+      "latex": "= 5(1-e^{-1}) \\approx 3.16\\,V",
+      "text": "= 5*(1 - exp(-1)) = 3.1606",
+      "continues": "m_vc"
+    },
+    {
+      "id": "n_90",
+      "type": "text",
+      "role": "text",
+      "text": "4.5V = 90% → ~2.3 tau"
+    },
+    {
+      "id": "m_t45",
+      "type": "math",
+      "latex": "t_{4.5} = -\\tau \\ln(1-4.5/5)",
+      "text": "t45 = Tau*2.302585",
+      "defines": "t45",
+      "check": {
+        "vars": {
+          "Tau": 1,
+          "t45": 2.302585
+        }
+      }
+    },
+    {
+      "id": "m_t452",
+      "type": "math",
+      "latex": "= 1 \\cdot 2.30 \\approx 2.30\\,s",
+      "text": "= 1*2.302585 = 2.302585",
+      "continues": "m_t45"
+    },
+    {
+      "id": "h4",
+      "type": "text",
+      "role": "heading",
+      "text": "4. Nodal"
+    },
+    {
+      "id": "schN",
+      "type": "schematic",
+      "components": [
+        {
+          "id": "s4I",
+          "type": "current_source",
+          "label": "Is",
+          "value": "1mA",
+          "at": [
+            0,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s4R1",
+          "type": "resistor",
+          "label": "R1",
+          "value": "1k",
+          "at": [
+            1,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s4R12",
+          "type": "resistor",
+          "label": "R12",
+          "value": "2k",
+          "at": [
+            1,
+            0
+          ],
+          "orient": "h"
+        },
+        {
+          "id": "s4R2",
+          "type": "resistor",
+          "label": "R2",
+          "value": "2k",
+          "at": [
+            2,
+            1
+          ],
+          "orient": "v"
+        },
+        {
+          "id": "s4G",
+          "type": "ground",
+          "at": [
+            0,
+            2
+          ]
+        }
+      ],
+      "nets": [
+        {
+          "id": "s4n1",
+          "connects": [
+            "s4I.a",
+            "s4R1.a",
+            "s4R12.a"
+          ]
+        },
+        {
+          "id": "s4n2",
+          "connects": [
+            "s4R12.b",
+            "s4R2.a"
+          ]
+        },
+        {
+          "id": "s4n0",
+          "connects": [
+            "s4I.b",
+            "s4R1.b",
+            "s4R2.b",
+            "s4G.a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m_n1",
+      "type": "math",
+      "latex": "\\frac{V_1}{1} + \\frac{V_1-V_2}{2} = 1\\,mA",
+      "text": "V1/1 + (V1-V2)/2 = 1",
+      "check": {
+        "vars": {
+          "V1": 0.8,
+          "V2": 0.4
+        }
+      }
+    },
+    {
+      "id": "m_n2",
+      "type": "math",
+      "latex": "\\frac{V_2}{2} + \\frac{V_2-V_1}{2} = 0",
+      "text": "V2/2 + (V2-V1)/2 = 0",
+      "check": {
+        "vars": {
+          "V1": 0.8,
+          "V2": 0.4
+        }
+      }
+    },
+    {
+      "id": "m_v1",
+      "type": "math",
+      "latex": "V_1 = 2 V_2",
+      "text": "V1 = 2*V2",
+      "defines": "V1",
+      "check": {
+        "vars": {
+          "V1": 0.8,
+          "V2": 0.4
+        }
+      }
+    },
+    {
+      "id": "m_v12",
+      "type": "math",
+      "latex": "= 2 \\cdot 0.4 = 0.8\\,V",
+      "text": "= 2*0.4 = 0.8",
+      "continues": "m_v1"
+    },
+    {
+      "id": "tabV",
+      "type": "table",
+      "kind": "node_voltages",
+      "header": [
+        "node",
+        "V"
+      ],
+      "rows": [
+        [
+          "V1",
+          "0.8V"
+        ],
+        [
+          "V2",
+          "0.4V"
+        ]
+      ]
+    },
+    {
+      "id": "n_done",
+      "type": "text",
+      "role": "text",
+      "text": "check: V1=2*V2 ok"
+    }
+  ]
+}

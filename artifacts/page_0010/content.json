@@ -1,0 +1,499 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0010",
+  "topic": "digital logic combinational solutions",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1 (logic)",
+    "automated": true
+  },
+  "elements": [
+    {
+      "id": "t0",
+      "type": "text",
+      "role": "title",
+      "text": "ECE 120 PS3 - Combinational Logic"
+    },
+    {
+      "id": "h1",
+      "type": "text",
+      "role": "heading",
+      "text": "1. Majority M(A,B,C)"
+    },
+    {
+      "id": "n1a",
+      "type": "text",
+      "role": "note",
+      "text": "a) M=1 if 2+ inputs are 1"
+    },
+    {
+      "id": "tbl1",
+      "type": "table",
+      "kind": "truth_table",
+      "header": [
+        "A",
+        "B",
+        "C",
+        "M"
+      ],
+      "rows": [
+        [
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      ],
+      "input_columns": [
+        0,
+        1,
+        2
+      ],
+      "output_columns": [
+        3
+      ],
+      "row_order": "binary_counting_msb_first"
+    },
+    {
+      "id": "n1b",
+      "type": "text",
+      "role": "note",
+      "text": "b) SOP → minimize:"
+    },
+    {
+      "id": "m1a",
+      "type": "math",
+      "latex": "M = A'BC + AB'C + ABC' + ABC",
+      "text": "M = A'BC + AB'C + ABC' + ABC",
+      "defines": "M"
+    },
+    {
+      "id": "m1b",
+      "type": "math",
+      "latex": "M = AB + AC + BC",
+      "text": "M = AB + AC + BC",
+      "defines": "M"
+    },
+    {
+      "id": "n1c",
+      "type": "text",
+      "role": "note",
+      "text": "c) circuit for M below:"
+    },
+    {
+      "id": "c1",
+      "type": "circuit",
+      "components": [
+        {
+          "id": "inA",
+          "type": "input_pin",
+          "label": "A"
+        },
+        {
+          "id": "inB",
+          "type": "input_pin",
+          "label": "B"
+        },
+        {
+          "id": "inC",
+          "type": "input_pin",
+          "label": "C"
+        },
+        {
+          "id": "andAB",
+          "type": "and2"
+        },
+        {
+          "id": "andAC",
+          "type": "and2"
+        },
+        {
+          "id": "andBC",
+          "type": "and2"
+        },
+        {
+          "id": "orA",
+          "type": "or2"
+        },
+        {
+          "id": "orB",
+          "type": "or2"
+        },
+        {
+          "id": "outM",
+          "type": "output_pin",
+          "label": "M"
+        }
+      ],
+      "wires": [
+        {
+          "id": "w1",
+          "net": "n1",
+          "from": "inA.y",
+          "to": "andAB.a"
+        },
+        {
+          "id": "w2",
+          "net": "n2",
+          "from": "inB.y",
+          "to": "andAB.b"
+        },
+        {
+          "id": "w3",
+          "net": "n3",
+          "from": "inA.y",
+          "to": "andAC.a"
+        },
+        {
+          "id": "w4",
+          "net": "n4",
+          "from": "inC.y",
+          "to": "andAC.b"
+        },
+        {
+          "id": "w5",
+          "net": "n5",
+          "from": "inB.y",
+          "to": "andBC.a"
+        },
+        {
+          "id": "w6",
+          "net": "n6",
+          "from": "inC.y",
+          "to": "andBC.b"
+        },
+        {
+          "id": "w7",
+          "net": "n7",
+          "from": "andAB.y",
+          "to": "orA.a"
+        },
+        {
+          "id": "w8",
+          "net": "n8",
+          "from": "andAC.y",
+          "to": "orA.b"
+        },
+        {
+          "id": "w9",
+          "net": "n9",
+          "from": "orA.y",
+          "to": "orB.a"
+        },
+        {
+          "id": "w10",
+          "net": "n10",
+          "from": "andBC.y",
+          "to": "orB.b"
+        },
+        {
+          "id": "w11",
+          "net": "n11",
+          "from": "orB.y",
+          "to": "outM.a"
+        }
+      ]
+    },
+    {
+      "id": "h2",
+      "type": "text",
+      "role": "heading",
+      "text": "2. XOR proof"
+    },
+    {
+      "id": "n2",
+      "type": "text",
+      "role": "note",
+      "text": "X = A xor B, check cols →"
+    },
+    {
+      "id": "tbl2",
+      "type": "table",
+      "kind": "truth_table",
+      "header": [
+        "A",
+        "B",
+        "A'B",
+        "AB'",
+        "XOR"
+      ],
+      "rows": [
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "input_columns": [
+        0,
+        1
+      ],
+      "output_columns": [
+        2,
+        3,
+        4
+      ],
+      "row_order": "binary_counting_msb_first"
+    },
+    {
+      "id": "m2",
+      "type": "math",
+      "latex": "\\text{XOR} = A'B + AB'",
+      "text": "XOR = A'B + AB'",
+      "defines": "XOR"
+    },
+    {
+      "id": "h3",
+      "type": "text",
+      "role": "heading",
+      "text": "3. Half adder"
+    },
+    {
+      "id": "n3",
+      "type": "text",
+      "role": "note",
+      "text": "S=xor, Cout=and → circuit"
+    },
+    {
+      "id": "tbl3",
+      "type": "table",
+      "kind": "truth_table",
+      "header": [
+        "A",
+        "B",
+        "S",
+        "Cout"
+      ],
+      "rows": [
+        [
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "1"
+        ]
+      ],
+      "input_columns": [
+        0,
+        1
+      ],
+      "output_columns": [
+        2,
+        3
+      ],
+      "row_order": "binary_counting_msb_first"
+    },
+    {
+      "id": "m3a",
+      "type": "math",
+      "latex": "S = A \\oplus B",
+      "text": "S = A xor B",
+      "defines": "S"
+    },
+    {
+      "id": "m3b",
+      "type": "math",
+      "latex": "\\text{Cout} = AB",
+      "text": "Cout = AB",
+      "defines": "Cout"
+    },
+    {
+      "id": "c3",
+      "type": "circuit",
+      "components": [
+        {
+          "id": "hA",
+          "type": "input_pin",
+          "label": "A"
+        },
+        {
+          "id": "hB",
+          "type": "input_pin",
+          "label": "B"
+        },
+        {
+          "id": "gxor",
+          "type": "xor2"
+        },
+        {
+          "id": "gand",
+          "type": "and2"
+        },
+        {
+          "id": "oS",
+          "type": "output_pin",
+          "label": "S"
+        },
+        {
+          "id": "oC",
+          "type": "output_pin",
+          "label": "Cout"
+        }
+      ],
+      "wires": [
+        {
+          "id": "hw1",
+          "net": "ha",
+          "from": "hA.y",
+          "to": "gxor.a"
+        },
+        {
+          "id": "hw2",
+          "net": "hb",
+          "from": "hB.y",
+          "to": "gxor.b"
+        },
+        {
+          "id": "hw3",
+          "net": "hc",
+          "from": "hA.y",
+          "to": "gand.a"
+        },
+        {
+          "id": "hw4",
+          "net": "hd",
+          "from": "hB.y",
+          "to": "gand.b"
+        },
+        {
+          "id": "hw5",
+          "net": "he",
+          "from": "gxor.y",
+          "to": "oS.a"
+        },
+        {
+          "id": "hw6",
+          "net": "hf",
+          "from": "gand.y",
+          "to": "oC.a"
+        }
+      ]
+    },
+    {
+      "id": "h4",
+      "type": "text",
+      "role": "heading",
+      "text": "4. 0b1011 0110 convert"
+    },
+    {
+      "id": "n4a",
+      "type": "text",
+      "role": "note",
+      "text": "dec 182 → hex 0xB6:"
+    },
+    {
+      "id": "m4a",
+      "type": "math",
+      "latex": "182 = 128 + 32 + 16 + 4 + 2",
+      "text": "182 = 128 + 32 + 16 + 4 + 2",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "m4b",
+      "type": "math",
+      "latex": "182 = 11 \\times 16 + 6",
+      "text": "182 = 11*16 + 6",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "n4b",
+      "type": "text",
+      "role": "note",
+      "text": "neg → 8-bit 2s complement:"
+    },
+    {
+      "id": "m4c",
+      "type": "math",
+      "latex": "74 = 256 - 182",
+      "text": "74 = 256 - 182",
+      "check": {
+        "vars": {}
+      }
+    }
+  ]
+}

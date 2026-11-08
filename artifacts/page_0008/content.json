@@ -1,0 +1,304 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0008",
+  "topic": "ECE 313 PS4 probability worked solutions",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1",
+    "automated": true
+  },
+  "elements": [
+    {
+      "id": "t_title",
+      "type": "text",
+      "role": "title",
+      "text": "ECE 313 PS4 - Probability - worked solns"
+    },
+    {
+      "id": "t_intro",
+      "type": "text",
+      "role": "note",
+      "text": "Binomial, Bayes, joint, indep → check sums = 1"
+    },
+    {
+      "id": "h1",
+      "type": "text",
+      "role": "heading",
+      "text": "1. Coin x3 fair, X = #heads, n=3 p=0.5"
+    },
+    {
+      "id": "l_out",
+      "type": "list",
+      "style": "numbered",
+      "heading": "all 8 outcomes:",
+      "items": [
+        {
+          "id": "o1",
+          "text": "HHH → X=3"
+        },
+        {
+          "id": "o2",
+          "text": "HHT → X=2"
+        },
+        {
+          "id": "o3",
+          "text": "HTH → X=2"
+        },
+        {
+          "id": "o4",
+          "text": "THH → X=2"
+        },
+        {
+          "id": "o5",
+          "text": "HTT → X=1"
+        },
+        {
+          "id": "o6",
+          "text": "THT → X=1"
+        },
+        {
+          "id": "o7",
+          "text": "TTH → X=1"
+        },
+        {
+          "id": "o8",
+          "text": "TTT → X=0"
+        }
+      ]
+    },
+    {
+      "id": "tbl_pmf",
+      "type": "table",
+      "kind": "pmf",
+      "header": [
+        "X",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "rows": [
+        [
+          "P(X)",
+          "1/8",
+          "3/8",
+          "3/8",
+          "1/8"
+        ]
+      ]
+    },
+    {
+      "id": "m_ex",
+      "type": "math",
+      "latex": "E[X] = 0\\cdot \\frac{1}{8}+1\\cdot \\frac{3}{8}+2\\cdot \\frac{3}{8}+3\\cdot \\frac{1}{8}",
+      "text": "EX = 0*1/8+1*3/8+2*3/8+3*1/8",
+      "defines": "EX",
+      "check": {
+        "vars": {
+          "EX": 1.5
+        }
+      }
+    },
+    {
+      "id": "m_ex2",
+      "type": "math",
+      "latex": "= 1.5",
+      "text": "= 1.5",
+      "continues": "m_ex"
+    },
+    {
+      "id": "m_var",
+      "type": "math",
+      "latex": "Var(X) = E[X^2]-E[X]^2 = 3-2.25 = 0.75",
+      "text": "VarX = EX2 - EX**2 = 3-2.25 = 0.75",
+      "defines": "VarX",
+      "check": {
+        "vars": {
+          "EX2": 3,
+          "EX": 1.5,
+          "VarX": 0.75
+        }
+      }
+    },
+    {
+      "id": "h2",
+      "type": "text",
+      "role": "heading",
+      "text": "2. Sensor: P(F)=0.01, P(flag|F)=0.95, P(flag|good)=0.02"
+    },
+    {
+      "id": "f_bayes",
+      "type": "flowchart",
+      "direction": "LR",
+      "nodes": [
+        {
+          "id": "n0",
+          "shape": "terminator",
+          "text": "chip in"
+        },
+        {
+          "id": "n1",
+          "shape": "decision",
+          "text": "faulty?"
+        },
+        {
+          "id": "n2",
+          "shape": "process",
+          "text": "flag p=0.95"
+        },
+        {
+          "id": "n3",
+          "shape": "process",
+          "text": "flag p=0.02"
+        },
+        {
+          "id": "n4",
+          "shape": "io",
+          "text": "P(flag)=?"
+        }
+      ],
+      "edges": [
+        {
+          "from": "n0",
+          "to": "n1"
+        },
+        {
+          "from": "n1",
+          "to": "n2",
+          "label": "yes"
+        },
+        {
+          "from": "n1",
+          "to": "n3",
+          "label": "no"
+        },
+        {
+          "from": "n2",
+          "to": "n4"
+        },
+        {
+          "from": "n3",
+          "to": "n4"
+        }
+      ]
+    },
+    {
+      "id": "m_flag",
+      "type": "math",
+      "latex": "P[flag] = 0.95\\cdot 0.01+0.02\\cdot 0.99 = 0.0293",
+      "text": "Pflag = 0.95*0.01+0.02*0.99 = 0.0293",
+      "defines": "Pflag",
+      "check": {
+        "vars": {
+          "Pflag": 0.0293
+        }
+      }
+    },
+    {
+      "id": "m_bayes",
+      "type": "math",
+      "latex": "P[faulty|flag] = \\frac{0.95\\cdot 0.01}{0.0293} \\approx 0.324",
+      "text": "Pfg = 0.95*0.01/0.0293 = 0.3242",
+      "defines": "Pfg",
+      "check": {
+        "vars": {
+          "Pfg": 0.3242
+        },
+        "rel_tol": 0.002
+      }
+    },
+    {
+      "id": "h3",
+      "type": "text",
+      "role": "heading",
+      "text": "3. P(A)=0.4 P(B)=0.5 P(A and B)=0.2"
+    },
+    {
+      "id": "m_or",
+      "type": "math",
+      "latex": "P[A \\text{ or } B] = 0.4+0.5-0.2 = 0.7",
+      "text": "Por = 0.4+0.5-0.2 = 0.7",
+      "defines": "Por",
+      "check": {
+        "vars": {
+          "Por": 0.7
+        }
+      }
+    },
+    {
+      "id": "m_indep",
+      "type": "math",
+      "latex": "P[A]\\cdot P[B] = 0.4\\cdot 0.5 = 0.2 = P[A \\text{ and } B]",
+      "text": "PAPB = 0.4*0.5 = 0.2",
+      "defines": "PAPB",
+      "check": {
+        "vars": {
+          "PAPB": 0.2
+        }
+      }
+    },
+    {
+      "id": "t_indep",
+      "type": "text",
+      "role": "note",
+      "text": "indep? yes → product = joint, P(A|B)=P(A)"
+    },
+    {
+      "id": "tbl_joint",
+      "type": "table",
+      "kind": "joint",
+      "header": [
+        "",
+        "B",
+        "not B"
+      ],
+      "rows": [
+        [
+          "A",
+          "0.2",
+          "0.2"
+        ],
+        [
+          "not A",
+          "0.3",
+          "0.3"
+        ]
+      ]
+    },
+    {
+      "id": "h4",
+      "type": "text",
+      "role": "heading",
+      "text": "4. Link Bin(n=5,p=0.1) drop, indep"
+    },
+    {
+      "id": "m_p2",
+      "type": "math",
+      "latex": "P_2 = 10\\cdot 0.1^2\\cdot 0.9^3 = 0.0729",
+      "text": "P2 = 10*0.1**2*0.9**3 = 0.0729",
+      "defines": "P2",
+      "check": {
+        "vars": {
+          "P2": 0.0729
+        }
+      }
+    },
+    {
+      "id": "m_ge1",
+      "type": "math",
+      "latex": "P[\\ge 1] = 1-0.9^5 = 0.40951",
+      "text": "Pge1 = 1-0.9**5 = 0.40951",
+      "defines": "Pge1",
+      "check": {
+        "vars": {
+          "Pge1": 0.40951
+        }
+      }
+    },
+    {
+      "id": "t_end",
+      "type": "text",
+      "role": "note",
+      "text": "check: 0.9^5=0.59049 → 1-that, E=np=1.5 ok"
+    }
+  ]
+}

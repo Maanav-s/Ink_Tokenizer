@@ -76,7 +76,7 @@ def find_targets(content, layout):
 
 
 def truth_table_targets(blk, leaves, items, pos, order, blocks, add):
-    if blk.get("kind") != "truth_table" or blk.get("row_order") != "binary_counting_msb_first":
+    if blk.get("kind") != "truth_table" or blk.get("row_order") not in ("binary_counting_msb_first", "gray_code"):
         return
     ins = set(blk.get("input_columns", []))
     cells = [leaf for leaf in leaves if items[leaf].get("role") == "cell"]

@@ -76,6 +76,8 @@ def check_content(content):
     def label(where, s):
         if lc.is_math(s):
             typesets(where, s[1:-1])
+        elif isinstance(s, str) and "$" in s:
+            errs.append(f"{where}: {s!r} mixes text and $math$; a label is all plain text or all one $...$")
         else:
             chars(where, s)
 
@@ -169,12 +171,23 @@ def check_table(e, label):
             return errs
         if any(s not in ("0", "1", "x", "X", "-") for r in rows for s in r):
             errs.append(f"{eid}: truth-table cells must be 0, 1 or x")
-        if e.get("row_order") == "binary_counting_msb_first":
-            want = [list(map(str, bits)) for bits in itertools.product((0, 1), repeat=len(ins))]
+        if e.get("row_order") in ROW_ORDERS:
+            want = [list(map(str, bits)) for bits in ROW_ORDERS[e["row_order"]](len(ins))]
             got = [[r[j] for j in ins] for r in rows]
-            if got != want[:len(got)] or len(got) != len(want):
-                errs.append(f"{eid}: input rows are not all {len(want)} rows in binary counting order")
+            if got != want:
+                errs.append(f"{eid}: input rows are not all {len(want)} rows in {e['row_order']} order")
+        elif e.get("row_order") is not None:
+            errs.append(f"{eid}: row_order must be one of {sorted(ROW_ORDERS)}")
     return errs
+
+
+def gray_code(n):
+    """Reflected binary code, most significant bit first: 00, 01, 11, 10."""
+    return [tuple((g >> (n - 1 - k)) & 1 for k in range(n)) for g in (i ^ (i >> 1) for i in range(2 ** n))]
+
+
+ROW_ORDERS = {"binary_counting_msb_first": lambda n: list(itertools.product((0, 1), repeat=n)),
+              "gray_code": gray_code}
 
 
 def check_flowchart(e, label):
@@ -604,6 +617,11 @@ def read_inkml_groups(path):
         item = {"kind": ann.get("kind"), "role": ann.get("role", ""), "element": ann.get("element")}
         groups.append((ann["element_id"], item, units))
     page = {"width": float(notes["page_width_mm"]), "height": float(notes["page_height_mm"])}
+    # Paper pages are checked at the whiteboard scale they were laid out at, which the thresholds assume.
+    s = float(notes.get("layout_scale", 1.0))
+    if s != 1.0:
+        traces = {k: [(x / s, y / s, *rest) for x, y, *rest in pts] for k, pts in traces.items()}
+        page = {k: v / s for k, v in page.items()}
     return groups, traces, page
 
 

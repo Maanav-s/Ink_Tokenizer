@@ -1,0 +1,1927 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0009",
+ "layout_seed": 0,
+ "unit": "mm",
+ "page": {
+  "width": 1079.5,
+  "height": 1397.0,
+  "origin": "top-left",
+  "y_axis": "down",
+  "paper": "letter",
+  "scale": 0.2
+ },
+ "style": {
+  "h": 20.24,
+  "title": 26.507,
+  "heading": 22.546,
+  "subbullet": 16.919,
+  "note": 18.312,
+  "table": 19.443,
+  "diagram": 16.921,
+  "math": 21.523,
+  "line_gap": 1.801,
+  "block_gap": 1.06,
+  "col_gap": 2.475,
+  "margin_x": 52.687,
+  "margin_y": 23.879,
+  "indent": 1.193,
+  "dash": "-",
+  "numbered": "{})",
+  "title_underline": true,
+  "title_center": false,
+  "heading_underline": false,
+  "table_style": "grid",
+  "table_rules": "after_header",
+  "table_left_align": false,
+  "row_h": 1.983,
+  "cell_pad": 0.821,
+  "side_by_side": 0.223,
+  "fill": 0.677,
+  "multi_writer": true,
+  "correction_rate": 0.03,
+  "scale": 1.0,
+  "page_w": 1079.5,
+  "page_h": 1397.0,
+  "flow": true,
+  "blocks": {
+   "m_req": {},
+   "m_req2": {},
+   "m_is": {},
+   "m_is2": {},
+   "m_vr1": {},
+   "m_vr12": {},
+   "m_ir3": {},
+   "m_ir32": {},
+   "tabN": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "grid"
+   },
+   "m_tau": {},
+   "m_tau2": {},
+   "m_vc": {},
+   "m_vc2": {},
+   "m_t45": {},
+   "m_t452": {},
+   "m_n1": {},
+   "m_n2": {},
+   "m_v1": {},
+   "m_v12": {},
+   "tabV": {
+    "fill": "rows",
+    "rules": "after_header",
+    "style": "grid"
+   }
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  },
+  {
+   "id": "writer_1",
+   "start_after": "sch12.s1n3.1"
+  }
+ ],
+ "items": {
+  "t_title": {
+   "kind": "text",
+   "text": "EE 201 HW6 - DC + first order",
+   "bbox": [
+    55.7,
+    23.88,
+    597.86,
+    50.39
+   ],
+   "text_height": 26.51,
+   "role": "title",
+   "bold": true,
+   "element": "t_title",
+   "writer": "writer_0"
+  },
+  "t_title.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     52.69,
+     54.36
+    ],
+    [
+     603.64,
+     54.48
+    ]
+   ],
+   "element": "t_title",
+   "writer": "writer_0"
+  },
+  "h1": {
+   "kind": "text",
+   "text": "1. Req + divider",
+   "bbox": [
+    52.69,
+    80.22,
+    269.45,
+    102.77
+   ],
+   "text_height": 22.55,
+   "role": "heading",
+   "element": "h1",
+   "writer": "writer_0"
+  },
+  "n_rpar": {
+   "kind": "text",
+   "text": "R2||R3 first → + R1",
+   "bbox": [
+    52.69,
+    112.89,
+    296.18,
+    133.12
+   ],
+   "text_height": 20.24,
+   "role": "text",
+   "element": "n_rpar",
+   "writer": "writer_0"
+  },
+  "m_req": {
+   "kind": "math",
+   "latex": "R_{eq} = R_1 + \\frac{R_2 R_3}{R_2 + R_3}",
+   "bbox": [
+    52.69,
+    154.57,
+    263.97,
+    197.62
+   ],
+   "baseline": 183.09,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_req",
+   "writer": "writer_0"
+  },
+  "m_req2": {
+   "kind": "math",
+   "latex": "= 2 + \\frac{4 \\cdot 4}{4+4} = 4\\,k\\Omega",
+   "bbox": [
+    96.85,
+    214.78,
+    304.01,
+    249.41
+   ],
+   "baseline": 239.09,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_req2",
+   "writer": "writer_0"
+  },
+  "m_is": {
+   "kind": "math",
+   "latex": "I_s = V_s / R_{eq}",
+   "bbox": [
+    52.69,
+    270.85,
+    189.31,
+    300.88
+   ],
+   "baseline": 290.87,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_is",
+   "writer": "writer_0"
+  },
+  "m_is2": {
+   "kind": "math",
+   "latex": "= 12/4 = 3\\,mA",
+   "bbox": [
+    81.17,
+    318.04,
+    268.55,
+    343.44
+   ],
+   "baseline": 338.06,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_is2",
+   "writer": "writer_0"
+  },
+  "m_vr1": {
+   "kind": "math",
+   "latex": "V_{R1} = I_s R_1",
+   "bbox": [
+    52.69,
+    364.88,
+    177.64,
+    388.24
+   ],
+   "baseline": 381.03,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_vr1",
+   "writer": "writer_0"
+  },
+  "m_vr12": {
+   "kind": "math",
+   "latex": "= 3 \\cdot 2 = 6\\,V",
+   "bbox": [
+    99.13,
+    405.39,
+    240.67,
+    426.92
+   ],
+   "baseline": 421.54,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_vr12",
+   "writer": "writer_0"
+  },
+  "n_vx": {
+   "kind": "text",
+   "text": "Vx=Vs-VR1=6V → Vp=6V",
+   "bbox": [
+    52.69,
+    448.36,
+    366.85,
+    468.6
+   ],
+   "text_height": 20.24,
+   "role": "text",
+   "element": "n_vx",
+   "writer": "writer_0"
+  },
+  "m_ir3": {
+   "kind": "math",
+   "latex": "I_{R3} = I_s \\frac{R_2}{R_2+R_3}",
+   "bbox": [
+    52.69,
+    490.05,
+    228.05,
+    533.1
+   ],
+   "baseline": 518.57,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_ir3",
+   "writer": "writer_0"
+  },
+  "m_ir32": {
+   "kind": "math",
+   "latex": "= 3 \\cdot \\frac{4}{8} = 1.5\\,mA",
+   "bbox": [
+    94.52,
+    550.25,
+    290.65,
+    584.88
+   ],
+   "baseline": 574.57,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_ir32",
+   "writer": "writer_0"
+  },
+  "h2": {
+   "kind": "text",
+   "text": "2. Circuit + nodes",
+   "bbox": [
+    52.69,
+    606.33,
+    294.94,
+    628.88
+   ],
+   "text_height": 22.55,
+   "role": "heading",
+   "element": "h2",
+   "writer": "writer_0"
+  },
+  "sch12.s1Vs": {
+   "kind": "component",
+   "component": "voltage_source",
+   "element": "sch12",
+   "role": "component",
+   "a": [
+    112.85,
+    666.36
+   ],
+   "b": [
+    112.85,
+    716.36
+   ],
+   "writer": "writer_0"
+  },
+  "sch12.s1Vs.label": {
+   "kind": "text",
+   "text": "Vs",
+   "bbox": [
+    66.91,
+    672.07,
+    91.08,
+    688.99
+   ],
+   "text_height": 16.92,
+   "align": "right",
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1Vs.value": {
+   "kind": "text",
+   "text": "12V",
+   "bbox": [
+    52.69,
+    695.76,
+    91.08,
+    712.68
+   ],
+   "text_height": 16.92,
+   "align": "right",
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1G": {
+   "kind": "component",
+   "component": "ground",
+   "element": "sch12",
+   "role": "component",
+   "a": [
+    112.85,
+    786.36
+   ],
+   "writer": "writer_0"
+  },
+  "sch12.s1R1": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "sch12",
+   "role": "component",
+   "a": [
+    182.85,
+    691.36
+   ],
+   "b": [
+    232.85,
+    691.36
+   ],
+   "style": "box",
+   "writer": "writer_0"
+  },
+  "sch12.s1R1.label": {
+   "kind": "text",
+   "text": "R1",
+   "bbox": [
+    194.25,
+    639.0,
+    221.45,
+    655.92
+   ],
+   "text_height": 16.92,
+   "align": "center",
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1R1.value": {
+   "kind": "text",
+   "text": "2k",
+   "bbox": [
+    196.51,
+    662.69,
+    219.19,
+    679.61
+   ],
+   "text_height": 16.92,
+   "align": "center",
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1R2": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "sch12",
+   "role": "component",
+   "a": [
+    307.85,
+    666.36
+   ],
+   "b": [
+    307.85,
+    716.36
+   ],
+   "style": "box",
+   "writer": "writer_0"
+  },
+  "sch12.s1R2.label": {
+   "kind": "text",
+   "text": "R2",
+   "bbox": [
+    320.62,
+    683.92,
+    348.13,
+    700.84
+   ],
+   "text_height": 16.92,
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1R3": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "sch12",
+   "role": "component",
+   "a": [
+    382.85,
+    666.36
+   ],
+   "b": [
+    382.85,
+    716.36
+   ],
+   "style": "box",
+   "writer": "writer_0"
+  },
+  "sch12.s1R3.label": {
+   "kind": "text",
+   "text": "R3",
+   "bbox": [
+    395.62,
+    672.07,
+    422.81,
+    688.99
+   ],
+   "text_height": 16.92,
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1R3.value": {
+   "kind": "text",
+   "text": "4k",
+   "bbox": [
+    395.62,
+    695.76,
+    417.98,
+    712.68
+   ],
+   "text_height": 16.92,
+   "element": "sch12",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "sch12.s1n1": {
+   "kind": "wire",
+   "points": [
+    [
+     112.85,
+     666.36
+    ],
+    [
+     112.85,
+     656.36
+    ],
+    [
+     172.85,
+     656.36
+    ],
+    [
+     172.85,
+     691.36
+    ],
+    [
+     182.85,
+     691.36
+    ]
+   ],
+   "element": "sch12",
+   "role": "wire",
+   "net": "s1n1",
+   "writer": "writer_0"
+  },
+  "sch12.s1n2.1": {
+   "kind": "wire",
+   "points": [
+    [
+     232.85,
+     691.36
+    ],
+    [
+     292.85,
+     691.36
+    ],
+    [
+     292.85,
+     656.36
+    ],
+    [
+     307.85,
+     656.36
+    ],
+    [
+     307.85,
+     666.36
+    ]
+   ],
+   "element": "sch12",
+   "role": "wire",
+   "net": "s1n2",
+   "writer": "writer_0"
+  },
+  "sch12.s1n2.2": {
+   "kind": "wire",
+   "points": [
+    [
+     307.85,
+     656.36
+    ],
+    [
+     382.85,
+     656.36
+    ],
+    [
+     382.85,
+     666.36
+    ]
+   ],
+   "element": "sch12",
+   "role": "wire",
+   "net": "s1n2",
+   "dots": [
+    [
+     307.85,
+     656.36
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "sch12.s1n3.1": {
+   "kind": "wire",
+   "points": [
+    [
+     112.85,
+     716.36
+    ],
+    [
+     112.85,
+     786.36
+    ]
+   ],
+   "element": "sch12",
+   "role": "wire",
+   "net": "s1n3",
+   "writer": "writer_0"
+  },
+  "sch12.s1n3.2": {
+   "kind": "wire",
+   "points": [
+    [
+     112.85,
+     726.36
+    ],
+    [
+     307.85,
+     726.36
+    ],
+    [
+     307.85,
+     716.36
+    ]
+   ],
+   "element": "sch12",
+   "role": "wire",
+   "net": "s1n3",
+   "dots": [
+    [
+     112.85,
+     726.36
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "sch12.s1n3.3": {
+   "kind": "wire",
+   "points": [
+    [
+     307.85,
+     726.36
+    ],
+    [
+     382.85,
+     726.36
+    ],
+    [
+     382.85,
+     716.36
+    ]
+   ],
+   "element": "sch12",
+   "role": "wire",
+   "net": "s1n3",
+   "dots": [
+    [
+     307.85,
+     726.36
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "n_nod": {
+   "kind": "text",
+   "text": "Vs+ 12V → Vx 6V → 0V",
+   "bbox": [
+    52.69,
+    822.21,
+    337.76,
+    842.45
+   ],
+   "text_height": 20.24,
+   "role": "text",
+   "element": "n_nod",
+   "writer": "writer_0"
+  },
+  "tabN.h0": {
+   "kind": "text",
+   "text": "node",
+   "bbox": [
+    72.22,
+    875.76,
+    124.3,
+    895.21
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.h1": {
+   "kind": "text",
+   "text": "V",
+   "bbox": [
+    173.87,
+    875.76,
+    189.84,
+    895.21
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.border": {
+   "kind": "rect",
+   "bbox": [
+    52.69,
+    863.9,
+    219.88,
+    1041.28
+   ],
+   "role": "rule",
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     52.69,
+     908.24
+    ],
+    [
+     219.88,
+     908.24
+    ]
+   ],
+   "role": "rule",
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.rule_h2": {
+   "kind": "polyline",
+   "points": [
+    [
+     52.69,
+     952.59
+    ],
+    [
+     219.88,
+     952.59
+    ]
+   ],
+   "role": "rule",
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.rule_h3": {
+   "kind": "polyline",
+   "points": [
+    [
+     52.69,
+     996.94
+    ],
+    [
+     219.88,
+     996.94
+    ]
+   ],
+   "role": "rule",
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     143.84,
+     863.9
+    ],
+    [
+     143.84,
+     1041.28
+    ]
+   ],
+   "role": "rule",
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.r0c0": {
+   "kind": "text",
+   "text": "Vs+",
+   "bbox": [
+    75.35,
+    920.11,
+    121.18,
+    939.55
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.r0c1": {
+   "kind": "text",
+   "text": "12V",
+   "bbox": [
+    159.8,
+    920.11,
+    203.92,
+    939.55
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.r1c0": {
+   "kind": "text",
+   "text": "Vx",
+   "bbox": [
+    84.37,
+    964.46,
+    112.15,
+    983.9
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.r1c1": {
+   "kind": "text",
+   "text": "6V",
+   "bbox": [
+    166.65,
+    964.46,
+    197.07,
+    983.9
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.r2c0": {
+   "kind": "text",
+   "text": "GND",
+   "bbox": [
+    68.65,
+    1008.8,
+    127.88,
+    1028.25
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 0,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "tabN.r2c1": {
+   "kind": "text",
+   "text": "0V",
+   "bbox": [
+    166.92,
+    1008.8,
+    196.8,
+    1028.25
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 2,
+   "col": 1,
+   "element": "tabN",
+   "writer": "writer_0"
+  },
+  "h3": {
+   "kind": "text",
+   "text": "3. RC step",
+   "bbox": [
+    52.69,
+    1062.73,
+    193.75,
+    1085.28
+   ],
+   "text_height": 22.55,
+   "role": "heading",
+   "element": "h3",
+   "writer": "writer_0"
+  },
+  "schRC.s3Vs": {
+   "kind": "component",
+   "component": "voltage_source",
+   "element": "schRC",
+   "role": "component",
+   "a": [
+    98.63,
+    1210.4
+   ],
+   "b": [
+    98.63,
+    1260.4
+   ],
+   "writer": "writer_0"
+  },
+  "schRC.s3Vs.label": {
+   "kind": "text",
+   "text": "Vs",
+   "bbox": [
+    52.69,
+    1227.95,
+    76.86,
+    1244.87
+   ],
+   "text_height": 16.92,
+   "align": "right",
+   "element": "schRC",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "schRC.s3G": {
+   "kind": "component",
+   "component": "ground",
+   "element": "schRC",
+   "role": "component",
+   "a": [
+    98.63,
+    1330.4
+   ],
+   "writer": "writer_0"
+  },
+  "schRC.s3n3.1": {
+   "kind": "wire",
+   "points": [
+    [
+     98.63,
+     1260.4
+    ],
+    [
+     98.63,
+     1330.4
+    ]
+   ],
+   "element": "schRC",
+   "role": "wire",
+   "net": "s3n3",
+   "writer": "writer_0"
+  },
+  "schRC.s3R": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "schRC",
+   "role": "component",
+   "a": [
+    158.63,
+    1130.4
+   ],
+   "b": [
+    208.63,
+    1130.4
+   ],
+   "writer": "writer_0"
+  },
+  "schRC.s3R.label": {
+   "kind": "text",
+   "text": "R",
+   "bbox": [
+    176.07,
+    1102.62,
+    191.18,
+    1119.54
+   ],
+   "text_height": 16.92,
+   "align": "center",
+   "element": "schRC",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "schRC.s3n1": {
+   "kind": "wire",
+   "points": [
+    [
+     98.63,
+     1210.4
+    ],
+    [
+     98.63,
+     1130.4
+    ],
+    [
+     158.63,
+     1130.4
+    ]
+   ],
+   "element": "schRC",
+   "role": "wire",
+   "net": "s3n1",
+   "writer": "writer_0"
+  },
+  "schRC.s3C": {
+   "kind": "component",
+   "component": "capacitor",
+   "element": "schRC",
+   "role": "component",
+   "a": [
+    283.63,
+    1105.4
+   ],
+   "b": [
+    283.63,
+    1155.4
+   ],
+   "writer": "writer_0"
+  },
+  "schRC.s3C.label": {
+   "kind": "text",
+   "text": "C",
+   "bbox": [
+    297.15,
+    1122.95,
+    311.15,
+    1139.87
+   ],
+   "text_height": 16.92,
+   "element": "schRC",
+   "role": "component_label",
+   "writer": "writer_0"
+  },
+  "schRC.s3n2": {
+   "kind": "wire",
+   "points": [
+    [
+     208.63,
+     1130.4
+    ],
+    [
+     268.63,
+     1130.4
+    ],
+    [
+     268.63,
+     1095.4
+    ],
+    [
+     283.63,
+     1095.4
+    ],
+    [
+     283.63,
+     1105.4
+    ]
+   ],
+   "element": "schRC",
+   "role": "wire",
+   "net": "s3n2",
+   "writer": "writer_0"
+  },
+  "schRC.s3n3.2": {
+   "kind": "wire",
+   "points": [
+    [
+     98.63,
+     1270.4
+    ],
+    [
+     283.63,
+     1270.4
+    ],
+    [
+     283.63,
+     1155.4
+    ]
+   ],
+   "element": "schRC",
+   "role": "wire",
+   "net": "s3n3",
+   "dots": [
+    [
+     98.63,
+     1270.4
+    ]
+   ],
+   "writer": "writer_0"
+  },
+  "m_tau": {
+   "kind": "math",
+   "latex": "\\tau = R C",
+   "bbox": [
+    564.8,
+    80.22,
+    649.23,
+    101.74
+   ],
+   "baseline": 96.36,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_tau",
+   "writer": "writer_1"
+  },
+  "m_tau2": {
+   "kind": "math",
+   "latex": "= 10000 \\cdot 0.0001 = 1\\,s",
+   "bbox": [
+    586.19,
+    118.9,
+    851.47,
+    140.42
+   ],
+   "baseline": 135.04,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_tau2",
+   "writer": "writer_1"
+  },
+  "n_init": {
+   "kind": "text",
+   "text": "vc(0)=0 uncharged",
+   "bbox": [
+    564.8,
+    161.87,
+    793.51,
+    182.11
+   ],
+   "text_height": 20.24,
+   "role": "text",
+   "element": "n_init",
+   "writer": "writer_1"
+  },
+  "m_vc": {
+   "kind": "math",
+   "latex": "v_C(t) = 5(1-e^{-t/\\tau})",
+   "bbox": [
+    564.8,
+    203.56,
+    794.34,
+    230.39
+   ],
+   "baseline": 225.01,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_vc",
+   "writer": "writer_1"
+  },
+  "m_vc2": {
+   "kind": "math",
+   "latex": "= 5(1-e^{-1}) \\approx 3.16\\,V",
+   "bbox": [
+    630.63,
+    247.54,
+    876.81,
+    272.94
+   ],
+   "baseline": 267.56,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_vc2",
+   "writer": "writer_1"
+  },
+  "n_90": {
+   "kind": "text",
+   "text": "4.5V = 90% → ~2.3 tau",
+   "bbox": [
+    564.8,
+    294.39,
+    845.46,
+    314.63
+   ],
+   "text_height": 20.24,
+   "role": "text",
+   "element": "n_90",
+   "writer": "writer_1"
+  },
+  "m_t45": {
+   "kind": "math",
+   "latex": "t_{4.5} = -\\tau \\ln(1-4.5/5)",
+   "bbox": [
+    564.8,
+    336.08,
+    827.9,
+    361.47
+   ],
+   "baseline": 356.09,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_t45",
+   "writer": "writer_1"
+  },
+  "m_t452": {
+   "kind": "math",
+   "latex": "= 1 \\cdot 2.30 \\approx 2.30\\,s",
+   "bbox": [
+    604.99,
+    378.63,
+    808.51,
+    400.15
+   ],
+   "baseline": 394.77,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_t452",
+   "writer": "writer_1"
+  },
+  "h4": {
+   "kind": "text",
+   "text": "4. Nodal",
+   "bbox": [
+    564.8,
+    421.6,
+    674.96,
+    444.15
+   ],
+   "text_height": 22.55,
+   "role": "heading",
+   "element": "h4",
+   "writer": "writer_1"
+  },
+  "schN.s4I": {
+   "kind": "component",
+   "component": "current_source",
+   "element": "schN",
+   "role": "component",
+   "a": [
+    691.14,
+    542.04
+   ],
+   "b": [
+    691.14,
+    592.04
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4I.label": {
+   "kind": "text",
+   "text": "Is = 1mA",
+   "bbox": [
+    564.8,
+    559.6,
+    669.37,
+    576.52
+   ],
+   "text_height": 16.92,
+   "align": "right",
+   "element": "schN",
+   "role": "component_label",
+   "writer": "writer_1"
+  },
+  "schN.s4G": {
+   "kind": "component",
+   "component": "ground",
+   "element": "schN",
+   "role": "component",
+   "a": [
+    691.14,
+    637.04
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4n0.1": {
+   "kind": "wire",
+   "points": [
+    [
+     691.14,
+     592.04
+    ],
+    [
+     691.14,
+     637.04
+    ]
+   ],
+   "element": "schN",
+   "role": "wire",
+   "net": "s4n0",
+   "writer": "writer_1"
+  },
+  "schN.s4R12": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "schN",
+   "role": "component",
+   "a": [
+    761.14,
+    482.04
+   ],
+   "b": [
+    811.14,
+    482.04
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4R12.label": {
+   "kind": "text",
+   "text": "R12 = 2k",
+   "bbox": [
+    737.48,
+    454.27,
+    834.81,
+    471.19
+   ],
+   "text_height": 16.92,
+   "align": "center",
+   "element": "schN",
+   "role": "component_label",
+   "writer": "writer_1"
+  },
+  "schN.s4R1": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "schN",
+   "role": "component",
+   "a": [
+    786.14,
+    542.04
+   ],
+   "b": [
+    786.14,
+    592.04
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4R1.label": {
+   "kind": "text",
+   "text": "R1",
+   "bbox": [
+    798.01,
+    559.6,
+    825.21,
+    576.52
+   ],
+   "text_height": 16.92,
+   "element": "schN",
+   "role": "component_label",
+   "writer": "writer_1"
+  },
+  "schN.s4n1.1": {
+   "kind": "wire",
+   "points": [
+    [
+     691.14,
+     542.04
+    ],
+    [
+     691.14,
+     532.04
+    ],
+    [
+     786.14,
+     532.04
+    ],
+    [
+     786.14,
+     542.04
+    ]
+   ],
+   "element": "schN",
+   "role": "wire",
+   "net": "s4n1",
+   "writer": "writer_1"
+  },
+  "schN.s4n1.2": {
+   "kind": "wire",
+   "points": [
+    [
+     751.14,
+     532.04
+    ],
+    [
+     751.14,
+     482.04
+    ],
+    [
+     761.14,
+     482.04
+    ]
+   ],
+   "element": "schN",
+   "role": "wire",
+   "net": "s4n1",
+   "dots": [
+    [
+     751.14,
+     532.04
+    ]
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4n0.2": {
+   "kind": "wire",
+   "points": [
+    [
+     691.14,
+     602.04
+    ],
+    [
+     786.14,
+     602.04
+    ],
+    [
+     786.14,
+     592.04
+    ]
+   ],
+   "element": "schN",
+   "role": "wire",
+   "net": "s4n0",
+   "dots": [
+    [
+     691.14,
+     602.04
+    ]
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4R2": {
+   "kind": "component",
+   "component": "resistor",
+   "element": "schN",
+   "role": "component",
+   "a": [
+    856.14,
+    542.04
+   ],
+   "b": [
+    856.14,
+    592.04
+   ],
+   "writer": "writer_1"
+  },
+  "schN.s4R2.label": {
+   "kind": "text",
+   "text": "R2 = 2k",
+   "bbox": [
+    868.01,
+    559.6,
+    953.26,
+    576.52
+   ],
+   "text_height": 16.92,
+   "element": "schN",
+   "role": "component_label",
+   "writer": "writer_1"
+  },
+  "schN.s4n2": {
+   "kind": "wire",
+   "points": [
+    [
+     811.14,
+     482.04
+    ],
+    [
+     856.14,
+     482.04
+    ],
+    [
+     856.14,
+     542.04
+    ]
+   ],
+   "element": "schN",
+   "role": "wire",
+   "net": "s4n2",
+   "writer": "writer_1"
+  },
+  "schN.s4n0.3": {
+   "kind": "wire",
+   "points": [
+    [
+     786.14,
+     602.04
+    ],
+    [
+     856.14,
+     602.04
+    ],
+    [
+     856.14,
+     592.04
+    ]
+   ],
+   "element": "schN",
+   "role": "wire",
+   "net": "s4n0",
+   "dots": [
+    [
+     786.14,
+     602.04
+    ]
+   ],
+   "writer": "writer_1"
+  },
+  "m_n1": {
+   "kind": "math",
+   "latex": "\\frac{V_1}{1} + \\frac{V_1-V_2}{2} = 1\\,mA",
+   "bbox": [
+    564.8,
+    672.89,
+    802.29,
+    710.67
+   ],
+   "baseline": 700.35,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_n1",
+   "writer": "writer_1"
+  },
+  "m_n2": {
+   "kind": "math",
+   "latex": "\\frac{V_2}{2} + \\frac{V_2-V_1}{2} = 0",
+   "bbox": [
+    564.8,
+    732.12,
+    752.02,
+    769.9
+   ],
+   "baseline": 759.59,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m_n2",
+   "writer": "writer_1"
+  },
+  "m_v1": {
+   "kind": "math",
+   "latex": "V_1 = 2 V_2",
+   "bbox": [
+    564.8,
+    791.35,
+    669.87,
+    812.87
+   ],
+   "baseline": 807.49,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_v1",
+   "writer": "writer_1"
+  },
+  "m_v12": {
+   "kind": "math",
+   "latex": "= 2 \\cdot 0.4 = 0.8\\,V",
+   "bbox": [
+    599.32,
+    830.03,
+    783.68,
+    851.55
+   ],
+   "baseline": 846.17,
+   "text_height": 21.52,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m_v12",
+   "writer": "writer_1"
+  },
+  "tabV.h0": {
+   "kind": "text",
+   "text": "node",
+   "bbox": [
+    580.76,
+    884.87,
+    632.84,
+    904.31
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 0,
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.h1": {
+   "kind": "text",
+   "text": "V",
+   "bbox": [
+    681.59,
+    884.87,
+    697.56,
+    904.31
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "header_cell",
+   "row": "header",
+   "col": 1,
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.border": {
+   "kind": "rect",
+   "bbox": [
+    564.8,
+    873.0,
+    730.35,
+    1006.04
+   ],
+   "role": "rule",
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.rule_h1": {
+   "kind": "polyline",
+   "points": [
+    [
+     564.8,
+     917.35
+    ],
+    [
+     730.35,
+     917.35
+    ]
+   ],
+   "role": "rule",
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.rule_h2": {
+   "kind": "polyline",
+   "points": [
+    [
+     564.8,
+     961.7
+    ],
+    [
+     730.35,
+     961.7
+    ]
+   ],
+   "role": "rule",
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.rule_c0": {
+   "kind": "polyline",
+   "points": [
+    [
+     648.8,
+     873.0
+    ],
+    [
+     648.8,
+     1006.04
+    ]
+   ],
+   "role": "rule",
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.r0c0": {
+   "kind": "text",
+   "text": "V1",
+   "bbox": [
+    591.87,
+    929.22,
+    621.73,
+    948.66
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 0,
+   "element": "tabV",
+   "corrections": [
+    {
+     "index": 1,
+     "wrong": "8",
+     "style": "overwrite"
+    }
+   ],
+   "writer": "writer_1"
+  },
+  "tabV.r0c1": {
+   "kind": "text",
+   "text": "0.8V",
+   "bbox": [
+    664.76,
+    929.22,
+    714.39,
+    948.66
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 0,
+   "col": 1,
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.r1c0": {
+   "kind": "text",
+   "text": "V2",
+   "bbox": [
+    591.68,
+    973.56,
+    621.91,
+    993.01
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 0,
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "tabV.r1c1": {
+   "kind": "text",
+   "text": "0.4V",
+   "bbox": [
+    664.9,
+    973.56,
+    714.25,
+    993.01
+   ],
+   "text_height": 19.44,
+   "align": "center",
+   "role": "cell",
+   "row": 1,
+   "col": 1,
+   "element": "tabV",
+   "writer": "writer_1"
+  },
+  "n_done": {
+   "kind": "text",
+   "text": "check: V1=2*V2 ok",
+   "bbox": [
+    564.8,
+    1027.49,
+    798.07,
+    1047.73
+   ],
+   "text_height": 20.24,
+   "role": "text",
+   "element": "n_done",
+   "writer": "writer_1"
+  }
+ },
+ "writing_order": [
+  "t_title",
+  "t_title.underline",
+  "h1",
+  "n_rpar",
+  "m_req",
+  "m_req2",
+  "m_is",
+  "m_is2",
+  "m_vr1",
+  "m_vr12",
+  "n_vx",
+  "m_ir3",
+  "m_ir32",
+  "h2",
+  "sch12.s1Vs",
+  "sch12.s1Vs.label",
+  "sch12.s1Vs.value",
+  "sch12.s1G",
+  "sch12.s1R1",
+  "sch12.s1R1.label",
+  "sch12.s1R1.value",
+  "sch12.s1R2",
+  "sch12.s1R2.label",
+  "sch12.s1R3",
+  "sch12.s1R3.label",
+  "sch12.s1R3.value",
+  "sch12.s1n1",
+  "sch12.s1n2.1",
+  "sch12.s1n2.2",
+  "sch12.s1n3.1",
+  "m_tau",
+  "m_tau2",
+  "n_init",
+  "m_vc",
+  "m_vc2",
+  "n_90",
+  "m_t45",
+  "m_t452",
+  "h4",
+  "schN.s4I",
+  "schN.s4I.label",
+  "schN.s4G",
+  "schN.s4n0.1",
+  "schN.s4R12",
+  "schN.s4R12.label",
+  "schN.s4R1",
+  "schN.s4R1.label",
+  "schN.s4n1.1",
+  "schN.s4n1.2",
+  "schN.s4n0.2",
+  "schN.s4R2",
+  "schN.s4R2.label",
+  "schN.s4n2",
+  "schN.s4n0.3",
+  "m_n1",
+  "m_n2",
+  "m_v1",
+  "m_v12",
+  "tabV.h0",
+  "tabV.h1",
+  "tabV.border",
+  "tabV.rule_h1",
+  "tabV.rule_h2",
+  "tabV.rule_c0",
+  "tabV.r0c0",
+  "tabV.r0c1",
+  "tabV.r1c0",
+  "tabV.r1c1",
+  "n_done",
+  "sch12.s1n3.2",
+  "sch12.s1n3.3",
+  "n_nod",
+  "tabN.h0",
+  "tabN.h1",
+  "tabN.border",
+  "tabN.rule_h1",
+  "tabN.rule_h2",
+  "tabN.rule_h3",
+  "tabN.rule_c0",
+  "tabN.r0c0",
+  "tabN.r0c1",
+  "tabN.r1c0",
+  "tabN.r1c1",
+  "tabN.r2c0",
+  "tabN.r2c1",
+  "h3",
+  "schRC.s3Vs",
+  "schRC.s3Vs.label",
+  "schRC.s3G",
+  "schRC.s3n3.1",
+  "schRC.s3R",
+  "schRC.s3R.label",
+  "schRC.s3n1",
+  "schRC.s3C",
+  "schRC.s3C.label",
+  "schRC.s3n2",
+  "schRC.s3n3.2"
+ ],
+ "targets": [
+  {
+   "id": "tgt_0",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "tabN",
+   "after": {
+    "id": "tabN.border"
+   },
+   "target": [
+    {
+     "id": "tabN.rule_h1"
+    },
+    {
+     "id": "tabN.rule_h2"
+    },
+    {
+     "id": "tabN.rule_h3"
+    },
+    {
+     "id": "tabN.rule_c0"
+    }
+   ]
+  },
+  {
+   "id": "tgt_1",
+   "kind": "table_rules",
+   "tier": "structural",
+   "element": "tabV",
+   "after": {
+    "id": "tabV.border"
+   },
+   "target": [
+    {
+     "id": "tabV.rule_h1"
+    },
+    {
+     "id": "tabV.rule_h2"
+    },
+    {
+     "id": "tabV.rule_c0"
+    }
+   ]
+  }
+ ],
+ "layout_attempt": 6
+}

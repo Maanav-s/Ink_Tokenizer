@@ -1,0 +1,12 @@
+ECE 120 - Problem Set 3: Combinational Logic (fake assignment for synthetic pages)
+
+1. A 3-input majority function M(A, B, C) is 1 when at least two inputs are 1.
+   (a) Write its truth table.
+   (b) Write the sum-of-products expression and simplify it.
+   (c) Draw a gate-level circuit for the simplified expression.
+
+2. Show that A XOR B = A'B + AB' by completing a truth table with columns A, B, A'B, AB', A XOR B.
+
+3. Design a 1-bit half adder: truth table for S and Cout, expressions, and a circuit.
+
+4. Convert 0b1011 0110 to decimal and hex, and give its 8-bit two's complement negation.

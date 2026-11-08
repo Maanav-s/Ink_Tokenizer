@@ -1,0 +1,714 @@
+{
+ "schema": "ink_tokenizer.synthetic_page.layout/v1",
+ "page_id": "page_0011",
+ "layout_seed": 0,
+ "unit": "mm",
+ "page": {
+  "width": 863.6,
+  "height": 1117.6,
+  "origin": "top-left",
+  "y_axis": "down",
+  "paper": "letter",
+  "scale": 0.25
+ },
+ "style": {
+  "h": 17.778,
+  "title": 23.19,
+  "heading": 19.974,
+  "subbullet": 14.849,
+  "note": 16.502,
+  "table": 15.227,
+  "diagram": 14.545,
+  "math": 18.134,
+  "line_gap": 1.721,
+  "block_gap": 1.392,
+  "col_gap": 2.339,
+  "margin_x": 44.541,
+  "margin_y": 38.233,
+  "indent": 1.474,
+  "dash": "-",
+  "numbered": "{})",
+  "title_underline": true,
+  "title_center": false,
+  "heading_underline": true,
+  "table_style": "open",
+  "table_rules": "last",
+  "table_left_align": false,
+  "row_h": 1.881,
+  "cell_pad": 0.796,
+  "side_by_side": 0.502,
+  "fill": 0.723,
+  "multi_writer": false,
+  "correction_rate": 0.1,
+  "scale": 1.0,
+  "page_w": 863.6,
+  "page_h": 1117.6,
+  "flow": true,
+  "blocks": {
+   "m1": {},
+   "m1a": {},
+   "m1b": {},
+   "m1c": {},
+   "m1d": {},
+   "m2": {},
+   "m2a": {},
+   "m2b": {},
+   "m2c": {},
+   "m3": {},
+   "m3a": {},
+   "m3b": {},
+   "m4": {},
+   "m4a": {},
+   "m4b": {},
+   "m5": {},
+   "m5a": {},
+   "m5b": {}
+  }
+ },
+ "writers": [
+  {
+   "id": "writer_0"
+  }
+ ],
+ "items": {
+  "t0": {
+   "kind": "text",
+   "text": "Homework 9 - Derivatives",
+   "bbox": [
+    45.8,
+    38.23,
+    415.04,
+    61.42
+   ],
+   "text_height": 23.19,
+   "role": "title",
+   "bold": true,
+   "element": "t0",
+   "writer": "writer_0"
+  },
+  "t0.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     44.54,
+     64.9
+    ],
+    [
+     420.85,
+     64.77
+    ]
+   ],
+   "element": "t0",
+   "writer": "writer_0"
+  },
+  "h1": {
+   "kind": "text",
+   "text": "1. Product rule",
+   "bbox": [
+    47.17,
+    94.59,
+    226.71,
+    114.56
+   ],
+   "text_height": 19.97,
+   "role": "heading",
+   "element": "h1",
+   "writer": "writer_0"
+  },
+  "h1.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     44.54,
+     117.56
+    ],
+    [
+     230.2,
+     116.94
+    ]
+   ],
+   "element": "h1",
+   "writer": "writer_0"
+  },
+  "n1": {
+   "kind": "text",
+   "text": "product rule",
+   "bbox": [
+    44.54,
+    126.45,
+    163.39,
+    142.95
+   ],
+   "text_height": 16.5,
+   "role": "note",
+   "element": "n1",
+   "writer": "writer_0"
+  },
+  "m1": {
+   "kind": "math",
+   "latex": "f'(x) = 2x\\sin x + x^2\\cos x",
+   "bbox": [
+    44.54,
+    167.69,
+    285.32,
+    192.9
+   ],
+   "baseline": 184.56,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m1",
+   "writer": "writer_0"
+  },
+  "m1a": {
+   "kind": "math",
+   "latex": "= 2x\\sin x + x^2\\cos x",
+   "bbox": [
+    99.95,
+    212.69,
+    285.32,
+    233.27
+   ],
+   "baseline": 228.74,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m1a",
+   "writer": "writer_0"
+  },
+  "m1b": {
+   "kind": "math",
+   "latex": "= x(2\\sin x + x\\cos x)",
+   "bbox": [
+    99.95,
+    253.06,
+    296.74,
+    274.46
+   ],
+   "baseline": 269.93,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m1b",
+   "writer": "writer_0"
+  },
+  "m1c": {
+   "kind": "math",
+   "latex": "f'(0) = 0",
+   "bbox": [
+    44.54,
+    299.2,
+    136.82,
+    324.41
+   ],
+   "baseline": 316.07,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m1c",
+   "writer": "writer_0"
+  },
+  "m1d": {
+   "kind": "math",
+   "latex": "f'(\\pi) = -\\pi^2",
+   "bbox": [
+    44.54,
+    349.15,
+    165.53,
+    374.36
+   ],
+   "baseline": 366.02,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m1d",
+   "writer": "writer_0"
+  },
+  "h2": {
+   "kind": "text",
+   "text": "2. Chain rule",
+   "bbox": [
+    46.86,
+    399.1,
+    197.09,
+    419.07
+   ],
+   "text_height": 19.97,
+   "role": "heading",
+   "element": "h2",
+   "writer": "writer_0"
+  },
+  "h2.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     44.54,
+     422.07
+    ],
+    [
+     197.19,
+     422.28
+    ]
+   ],
+   "element": "h2",
+   "writer": "writer_0"
+  },
+  "n2": {
+   "kind": "text",
+   "text": "chain rule",
+   "bbox": [
+    44.54,
+    431.17,
+    177.28,
+    447.68
+   ],
+   "text_height": 16.5,
+   "role": "note",
+   "element": "n2",
+   "corrections": [
+    {
+     "index": 0,
+     "wrong": "cha",
+     "style": "strike"
+    }
+   ],
+   "writer": "writer_0"
+  },
+  "m2": {
+   "kind": "math",
+   "latex": "g'(x) = \\frac{6x}{2\\sqrt{3x^2+1}}",
+   "bbox": [
+    44.54,
+    472.42,
+    211.35,
+    514.16
+   ],
+   "baseline": 496.45,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m2",
+   "writer": "writer_0"
+  },
+  "m2a": {
+   "kind": "math",
+   "latex": "= \\frac{6x}{2\\sqrt{3x^2+1}}",
+   "bbox": [
+    100.16,
+    533.95,
+    211.35,
+    575.69
+   ],
+   "baseline": 557.98,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m2a",
+   "writer": "writer_0"
+  },
+  "m2b": {
+   "kind": "math",
+   "latex": "= \\frac{3x}{\\sqrt{3x^2+1}}",
+   "bbox": [
+    100.16,
+    595.48,
+    200.04,
+    637.22
+   ],
+   "baseline": 619.51,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m2b",
+   "writer": "writer_0"
+  },
+  "m2c": {
+   "kind": "math",
+   "latex": "g'(1) = \\frac{3}{2}",
+   "bbox": [
+    44.54,
+    661.96,
+    141.13,
+    691.14
+   ],
+   "baseline": 682.45,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m2c",
+   "writer": "writer_0"
+  },
+  "h3": {
+   "kind": "text",
+   "text": "3. Definite integral",
+   "bbox": [
+    45.0,
+    715.88,
+    269.0,
+    735.85
+   ],
+   "text_height": 19.97,
+   "role": "heading",
+   "element": "h3",
+   "writer": "writer_0"
+  },
+  "h3.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     44.54,
+     738.85
+    ],
+    [
+     269.61,
+     737.9
+    ]
+   ],
+   "element": "h3",
+   "writer": "writer_0"
+  },
+  "n3": {
+   "kind": "text",
+   "text": "power rule",
+   "bbox": [
+    44.54,
+    747.74,
+    147.1,
+    764.24
+   ],
+   "text_height": 16.5,
+   "role": "note",
+   "element": "n3",
+   "writer": "writer_0"
+  },
+  "m3": {
+   "kind": "math",
+   "latex": "\\int_0^2 (3x^2-4x+1)\\,dx = \\left[x^3-2x^2+x\\right]_0^2",
+   "bbox": [
+    44.54,
+    788.98,
+    404.33,
+    826.34
+   ],
+   "baseline": 813.56,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m3",
+   "writer": "writer_0"
+  },
+  "m3a": {
+   "kind": "math",
+   "latex": "= (8-8+2)-0",
+   "bbox": [
+    238.58,
+    846.13,
+    406.24,
+    867.53
+   ],
+   "baseline": 863.0,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m3a",
+   "writer": "writer_0"
+  },
+  "m3b": {
+   "kind": "math",
+   "latex": "= 2",
+   "bbox": [
+    238.58,
+    887.32,
+    273.8,
+    905.46
+   ],
+   "baseline": 900.92,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m3b",
+   "writer": "writer_0"
+  },
+  "h4": {
+   "kind": "text",
+   "text": "4. Parts integral",
+   "bbox": [
+    455.15,
+    94.59,
+    648.55,
+    114.56
+   ],
+   "text_height": 19.97,
+   "role": "heading",
+   "element": "h4",
+   "writer": "writer_0"
+  },
+  "h4.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     452.59,
+     117.56
+    ],
+    [
+     653.39,
+     117.93
+    ]
+   ],
+   "element": "h4",
+   "writer": "writer_0"
+  },
+  "n4": {
+   "kind": "text",
+   "text": "u = x, dv = exp(x) dx",
+   "bbox": [
+    452.59,
+    126.82,
+    668.76,
+    143.33
+   ],
+   "text_height": 16.5,
+   "role": "note",
+   "element": "n4",
+   "writer": "writer_0"
+  },
+  "m4": {
+   "kind": "math",
+   "latex": "\\int_0^1 x e^x\\,dx = \\left[xe^x\\right]_0^1-\\int_0^1 e^x\\,dx",
+   "bbox": [
+    452.59,
+    168.07,
+    718.64,
+    205.42
+   ],
+   "baseline": 192.64,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m4",
+   "writer": "writer_0"
+  },
+  "m4a": {
+   "kind": "math",
+   "latex": "= e-(e-1)",
+   "bbox": [
+    540.03,
+    225.22,
+    667.15,
+    246.61
+   ],
+   "baseline": 242.08,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m4a",
+   "writer": "writer_0"
+  },
+  "m4b": {
+   "kind": "math",
+   "latex": "= 1",
+   "bbox": [
+    540.03,
+    266.41,
+    574.9,
+    284.54
+   ],
+   "baseline": 280.01,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "bar_num_den",
+    "radical_bar": "after"
+   },
+   "role": "math",
+   "element": "m4b",
+   "writer": "writer_0"
+  },
+  "h5": {
+   "kind": "text",
+   "text": "5. Limit",
+   "bbox": [
+    456.41,
+    309.28,
+    543.71,
+    329.25
+   ],
+   "text_height": 19.97,
+   "role": "heading",
+   "element": "h5",
+   "writer": "writer_0"
+  },
+  "h5.underline": {
+   "kind": "polyline",
+   "role": "underline",
+   "points": [
+    [
+     452.59,
+     332.25
+    ],
+    [
+     549.06,
+     332.82
+    ]
+   ],
+   "element": "h5",
+   "writer": "writer_0"
+  },
+  "n5": {
+   "kind": "text",
+   "text": "l'Hopital",
+   "bbox": [
+    452.59,
+    341.71,
+    530.77,
+    358.22
+   ],
+   "text_height": 16.5,
+   "role": "note",
+   "element": "n5",
+   "writer": "writer_0"
+  },
+  "m5": {
+   "kind": "math",
+   "latex": "\\lim_{x\\to 0}\\frac{e^{2x}-1}{x} = \\lim_{x\\to 0}2e^{2x}",
+   "bbox": [
+    452.59,
+    382.96,
+    646.41,
+    419.3
+   ],
+   "baseline": 405.52,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m5",
+   "writer": "writer_0"
+  },
+  "m5a": {
+   "kind": "math",
+   "latex": "= 2e^{0}",
+   "bbox": [
+    550.99,
+    439.1,
+    607.0,
+    459.68
+   ],
+   "baseline": 455.14,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m5a",
+   "writer": "writer_0"
+  },
+  "m5b": {
+   "kind": "math",
+   "latex": "= 2",
+   "bbox": [
+    550.99,
+    479.47,
+    586.21,
+    497.6
+   ],
+   "baseline": 493.07,
+   "text_height": 18.13,
+   "options": {
+    "frac_order": "num_bar_den",
+    "radical_bar": "joined"
+   },
+   "role": "math",
+   "element": "m5b",
+   "writer": "writer_0"
+  }
+ },
+ "writing_order": [
+  "t0",
+  "t0.underline",
+  "h1",
+  "h1.underline",
+  "n1",
+  "m1",
+  "m1a",
+  "m1b",
+  "m1c",
+  "m1d",
+  "h2",
+  "h2.underline",
+  "n2",
+  "m2",
+  "m2a",
+  "m2b",
+  "m2c",
+  "h3",
+  "h3.underline",
+  "n3",
+  "m3",
+  "m3a",
+  "m3b",
+  "h4",
+  "h4.underline",
+  "n4",
+  "m4",
+  "m4a",
+  "m4b",
+  "h5",
+  "h5.underline",
+  "n5",
+  "m5",
+  "m5a",
+  "m5b"
+ ],
+ "targets": [],
+ "layout_attempt": 4
+}

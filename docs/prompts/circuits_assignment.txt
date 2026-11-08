@@ -1,0 +1,16 @@
+EE 201 - Homework 6: DC and First-Order Circuits (fake assignment for synthetic pages)
+
+1. A 12 V source drives R1 = 2 kΩ in series with R2 = 4 kΩ and R3 = 4 kΩ in parallel.
+   (a) Find the equivalent resistance seen by the source.
+   (b) Find the source current and the voltage across R1.
+   (c) Find the current through R3.
+
+2. Draw the circuit for problem 1 and label every node voltage.
+
+3. A 5 V step is applied at t = 0 to R = 10 kΩ in series with C = 100 μF (initially uncharged).
+   (a) Find the time constant τ.
+   (b) Write v_C(t) for t ≥ 0.
+   (c) Find v_C at t = τ and the time to reach 4.5 V.
+
+4. Use nodal analysis on a two-node circuit: a 1 mA current source into node 1, R = 1 kΩ from node 1 to ground,
+   R = 2 kΩ between node 1 and node 2, R = 2 kΩ from node 2 to ground. Find V1 and V2.

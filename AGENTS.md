@@ -109,6 +109,22 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     rejecting renders whose text ink collides.
   - [inkml_to_png.py](scripts/inkml_to_png.py) — rasterize InkML for
     inspection.
+  - [muse_page.py](scripts/muse_page.py) — has Meta's Muse Spark
+    (`MUSE_API_KEY` in `.env`; Contributor mode by default, so Meta may
+    train on the prompts and replies) write `content.json`, retrying with the
+    validator's errors, then lays it out and renders it. `--variant` is
+    `whiteboard` (docs/content_prompt.md) or a student's worked solutions to
+    `--assignment` (docs/content_prompts/: math, logic, circuits,
+    physics, writing). Each page draws style knobs (numbering, answer
+    marking, notation, truth-table row order, ...) from `--style-seed`
+    (default: the page id), recorded in the content's provenance. Sample
+    assignments are in docs/prompts/.
+  - `layout_engine.py --paper letter|a4` lays a page out on paper at
+    whiteboard scale, in one or two columns filled in reading order, and
+    `render_inkml.py` scales the ink to paper mm (page `scale`).
+  - [student_text.py](scripts/student_text.py) — `render_inkml.py
+    --student <checkpoint>` writes text items with the text-to-ink student,
+    a word's 3-4 characters at a time, in the student's own stroke order.
   - [fonts/](fonts/README.md) holds OFL-licensed single-line SVG fonts.
   - `scripts/legacy_v0/` — generators for the old hand-placed v0 pages,
     kept for reference; the current renderer does not read v0 layouts.

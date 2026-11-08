@@ -1,0 +1,9 @@
+PHYS 211 - Homework 4: Kinematics, Energy and Momentum (fake assignment for synthetic pages)
+
+1. A ball is dropped from 20 m. Find the time to reach the ground and its speed on impact.
+2. A projectile leaves the ground at 15 m/s at 30° above horizontal. Find its maximum height, time of
+   flight and range.
+3. A 2.0 kg block slides down a frictionless 5.0 m high ramp from rest. Find its speed at the bottom,
+   then the distance it slides on a floor with μk = 0.25.
+4. A 1500 kg car at 20 m/s rear-ends a 1000 kg car at rest, and they stick. Find their common speed and
+   the kinetic energy lost.

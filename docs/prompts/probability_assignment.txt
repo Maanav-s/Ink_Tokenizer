@@ -1,0 +1,20 @@
+ECE 313 - Problem Set 4: Probability (fake assignment for synthetic pages)
+
+1. A fair coin is flipped 3 times. Let X be the number of heads.
+   (a) List every outcome and the value of X for each.
+   (b) Give the PMF of X as a table.
+   (c) Compute E[X] and Var(X).
+
+2. A sensor flags a faulty chip with probability 0.95 when the chip is faulty,
+   and falsely flags a good chip with probability 0.02. 1% of chips are faulty.
+   (a) Find P(flagged).
+   (b) Find P(faulty | flagged) using Bayes' rule.
+
+3. Events A and B have P(A) = 0.4, P(B) = 0.5 and P(A and B) = 0.2.
+   (a) Find P(A or B).
+   (b) Are A and B independent? Justify.
+   (c) Fill in the 2x2 joint probability table for A, not A, B, not B.
+
+4. A link drops each packet independently with probability 0.1. 5 packets are sent.
+   (a) Find P(exactly 2 dropped).
+   (b) Find P(at least 1 dropped).

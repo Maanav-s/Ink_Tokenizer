@@ -1,0 +1,514 @@
+{
+  "schema": "ink_tokenizer.synthetic_page.content/v1",
+  "page_id": "page_0016",
+  "topic": "combinational logic worked solutions",
+  "provenance": {
+    "generator": "muse-spark-1.3-contributor / content_prompt v1 (logic)",
+    "automated": true,
+    "style": {
+      "headings": "number problems as Q1, Q2, Q3",
+      "answers": "box each final answer with \\boxed{...} in its math line",
+      "verbosity": "a short note naming the method before each problem's working",
+      "sanity": "no sanity checks",
+      "row order": "truth tables in Gray code order (row_order \"gray_code\": 00, 01, 11, 10)",
+      "not": "NOT written as an overbar in latex (\\overline{A})",
+      "and": "AND written with \\cdot in latex (A \\cdot B)",
+      "names": "inputs named x, y, z"
+    }
+  },
+  "elements": [
+    {
+      "id": "title1",
+      "type": "text",
+      "role": "title",
+      "text": "ECE 120 PS3 combin logic"
+    },
+    {
+      "id": "h_q1",
+      "type": "text",
+      "role": "heading",
+      "text": "Q1 majority M(x,y,z)"
+    },
+    {
+      "id": "n_q1m",
+      "type": "text",
+      "role": "note",
+      "text": "method: truth table → SOP"
+    },
+    {
+      "id": "t_q1",
+      "type": "table",
+      "kind": "truth_table",
+      "header": [
+        "x",
+        "y",
+        "z",
+        "M"
+      ],
+      "input_columns": [
+        0,
+        1,
+        2
+      ],
+      "output_columns": [
+        3
+      ],
+      "row_order": "gray_code",
+      "rows": [
+        [
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "id": "n_q1sop",
+      "type": "text",
+      "role": "note",
+      "text": "SOP minterms → factor"
+    },
+    {
+      "id": "m_q1",
+      "type": "math",
+      "latex": "\\boxed{M = x\\cdot y + x\\cdot z + y\\cdot z}",
+      "text": "M = xy + xz + yz",
+      "defines": "M"
+    },
+    {
+      "id": "c_q1",
+      "type": "circuit",
+      "components": [
+        {
+          "id": "c1_inx",
+          "type": "input_pin",
+          "label": "x"
+        },
+        {
+          "id": "c1_iny",
+          "type": "input_pin",
+          "label": "y"
+        },
+        {
+          "id": "c1_inz",
+          "type": "input_pin",
+          "label": "z"
+        },
+        {
+          "id": "c1_andxy",
+          "type": "and2"
+        },
+        {
+          "id": "c1_andxz",
+          "type": "and2"
+        },
+        {
+          "id": "c1_andyz",
+          "type": "and2"
+        },
+        {
+          "id": "c1_or1",
+          "type": "or2"
+        },
+        {
+          "id": "c1_or2",
+          "type": "or2"
+        },
+        {
+          "id": "c1_out",
+          "type": "output_pin",
+          "label": "M"
+        }
+      ],
+      "wires": [
+        {
+          "id": "c1_w1",
+          "net": "n1",
+          "from": "c1_inx.y",
+          "to": "c1_andxy.a"
+        },
+        {
+          "id": "c1_w2",
+          "net": "n2",
+          "from": "c1_iny.y",
+          "to": "c1_andxy.b"
+        },
+        {
+          "id": "c1_w3",
+          "net": "n3",
+          "from": "c1_inx.y",
+          "to": "c1_andxz.a"
+        },
+        {
+          "id": "c1_w4",
+          "net": "n4",
+          "from": "c1_inz.y",
+          "to": "c1_andxz.b"
+        },
+        {
+          "id": "c1_w5",
+          "net": "n5",
+          "from": "c1_iny.y",
+          "to": "c1_andyz.a"
+        },
+        {
+          "id": "c1_w6",
+          "net": "n6",
+          "from": "c1_inz.y",
+          "to": "c1_andyz.b"
+        },
+        {
+          "id": "c1_w7",
+          "net": "n7",
+          "from": "c1_andxy.y",
+          "to": "c1_or1.a"
+        },
+        {
+          "id": "c1_w8",
+          "net": "n8",
+          "from": "c1_andxz.y",
+          "to": "c1_or1.b"
+        },
+        {
+          "id": "c1_w9",
+          "net": "n9",
+          "from": "c1_or1.y",
+          "to": "c1_or2.a"
+        },
+        {
+          "id": "c1_w10",
+          "net": "n10",
+          "from": "c1_andyz.y",
+          "to": "c1_or2.b"
+        },
+        {
+          "id": "c1_w11",
+          "net": "n11",
+          "from": "c1_or2.y",
+          "to": "c1_out.a"
+        }
+      ]
+    },
+    {
+      "id": "h_q2",
+      "type": "text",
+      "role": "heading",
+      "text": "Q2 xor proof x xor y"
+    },
+    {
+      "id": "n_q2m",
+      "type": "text",
+      "role": "note",
+      "text": "method: compare cols in table"
+    },
+    {
+      "id": "t_q2",
+      "type": "table",
+      "kind": "truth_table",
+      "header": [
+        "x",
+        "y",
+        "P",
+        "Q",
+        "R"
+      ],
+      "input_columns": [
+        0,
+        1
+      ],
+      "output_columns": [
+        2,
+        3,
+        4
+      ],
+      "row_order": "gray_code",
+      "rows": [
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "1",
+          "1"
+        ]
+      ]
+    },
+    {
+      "id": "n_q2pq",
+      "type": "text",
+      "role": "note",
+      "text": "P=x'y, Q=xy', R=x xor y"
+    },
+    {
+      "id": "m_q2",
+      "type": "math",
+      "latex": "\\boxed{R = \\overline{x}\\cdot y + x\\cdot \\overline{y}}",
+      "text": "R = x'y + xy'",
+      "defines": "R"
+    },
+    {
+      "id": "h_q3",
+      "type": "text",
+      "role": "heading",
+      "text": "Q3 half adder S Cout"
+    },
+    {
+      "id": "n_q3m",
+      "type": "text",
+      "role": "note",
+      "text": "method: xor for S, and for Cout"
+    },
+    {
+      "id": "t_q3",
+      "type": "table",
+      "kind": "truth_table",
+      "header": [
+        "x",
+        "y",
+        "S",
+        "Cout"
+      ],
+      "input_columns": [
+        0,
+        1
+      ],
+      "output_columns": [
+        2,
+        3
+      ],
+      "row_order": "gray_code",
+      "rows": [
+        [
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "1",
+          "0"
+        ]
+      ]
+    },
+    {
+      "id": "m_q3s",
+      "type": "math",
+      "latex": "\\boxed{S = x\\oplus y}",
+      "text": "S = x xor y",
+      "defines": "S"
+    },
+    {
+      "id": "m_q3c",
+      "type": "math",
+      "latex": "\\boxed{Cout = x\\cdot y}",
+      "text": "Cout = xy",
+      "defines": "Cout"
+    },
+    {
+      "id": "c_q3",
+      "type": "circuit",
+      "components": [
+        {
+          "id": "c3_inx",
+          "type": "input_pin",
+          "label": "x"
+        },
+        {
+          "id": "c3_iny",
+          "type": "input_pin",
+          "label": "y"
+        },
+        {
+          "id": "c3_xor",
+          "type": "xor2"
+        },
+        {
+          "id": "c3_and",
+          "type": "and2"
+        },
+        {
+          "id": "c3_outS",
+          "type": "output_pin",
+          "label": "S"
+        },
+        {
+          "id": "c3_outC",
+          "type": "output_pin",
+          "label": "Cout"
+        }
+      ],
+      "wires": [
+        {
+          "id": "c3_w1",
+          "net": "m1",
+          "from": "c3_inx.y",
+          "to": "c3_xor.a"
+        },
+        {
+          "id": "c3_w2",
+          "net": "m2",
+          "from": "c3_iny.y",
+          "to": "c3_xor.b"
+        },
+        {
+          "id": "c3_w3",
+          "net": "m3",
+          "from": "c3_inx.y",
+          "to": "c3_and.a"
+        },
+        {
+          "id": "c3_w4",
+          "net": "m4",
+          "from": "c3_iny.y",
+          "to": "c3_and.b"
+        },
+        {
+          "id": "c3_w5",
+          "net": "m5",
+          "from": "c3_xor.y",
+          "to": "c3_outS.a"
+        },
+        {
+          "id": "c3_w6",
+          "net": "m6",
+          "from": "c3_and.y",
+          "to": "c3_outC.a"
+        }
+      ]
+    },
+    {
+      "id": "h_q4",
+      "type": "text",
+      "role": "heading",
+      "text": "Q4 0b10110110 convert"
+    },
+    {
+      "id": "n_q4m",
+      "type": "text",
+      "role": "note",
+      "text": "method: positional sum → hex"
+    },
+    {
+      "id": "m_q4d",
+      "type": "math",
+      "latex": "\\boxed{182}=128+32+16+4+2",
+      "text": "182 = 128+32+16+4+2",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "n_q4h",
+      "type": "text",
+      "role": "note",
+      "text": "hex: groups of 4 bits → B6"
+    },
+    {
+      "id": "m_q4x",
+      "type": "math",
+      "latex": "\\boxed{0xB6}=11\\cdot 16+6",
+      "text": "182 = 11*16+6",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "n_q4n",
+      "type": "text",
+      "role": "note",
+      "text": "neg: invert +1 → 8-bit"
+    },
+    {
+      "id": "m_q4n",
+      "type": "math",
+      "latex": "\\boxed{74}=256-182",
+      "text": "74 = 256-182",
+      "check": {
+        "vars": {}
+      }
+    },
+    {
+      "id": "n_q4b",
+      "type": "text",
+      "role": "note",
+      "text": "01001010 = 0x4A → +74"
+    }
+  ]
+}
