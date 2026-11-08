@@ -162,6 +162,26 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     `element_spans` as token ranges) and back to page millimetres
     (`origins`, `units`). `read_document()` parses a whole page (strokes in
     mm, upright, plus the annotation tree) for page-level work.
+  - [deepwriting_corpus.py](scripts/deepwriting_corpus.py) and
+    [brush_corpus.py](scripts/brush_corpus.py) — convert DeepWriting's
+    extended dataset (IAM-OnDB lines plus the authors' writers, 294 in all)
+    and BRUSH (170 writers, random words and symbols) into the same format,
+    reading their zips in place, with real per-point `chars`. DeepWriting's
+    character ranges come from its authors' recognizer, so they are aligned
+    to the prompt text and unmatched points stay -1. BRUSH's pickles are
+    read with an unpickler that only rebuilds numpy arrays. Each holds out
+    every 20th writer as its validation shard. Shared code is in
+    [text_corpus.py](scripts/text_corpus.py). **DeepWriting's license forbids
+    distribution**: never push its corpus, or a pool containing it, to W&B.
+  - [pool_corpus.py](scripts/pool_corpus.py) — pools MathWriting with any of
+    these text corpora into `data/pooled_corpus` for one recognizer: text
+    lines become `\text{...}` (labels shifted to match), MathWriting's
+    shards and vocabulary come first, and every corpus's last shard goes into
+    the validation shard with a per-line `sources` entry, which
+    `train_recognizer.py` scores apart (`val_iamondo_*`, `val_brush_*`, ...).
+  - [fetch_datasets.sh](scripts/fetch_datasets.sh) — downloads and converts
+    IAMonDo, DeepWriting, BRUSH and MathWriting (or the ones named), then
+    pools them. It needs `--accept-licenses` for DeepWriting and BRUSH.
   - [mixed_corpus.py](scripts/mixed_corpus.py) — merges the MathWriting and
     teacher corpora into `data/mixed_corpus`, so one model writes formulas and
     plain text. A teacher line becomes `\text{...}` (MathWriting has no
@@ -303,6 +323,10 @@ uv run python scripts/iamondo_corpus.py          # data/IAMonDo-db-1.0 -> data/i
 # A recognizer on it: an epoch is about 80 batches, so far fewer steps than on MathWriting.
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
     --corpus data/iamondo_corpus --steps 20000 --eval-every 500 $WB
+# All human handwriting (IAMonDo, DeepWriting, BRUSH) pooled with MathWriting, and a recognizer on the pool.
+scripts/fetch_datasets.sh --accept-licenses       # data/pooled_corpus; about 4 GB of downloads with MathWriting
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir models/recognizer/<name> \
+    --corpus data/pooled_corpus --artifact none $WB
 # Formulas and plain text in one flow student, continuing from a MathWriting one.
 uv run python scripts/mixed_corpus.py   # needs both corpora; writes data/mixed_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow.py --run-dir models/student/<name> \

@@ -52,7 +52,7 @@ from multiprocessing import Pool
 import numpy as np
 
 from ink_corpus import MAX_TEXT
-from mathwriting_corpus import resample
+from text_corpus import TEXT_HEIGHT, ink_offsets
 
 XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
 VALUE = re.compile(r"""([!'"]?)\s*(-?(?:\d+\.?\d*|\.\d+))""")
@@ -154,22 +154,7 @@ def line_offsets(strokes, groups, spacing):
     the first point's page position and mm per unit; None for an unusable line."""
     labelled = sorted(((strokes[t], e) for e, (ids, _, _) in enumerate(groups) for t in ids),
                       key=lambda s: s[0][0, 2])
-    sizes = [np.ptp(s[:, :2], axis=0).max() for s, _ in labelled]
-    unit = float(np.median(sizes)) if sizes else 0.0
-    if unit <= 0:
-        return None
-    points, eos, labels = [], [], []
-    for s, e in labelled:
-        r = resample(s[:, :2] / unit, spacing)
-        points.append(r)
-        eos.append(np.arange(len(r)) == len(r) - 1)
-        labels.append(np.full(len(r), e))
-    xy = np.concatenate(points)
-    origin = xy[0] * unit
-    xy -= xy[0]
-    d = np.diff(xy, axis=0, prepend=xy[:1])
-    offsets = np.concatenate([d, np.concatenate(eos)[:, None]], axis=1).astype(np.float32)
-    return offsets, np.concatenate(labels), origin, unit
+    return ink_offsets([s[:, :2] for s, _ in labelled], [np.full(len(s), e) for s, e in labelled], spacing)
 
 
 def convert(args):
@@ -258,10 +243,9 @@ def main(args):
     with open(os.path.join(args.out_dir, "lines.txt"), "w") as f:
         f.write("\n".join(l["text"] for l in train) + "\n")
     with open(os.path.join(args.out_dir, "meta.json"), "w") as f:
-        # text_height: as in mathwriting_corpus, a rough guess with a symbol about one unit.
         json.dump({"charset": charset, "tokenizer": "char", "mu": mu.tolist(), "std": std.tolist(),
                    "source": "IAMonDo-db-1.0", "folds": order, "held_out": args.held_out,
-                   "spacing": args.spacing, "text_height": 1.5, "lines": "lines.txt"}, f, indent=1)
+                   "spacing": args.spacing, "text_height": TEXT_HEIGHT, "lines": "lines.txt"}, f, indent=1)
     print(f"{len(charset)} tokens; skipped {skipped} lines and {unassigned} documents in no fold", flush=True)
 
 
