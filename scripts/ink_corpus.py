@@ -81,7 +81,7 @@ class Corpus:
         self.token = char_tokens(self.charset)
         self.tokenizer = self.meta.get("tokenizer", "char")
         self.shards = list(shards)
-        offsets, chars, lengths, bias, self.texts = [], [], [], [], []
+        offsets, chars, lengths, bias, self.texts, self.writers = [], [], [], [], [], []
         for path in shards:
             d = np.load(path)
             offsets.append(d["offsets"])
@@ -89,6 +89,11 @@ class Corpus:
             lengths.append(d["lengths"])
             bias.append(d["bias"])
             self.texts.extend(str(t) for t in d["texts"])
+            # "source/id" where the corpus knows who wrote a line, else "".
+            if "writers" in d.files:
+                self.writers.extend(str(w) for w in d["writers"])
+            else:
+                self.writers.extend([""] * len(d["texts"]))
         self.offsets = np.concatenate(offsets)
         self.chars = np.concatenate(chars)
         self.lengths = np.concatenate(lengths)

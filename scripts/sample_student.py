@@ -25,6 +25,7 @@ from flow_model import FlowStudent
 from hybrid_model import HybridStudent
 from ink_corpus import char_tokens, encode_texts
 from spline_flow_model import SplineFlowStudent
+from style_flow_model import StyleSplineFlowStudent
 from student_model import load_student
 from text_to_ink import TEXT_HEIGHT, ink_extent, plausible, preview, render, to_line
 
@@ -87,9 +88,12 @@ def teacher_vs_student(model, corpus, n=8, seed=0):
 
 
 def load_model(path, device="cuda"):
-    """The Mamba, hybrid, flow-matching or spline flow student a checkpoint holds, and the checkpoint."""
+    """The Mamba, hybrid, flow-matching, spline flow or style spline flow
+    student a checkpoint holds, and the checkpoint. A style student writes
+    with no style (its null_style) unless sample() is given one."""
     ckpt = torch.load(path, map_location=device, weights_only=False)
-    architectures = {"flow": FlowStudent, "hybrid": HybridStudent, "spline_flow": SplineFlowStudent}
+    architectures = {"flow": FlowStudent, "hybrid": HybridStudent, "spline_flow": SplineFlowStudent,
+                     "style_spline_flow": StyleSplineFlowStudent}
     architecture = architectures.get(ckpt.get("architecture"))
     if architecture is None:
         return load_student(path, device)

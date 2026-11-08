@@ -188,9 +188,10 @@ class FlowStudent(nn.Module):
             pad = pad | (drop.unsqueeze(1) & (pos < text_len.unsqueeze(1)))
         return memory, pad, length_logit
 
-    def denoise(self, x, t, ink_len, memory, memory_pad):
+    def denoise(self, x, t, ink_len, memory, memory_pad, cond=None):
         """Velocity (B, N, 3) and token-index logits (B, N, MAX_TEXT) for the
-        noisy ink x at flow times t (B,)."""
+        noisy ink x at flow times t (B,). cond (B, d_model), if given, is added
+        to the time embedding that modulates every block (a writer's style)."""
         B, N, _ = x.shape
         index = torch.arange(N, device=x.device)
         point_pad = index.unsqueeze(0) >= ink_len.unsqueeze(1)
@@ -201,19 +202,22 @@ class FlowStudent(nn.Module):
                               sinusoid(fraction * 1000, self.d_model)], dim=-1)
         h = self.point_in(x) + self.position_in(position)
         time = self.time_in(sinusoid(t * 1000, self.d_model))
+        if cond is not None:
+            time = time + cond.to(time.dtype)
         for block in self.blocks:
             h = block(h, time, point_pad, memory, memory_pad)
         h = self.out_norm(h, time)
         return self.velocity(h).float(), self.char_head(h).float()
 
-    def loss(self, batch, generator=None, pair=None):
+    def loss(self, batch, generator=None, pair=None, cond=None):
         """A dict of losses, each a mean over real (unpadded) positions:
         flow (velocity error), smooth (error in the velocity's change between
         neighbouring points), length, char_ce and char_acc.
 
         pair is (noise, ink), both (B, N, 3), to train on instead of the
         batch's ink and fresh noise. If the batch has true_len (its inks
-        resampled to other lengths), the length head learns true_len."""
+        resampled to other lengths), the length head learns true_len. cond is
+        as in denoise()."""
         text, text_len, offsets, chars, ink_len = (batch[k] for k in ("text", "text_len", "offsets", "chars", "ink_len"))
         B, N, _ = offsets.shape
         device = offsets.device
@@ -229,7 +233,7 @@ class FlowStudent(nn.Module):
         drop = torch.rand(B, generator=generator, device=device) < self.text_dropout
 
         memory, memory_pad, length_logit = self.encode_text(text, text_len, drop)
-        velocity, char_logit = self.denoise(xt, t, ink_len, memory, memory_pad)
+        velocity, char_logit = self.denoise(xt, t, ink_len, memory, memory_pad, cond)
 
         error = (velocity - (x1 - x0)) * mask.unsqueeze(-1)
         flow = error.pow(2).sum() / (3 * mask.sum())
@@ -253,7 +257,7 @@ class FlowStudent(nn.Module):
         return {"flow": flow, "smooth": smooth, "length": length, "char_ce": char_ce, "char_acc": char_acc}
 
     @torch.no_grad()
-    def transport(self, x, text, text_len, ink_len, steps=None, guidance=None):
+    def transport(self, x, text, text_len, ink_len, steps=None, guidance=None, cond=None):
         """Carry noise x (B, N, 3) to ink with Euler steps. Returns the ink
         and the index of the text token each point draws (B, N). guidance is
         the classifier-free guidance scale (1 turns it off); steps and
@@ -267,18 +271,18 @@ class FlowStudent(nn.Module):
             null_memory, null_pad, _ = self.encode_text(text, text_len, everything)
         for n in range(steps):
             t = torch.full((B,), n / steps, device=device)
-            velocity, _ = self.denoise(x, t, ink_len, memory, memory_pad)
+            velocity, _ = self.denoise(x, t, ink_len, memory, memory_pad, cond)
             if guidance != 1:
-                unconditional, _ = self.denoise(x, t, ink_len, null_memory, null_pad)
+                unconditional, _ = self.denoise(x, t, ink_len, null_memory, null_pad, cond)
                 velocity = unconditional + guidance * (velocity - unconditional)
             x = x + velocity / steps
 
-        _, char_logit = self.denoise(x, torch.ones(B, device=device), ink_len, memory, memory_pad)
+        _, char_logit = self.denoise(x, torch.ones(B, device=device), ink_len, memory, memory_pad, cond)
         valid = torch.arange(MAX_TEXT, device=device).unsqueeze(0) < text_len.unsqueeze(1)
         return x, char_logit.masked_fill(~valid.unsqueeze(1), -torch.inf).argmax(-1)
 
     @torch.no_grad()
-    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None):
+    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None, cond=None):
         """Write a batch of lines. text: (B, T) left-padded tokens.
 
         Returns per line (offsets (n, 3), chars (n,), finished), as
@@ -299,7 +303,7 @@ class FlowStudent(nn.Module):
 
         x = torch.randn((B, int(ink_len.max()), 3), generator=generator, device=device)
         x = x * torch.exp(-BIAS_TEMPERATURE * bias).view(B, 1, 1)
-        x, labels = self.transport(x, text, text_len, ink_len, steps, guidance)
+        x, labels = self.transport(x, text, text_len, ink_len, steps, guidance, cond)
         labels = labels.cpu()
         offsets = self.to_offsets(x).cpu()
         out = []

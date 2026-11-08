@@ -105,7 +105,7 @@ def convert(job):
     offsets, labels = to_offsets(*rendered, spacing)
     if len(offsets) > max_points:
         return "too long"
-    return WRAPPER + "{" + label + "}", offsets, labels + LABEL_SHIFT
+    return WRAPPER + "{" + label + "}", offsets, labels + LABEL_SHIFT, font
 
 
 def read_label(path):
@@ -114,17 +114,19 @@ def read_label(path):
 
 def write_shard(path, lines, mu, std):
     np.savez(path,
-             offsets=np.concatenate([(o - mu) / std for _, o, _ in lines]).astype(np.float32),
-             chars=np.concatenate([c for _, _, c in lines]).astype(np.int16),
-             lengths=np.array([len(o) for _, o, _ in lines], dtype=np.int32),
-             texts=np.array([t for t, _, _ in lines]),
+             offsets=np.concatenate([(o - mu) / std for _, o, _, _ in lines]).astype(np.float32),
+             chars=np.concatenate([c for _, _, c, _ in lines]).astype(np.int16),
+             lengths=np.array([len(o) for _, o, _, _ in lines], dtype=np.int32),
+             texts=np.array([t for t, _, _, _ in lines]),
              bias=np.zeros(len(lines), dtype=np.float32),
-             rejected=np.int32(0))
+             rejected=np.int32(0),
+             # Each font is one "writer" to the style encoder (scripts/style_flow_model.py).
+             writers=np.array(["font/" + f for _, _, _, f in lines]))
 
 
 def render_splits(splits, args, meta):
     """Every unique label of the MathWriting splits that the base vocabulary
-    covers, rendered in each of args.fonts, as (text, offsets, labels)."""
+    covers, rendered in each of args.fonts, as (text, offsets, labels, font)."""
     paths = sorted(p for split in splits for p in glob.glob(os.path.join(args.source, split, "*.inkml")))
     with Pool(args.workers) as pool:
         labels = sorted(set(pool.map(read_label, paths, chunksize=256)))
@@ -172,7 +174,7 @@ def main(args):
         fonts.TextRenderer(font)  # fail now on a misspelled font, not in every worker
 
     kept = render_splits(args.splits, args, meta)
-    lengths = np.array([len(o) for _, o, _ in kept])
+    lengths = np.array([len(o) for _, o, _, _ in kept])
     print(f"points per ink p50/p90/p99: {np.percentile(lengths, [50, 90, 99]).round().tolist()}", flush=True)
 
     os.makedirs(args.out_dir, exist_ok=True)
@@ -196,7 +198,7 @@ def main(args):
 
     base_lines = open(os.path.join(args.base, meta["lines"])).read()
     with open(os.path.join(args.out_dir, "lines.txt"), "w") as f:
-        f.write(base_lines + "\n".join(t for t, _, _ in kept) + "\n")
+        f.write(base_lines + "\n".join(t for t, _, _, _ in kept) + "\n")
     new_tokens = [t for t in (WRAPPER, "{", "}") if t not in meta["charset"]]
     with open(os.path.join(args.out_dir, "meta.json"), "w") as f:
         json.dump({**meta, "charset": meta["charset"] + new_tokens,

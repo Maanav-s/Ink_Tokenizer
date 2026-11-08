@@ -195,6 +195,9 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     shards and vocabulary come first, and every corpus's last shard goes into
     the validation shard with a per-line `sources` entry, which
     `train_recognizer.py` scores apart (`val_iamondo_*`, `val_brush_*`, ...).
+    Lines also carry `writers` ("deepwriting/<id>", "brush/<id>", "" where
+    unknown) for the style student; `--fonts data/font_corpus` adds up to
+    `--font-lines` font lines, each font a writer.
   - [fetch_datasets.sh](scripts/fetch_datasets.sh) — downloads and converts
     IAMonDo, DeepWriting, BRUSH and MathWriting (or the ones named), then
     pools them. It needs `--accept-licenses` for DeepWriting and BRUSH.
@@ -282,6 +285,15 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     `train_flow_legibility.py` fine-tunes it too (it decodes x̂1 into dense
     ink, differentiably, for the recognizer), and `measure_legibility.py`
     scores it against its source corpus's real ink by default.
+    [style_flow_model.py](scripts/style_flow_model.py) adds a writer style:
+    a VAE-style latent z from reference inks (other lines by the same
+    writer, or a crop of the line itself when the writer is unknown), added
+    to the time embedding of every block, with a free-bits KL and a
+    supervised contrastive loss on z's mean (negatives from the same source
+    only). [train_style_flow.py](scripts/train_style_flow.py) trains it,
+    optionally `--init-from` a plain spline flow checkpoint (it starts out
+    writing exactly as that one). `val_style_gain` is the validation flow
+    loss without a style minus with one, on writers unseen in training.
   - [hybrid_model.py](scripts/hybrid_model.py) — Mamba + attention student
     at the flow student's width, depth and text encoder (about 32M
     parameters each), to compare writing point by point with flow matching
@@ -365,6 +377,11 @@ CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_recognizer.py --run-dir model
 uv run python scripts/spline_corpus.py --source data/mathwriting_corpus --out-dir data/spline_corpus
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_spline_flow.py --run-dir models/student/<name> \
     --corpus data/spline_corpus --accumulate 2 $WB
+# Style student: pool with writers (and fonts), convert, train from a plain spline flow checkpoint.
+uv run python scripts/pool_corpus.py --fonts data/font_corpus --out-dir data/pooled_corpus
+uv run python scripts/spline_corpus.py --source data/pooled_corpus --out-dir data/pooled_spline_corpus
+CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_style_flow.py --run-dir models/student/<name> \
+    --corpus data/pooled_spline_corpus --init-from models/student/pooled_spline_flow/checkpoint.pt --accumulate 2 $WB
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/measure_legibility.py --student models/student/spline_flow/checkpoint.pt \
     --recognizer models/recognizer/<run>/checkpoint.pt $WB
 CUDA_VISIBLE_DEVICES=0 uv run python scripts/train_flow_legibility.py --run-dir models/student/<name> \

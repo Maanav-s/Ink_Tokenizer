@@ -35,10 +35,10 @@ class SplineFlowStudent(FlowStudent):
         self.config["points_per_control"] = points_per_control
 
     @torch.no_grad()
-    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None):
+    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None, cond=None):
         mu, std = self.offset_mu.cpu().numpy(), self.offset_std.cpu().numpy()
         out = []
-        for control, chars, finished in super().sample(text, text_len, bias, steps, guidance, generator):
+        for control, chars, finished in super().sample(text, text_len, bias, steps, guidance, generator, cond):
             offsets, labels = decode_ink(control.numpy(), chars.numpy(), self.points_per_control, mu, std)
             out.append((torch.from_numpy(offsets), torch.from_numpy(labels), finished))
         return out
