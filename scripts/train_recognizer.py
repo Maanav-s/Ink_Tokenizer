@@ -14,19 +14,21 @@ transform and point jitter, so it reads the shape rather than one writer's
 proportions.
 
 Every --eval-every steps each validation source is evaluated on its own:
-human ink (`val_*`: MathWriting's math or IAMonDo's text), teacher text (`val_text_*`) and font renders of
-MathWriting's valid labels (`val_font_*`, from font_corpus.py's
-font_valid.npz). Each gets the losses, then --read-lines inks read greedily
-for the token error rate (edit distance / label tokens) and the fraction read
-exactly, and its --worst worst reads are drawn into <run-dir>/reads/ and W&B.
+human ink (`val_*`: MathWriting's math or IAMonDo's text), each human text
+source of a pooled corpus (pool_corpus.py) as `val_<source>_*`, teacher text
+(`val_text_*`) and font renders of MathWriting's valid labels (`val_font_*`,
+from font_corpus.py's font_valid.npz). Each gets the losses, then
+--read-lines inks read greedily for the token error rate (edit distance /
+label tokens) and the fraction read exactly, and its --worst worst reads are
+drawn into <run-dir>/reads/ and W&B.
 The rate on human ink is how far it can be trusted as a judge of generated
 ink.
 
 The run directory, resuming and W&B work as in scripts/train_flow.py.
 
 Usage: python scripts/train_recognizer.py --run-dir models/recognizer/<name>
-           [--corpus data/font_corpus | data/font_mixed_corpus | data/iamondo_corpus] [--steps 100000]
-           [--max-points 65536]
+           [--corpus data/font_corpus | data/font_mixed_corpus | data/iamondo_corpus | data/pooled_corpus]
+           [--steps 100000] [--max-points 65536]
            [--wandb-project P [--wandb-entity E] [--artifact none]]
 """
 import argparse
@@ -86,15 +88,31 @@ def inputs(batch, mu, std):
     return ink_positions(batch["offsets"], batch["ink_len"], mu, std), batch["ink_len"]
 
 
-def validation_groups(texts):
+def line_sources(corpus):
+    """Each line's `sources` entry (pool_corpus.py), "" where its shard has none."""
+    out = []
+    for path in corpus.shards:
+        d = np.load(path)
+        out.extend(d["sources"].tolist() if "sources" in d.files else [""] * len(d["texts"]))
+    return out
+
+
+def source_name(prefix):
+    return SOURCES.get(prefix, prefix.removeprefix("val_").removesuffix("_"))
+
+
+def validation_groups(texts, sources):
     """Validation line indices by metric prefix, from the labels before
     unwrap(): human ink under `val_` (its name before the other sources were
-    added), teacher text under `val_text_`, font renders under `val_font_`.
-    Empty groups are left out."""
+    added), a pooled corpus's human text under `val_<source>_`, teacher text
+    under `val_text_`, font renders under `val_font_`. Empty groups are left
+    out."""
     groups = {prefix: [] for prefix in SOURCES}
-    for i, text in enumerate(texts):
+    for i, (text, source) in enumerate(zip(texts, sources)):
         if text.startswith(TYPESET_PREFIX):
             groups["val_font_"].append(i)
+        elif source and source != "mathwriting":
+            groups.setdefault(f"val_{source}_", []).append(i)
         elif text.startswith(TEXT_PREFIX):
             groups["val_text_"].append(i)
         else:
@@ -180,7 +198,7 @@ def main(args):
     elif any(t.startswith(TYPESET_PREFIX) for t in train.texts):
         print(f"no {font_valid}: font renders are trained on but not validated "
               "(font_corpus.py writes it)", flush=True)
-    val_groups = validation_groups(val.texts)
+    val_groups = validation_groups(val.texts, line_sources(val))
     for corpus in (train, val):
         corpus.texts = [unwrap(t) for t in corpus.texts]
     print(f"train {len(train)} lines, val {len(val)} lines "
@@ -244,12 +262,12 @@ def main(args):
                         v, worst = evaluate(model, val, indices, args, mu, std, device)
                         rec.update({f"{prefix}{k}": x for k, x in v.items()})
                         for _, _, label, read in worst[:3]:
-                            print(f"  {SOURCES[prefix]}\n  label {label!r}\n  read  {read!r}", flush=True)
+                            print(f"  {source_name(prefix)}\n  label {label!r}\n  read  {read!r}", flush=True)
                         if worst:
                             name = f"{prefix}worst"
                             path = os.path.join(args.run_dir, "reads", f"step_{step:07d}_{name}.png")
                             images[name] = (draw_worst(worst, path),
-                                            f"{SOURCES[prefix]}, step {step}: {len(worst)} worst reads, "
+                                            f"{source_name(prefix)}, step {step}: {len(worst)} worst reads, "
                                             "label green, read below")
                     best_val = min(best_val, rec.get("val_ce", math.inf))
                     save()
