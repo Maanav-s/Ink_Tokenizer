@@ -67,6 +67,11 @@ suggestion is worse than none, so if you are not confident, reply with nothing. 
 \\int_{{0}}^{{2}}x^{{3}}\\,dx= the whole reply is: 4
 """ + PLACEMENT + VOCABULARY
 
+# Handwritten, \cos is just the letters cos, and the student has no tokens for these commands.
+OPERATOR_NAMES = {"sin", "cos", "tan", "cot", "sec", "csc", "arcsin", "arccos", "arctan", "sinh", "cosh",
+                  "tanh", "coth", "log", "ln", "lg", "exp", "lim", "liminf", "limsup", "max", "min", "sup",
+                  "inf", "det", "dim", "ker", "deg", "gcd", "arg", "hom", "Pr", "mod", "bmod"}
+
 BOX = {"type": "object", "properties": {edge: {"type": "number"} for edge in ("left", "top", "right", "bottom")},
        "required": ["left", "top", "right", "bottom"], "additionalProperties": False}
 # At low effort Claude sometimes works the answer out in its reply; fixed fields leave no room for that.
@@ -157,7 +162,12 @@ class Demo:
 
     @torch.no_grad()
     def write(self, latex):
-        tokens = split_text(latex, self.tokenizer)
+        tokens = []
+        for t in split_text(latex, self.tokenizer):
+            if t not in self.student_token and t[1:] in OPERATOR_NAMES:
+                tokens.extend(t[1:])
+            else:
+                tokens.append(t)
         unknown = sorted({t for t in tokens if t not in self.student_token})
         if unknown:
             raise ValueError(f"the student cannot write {' '.join(unknown)}")
