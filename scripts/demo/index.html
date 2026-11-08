@@ -7,14 +7,21 @@
 <style>
   :root { --bg: #f6f6f4; --panel: #fff; --ink: #1b1b1b; --muted: #6b6b6b; --line: #d9d9d4; --accent: #2457c5; --suggestion: #1f6feb; --error: #b3261e; }
   * { box-sizing: border-box; }
-  body { margin: 0; padding: 16px; background: var(--bg); color: var(--ink); font: 15px/1.4 system-ui, sans-serif; }
-  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
-  canvas { display: block; width: 100%; height: 480px; border: 1px dashed var(--line); border-radius: 6px; touch-action: none; }
-  .controls { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  input[type=text] { flex: 1; min-width: 200px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--ink); font: 16px/1.4 system-ui, sans-serif; }
+  /* Long-press on iPad otherwise selects text or opens the magnifier mid-stroke. */
+  body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  /* The board takes whatever height the controls leave, however many rows they wrap to. */
+  body { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+  .box { flex: 1; min-height: 0; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  .board-area { flex: 1; min-height: 240px; position: relative; }
+  /* Positioned absolutely so its pixel buffer, resized on every fit(), can't feed back into the layout. */
+  canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border: 1px dashed var(--line); border-radius: 6px; touch-action: none; }
+  .controls { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  input[type=text] { flex: 1; min-width: 200px; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; -webkit-user-select: text; user-select: text; }
   input[type=text]:disabled { opacity: 0.5; }
-  .toggle { display: flex; align-items: center; gap: 6px; }
-  button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font: inherit; cursor: pointer; }
+  .toggle { display: flex; align-items: center; gap: 6px; min-height: 44px; }
+  .toggle input { width: 20px; height: 20px; }
+  button { min-height: 44px; min-width: 72px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; cursor: pointer; }
   button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   button:disabled { opacity: 0.5; cursor: default; }
   .latex { margin-top: 8px; font-family: ui-monospace, monospace; font-size: 13px; min-height: 1.4em; word-break: break-all; }
@@ -25,13 +32,16 @@
 </head>
 <body>
 <div class="box">
-  <canvas id="board"></canvas>
+  <div class="board-area"><canvas id="board"></canvas></div>
   <div class="latex">read: <span id="read"></span></div>
   <div class="latex">claude: <span id="reply"></span></div>
 </div>
 <div class="controls">
   <label class="toggle"><input type="checkbox" id="autocomplete"> Autocomplete</label>
+  <label class="toggle"><input type="checkbox" id="autosend" checked> Auto-send</label>
   <input type="text" id="instruction" value="Simplify this expression.">
+  <button id="keep" disabled>Keep</button>
+  <button id="undo">Undo</button>
   <button id="clear">Clear</button>
   <button id="send" class="primary">Send</button>
 </div>
@@ -47,6 +57,15 @@ let strokes = [];
 let current = null;
 // {strokes, box}: the student's ink, drawn into the box Claude chose.
 let suggestion = null;
+const autosend = document.getElementById("autosend");
+const PAUSE_MS = 1000;
+const keepButton = document.getElementById("keep");
+// The board's length before each pen stroke or kept suggestion, so Undo takes back a kept
+// suggestion all at once rather than stroke by stroke.
+let undoLengths = [];
+let pauseTimer = null;
+// The board as last sent, so a pause after Clear, or with nothing new written, doesn't send again.
+let sentStrokeCount = 0;
 
 function fit(canvas) {
   const ratio = window.devicePixelRatio || 1;
@@ -79,21 +98,22 @@ function bounds(list) {
 // Scaled to the box's height only: Claude judges the line height from the writing well, but
 // cannot know how wide the student's ink comes out, and fitting the width shrank the symbols.
 // It starts at the box's left edge, so a right-hand side begins where Claude put it.
-function drawSuggestion(ctx, { strokes: list, box }) {
+function placeSuggestion({ strokes: list, box }) {
   const ink = bounds(list);
   const scale = (box.bottom - box.top) / (ink.bottom - ink.top || 1);
-  drawStrokes(ctx, list, ([x, y]) => [box.left + (x - ink.left) * scale, box.top + (y - ink.top) * scale]);
+  return list.map(stroke => stroke.map(([x, y]) => [box.left + (x - ink.left) * scale, box.top + (y - ink.top) * scale]));
 }
 
 function redraw() {
-  const ctx = fit(board);
+  ctx = fit(board);
   const style = getComputedStyle(document.body);
-  ctx.strokeStyle = style.color;
-  drawStrokes(ctx, strokes);
+  keepButton.disabled = !suggestion;
   if (suggestion) {
     ctx.strokeStyle = style.getPropertyValue("--suggestion");
-    drawSuggestion(ctx, suggestion);
+    drawStrokes(ctx, placeSuggestion(suggestion));
   }
+  ctx.strokeStyle = style.color;
+  drawStrokes(ctx, strokes);
 }
 
 function point(e) {
@@ -101,26 +121,87 @@ function point(e) {
   return [e.clientX - r.left, e.clientY - r.top];
 }
 
+// Once a pen has touched the board, fingers are ignored so a resting palm doesn't draw.
+// Before that, fingers draw, so the page still works on a phone.
+let penSeen = false;
+let currentPointer = null;
+let ctx = null;
+
+function draws(e) {
+  if (e.pointerType === "pen") penSeen = true;
+  return !(penSeen && e.pointerType === "touch");
+}
+
+// Safari otherwise holds back a quick second Pencil stroke while it decides whether the
+// touch is a gesture (Scribble, scrolling, the magnifier).
+for (const type of ["touchstart", "touchmove", "touchend"])
+  board.addEventListener(type, e => e.preventDefault(), { passive: false });
+
 board.addEventListener("pointerdown", e => {
+  if (!draws(e) || current) return;
   board.setPointerCapture(e.pointerId);
-  // Writing on dismisses the suggestion, as typing past an autocomplete does.
-  suggestion = null;
+  currentPointer = e.pointerId;
+  clearTimeout(pauseTimer);
   current = [point(e)];
+  undoLengths.push(strokes.length);
   strokes.push(current);
-  redraw();
+  // Writing on dismisses the suggestion, as typing past an autocomplete does.
+  if (suggestion) {
+    suggestion = null;
+    redraw();
+  } else {
+    drawStrokes(ctx, [current]);
+  }
 });
+// Only the new segment is drawn: redrawing the whole board on every move lagged on the iPad.
 board.addEventListener("pointermove", e => {
-  if (!current) return;
+  if (!current || e.pointerId !== currentPointer) return;
   const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  const from = current.length - 1;
   for (const ev of events) current.push(point(ev));
-  redraw();
+  drawStrokes(ctx, [current.slice(from)]);
 });
-const end = () => { current = null; };
+const end = e => {
+  if (!current || e.pointerId !== currentPointer) return;
+  current = null;
+  currentPointer = null;
+  clearTimeout(pauseTimer);
+  if (autosend.checked) pauseTimer = setTimeout(() => {
+    if (strokes.length > sentStrokeCount && !sendButton.disabled) send();
+  }, PAUSE_MS);
+};
 board.addEventListener("pointerup", end);
 board.addEventListener("pointercancel", end);
 
+// The suggestion goes first, since it is the last thing drawn on the board.
+document.getElementById("undo").onclick = () => {
+  clearTimeout(pauseTimer);
+  if (suggestion) {
+    suggestion = null;
+    document.getElementById("reply").textContent = "";
+  } else if (undoLengths.length) {
+    strokes.length = undoLengths.pop();
+    sentStrokeCount = Math.min(sentStrokeCount, strokes.length);
+  }
+  redraw();
+};
+
+// The kept suggestion becomes ordinary ink, so the next send reads it along with the rest.
+keepButton.onclick = () => {
+  if (!suggestion) return;
+  clearTimeout(pauseTimer);
+  undoLengths.push(strokes.length);
+  strokes.push(...placeSuggestion(suggestion));
+  suggestion = null;
+  document.getElementById("reply").textContent = "";
+  redraw();
+};
+
 document.getElementById("clear").onclick = () => {
+  clearTimeout(pauseTimer);
   strokes = [];
+  undoLengths = [];
+  sentStrokeCount = 0;
   suggestion = null;
   redraw();
   document.getElementById("read").textContent = "";
@@ -140,10 +221,14 @@ async function post(path, body) {
   return data;
 }
 
-document.getElementById("send").onclick = async () => {
+const sendButton = document.getElementById("send");
+sendButton.onclick = () => send();
+
+async function send() {
   if (!strokes.length) return;
-  const button = document.getElementById("send");
-  button.disabled = true;
+  clearTimeout(pauseTimer);
+  sentStrokeCount = strokes.length;
+  sendButton.disabled = true;
   suggestion = null;
   redraw();
   try {
@@ -167,9 +252,9 @@ document.getElementById("send").onclick = async () => {
   } catch (err) {
     setStatus(err.message, true);
   } finally {
-    button.disabled = false;
+    sendButton.disabled = false;
   }
-};
+}
 
 window.addEventListener("resize", redraw);
 redraw();
