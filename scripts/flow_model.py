@@ -282,8 +282,10 @@ class FlowStudent(nn.Module):
         return x, char_logit.masked_fill(~valid.unsqueeze(1), -torch.inf).argmax(-1)
 
     @torch.no_grad()
-    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None, cond=None):
+    def sample(self, text, text_len, bias=0.0, steps=None, guidance=None, generator=None, cond=None,
+               **transport_kwargs):
         """Write a batch of lines. text: (B, T) left-padded tokens.
+        transport_kwargs go to a subclass's transport().
 
         Returns per line (offsets (n, 3), chars (n,), finished), as
         Student.sample() does. finished is always True: the length is chosen
@@ -303,7 +305,7 @@ class FlowStudent(nn.Module):
 
         x = torch.randn((B, int(ink_len.max()), 3), generator=generator, device=device)
         x = x * torch.exp(-BIAS_TEMPERATURE * bias).view(B, 1, 1)
-        x, labels = self.transport(x, text, text_len, ink_len, steps, guidance, cond)
+        x, labels = self.transport(x, text, text_len, ink_len, steps, guidance, cond, **transport_kwargs)
         labels = labels.cpu()
         offsets = self.to_offsets(x).cpu()
         out = []

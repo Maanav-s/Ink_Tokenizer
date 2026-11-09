@@ -34,6 +34,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from flow_model import sinusoid
+from ink_corpus import MAX_TEXT
 from spline_flow_model import SplineFlowStudent
 
 
@@ -129,6 +130,35 @@ class StyleSplineFlowStudent(SplineFlowStudent):
     def style_cond(self, z):
         """z (B, z_dim) -> what denoise() adds to the time embedding."""
         return self.style_in(z)
+
+    @torch.no_grad()
+    def transport(self, x, text, text_len, ink_len, steps=None, guidance=None, cond=None, style_guidance=1.0):
+        """FlowStudent.transport(), plus guidance on the style: with cond given
+        and style_guidance g != 1, the velocity is pushed g - 1 times further
+        from the no-style velocity (null_style), as text guidance is pushed
+        from the no-text one; both guidances add up."""
+        if cond is None or style_guidance == 1:
+            return super().transport(x, text, text_len, ink_len, steps, guidance, cond)
+        steps = self.sample_steps if steps is None else steps
+        guidance = self.sample_guidance if guidance is None else guidance
+        B, device = x.shape[0], x.device
+        memory, memory_pad, _ = self.encode_text(text, text_len)
+        if guidance != 1:
+            everything = torch.ones(B, dtype=torch.bool, device=device)
+            null_memory, null_pad, _ = self.encode_text(text, text_len, everything)
+        for n in range(steps):
+            t = torch.full((B,), n / steps, device=device)
+            velocity, _ = self.denoise(x, t, ink_len, memory, memory_pad, cond)
+            no_style, _ = self.denoise(x, t, ink_len, memory, memory_pad)
+            update = velocity + (style_guidance - 1) * (velocity - no_style)
+            if guidance != 1:
+                no_text, _ = self.denoise(x, t, ink_len, null_memory, null_pad, cond)
+                update = update + (guidance - 1) * (velocity - no_text)
+            x = x + update / steps
+
+        _, char_logit = self.denoise(x, torch.ones(B, device=device), ink_len, memory, memory_pad, cond)
+        valid = torch.arange(MAX_TEXT, device=device).unsqueeze(0) < text_len.unsqueeze(1)
+        return x, char_logit.masked_fill(~valid.unsqueeze(1), -torch.inf).argmax(-1)
 
     def denoise(self, x, t, ink_len, memory, memory_pad, cond=None):
         if cond is None:

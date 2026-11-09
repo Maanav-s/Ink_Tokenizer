@@ -197,10 +197,11 @@ def evaluate(model, corpus, references, max_points, device, limit=200):
 
 
 @torch.no_grad()
-def style_samples(model, corpus, source, references, n, seed=0):
-    """Rows of three per held-out writer: the source corpus's ink for one of
-    their lines, the student without a style, and with the style of their
-    other lines (the same noise). None if no line has a known writer."""
+def style_samples(model, corpus, source, references, n, seed=0, guidances=(1.0,)):
+    """Rows per held-out writer: the source corpus's ink for one of their
+    lines, the student without a style, and with the style of their other
+    lines at each style guidance in `guidances` (all with the same noise).
+    None if no line has a known writer."""
     first = {}
     for i, w in enumerate(corpus.writers):
         if w and len(references.lines[w]) > 1:
@@ -218,18 +219,19 @@ def style_samples(model, corpus, source, references, n, seed=0):
     text, text_len = encode_texts(texts, corpus.token, corpus.tokenizer)
     text, text_len = text.to(device), text_len.to(device)
     plain = model.sample(text, text_len, 0.0, generator=torch.Generator(device=device).manual_seed(seed))
-    styled = model.sample(text, text_len, 0.0, generator=torch.Generator(device=device).manual_seed(seed),
-                          cond=model.style_cond(mu))
+    styled = [model.sample(text, text_len, 0.0, generator=torch.Generator(device=device).manual_seed(seed),
+                           cond=model.style_cond(mu), style_guidance=g) for g in guidances]
     model.train(was_training)
 
     mu_, std_ = np.array(source.meta["mu"]), np.array(source.meta["std"])
     scale = preview_scale(source.meta)
     rows = []
-    for i, text_i, p, s in zip(picks, texts, plain, styled):
+    for b, (i, text_i) in enumerate(zip(picks, texts)):
         a, k = source.starts[i], source.lengths[i]
         rows.append(to_line(text_i, source.offsets[a:a + k], source.chars[a:a + k], mu_, std_, scale))
-        rows += [to_line(text_i, off.numpy(), chars.numpy(), mu_, std_, scale) for off, chars, _ in (p, s)]
-    real = [ink_extent(r) for r in rows[::3]]
+        rows += [to_line(text_i, off.numpy(), chars.numpy(), mu_, std_, scale)
+                 for off, chars, _ in (plain[b], *(s[b] for s in styled))]
+    real = [ink_extent(r) for r in rows[::2 + len(guidances)]]
     return render(rows, max_width=1.5 * max(e[0] for e in real),
                   max_height=1.5 * max(max(-e[1], e[2]) for e in real))
 
