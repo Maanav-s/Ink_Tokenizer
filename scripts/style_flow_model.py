@@ -16,8 +16,11 @@ Losses on top of SplineFlowStudent's:
 - kl: KL(q(z | references) || N(0, I)), summed over z's dimensions: the
   information z carries, in nats. The trainer (scripts/train_style_flow.py)
   holds it near a target by adapting its weight, rather than fixing one.
-- contrastive: supervised contrastive loss on the normalized means, for lines
-  with a known writer. Every such line is also encoded on its own, so each has
+- contrastive: supervised contrastive loss for lines with a known writer, on
+  the normalized output of a small projection head over z's mean when
+  projection_dim > 0 (as in SimCLR/SupCon: the head, not z, collapses each
+  writer's lines together, so z keeps how one writer's lines differ, which
+  the flow can use), else on the means themselves. Every such line is also encoded on its own, so each has
   a positive (its references' mean); negatives are only lines from the same
   source, as telling corpora apart (different digitizers, sampling rates)
   would be learned instead of telling writers apart.
@@ -87,12 +90,16 @@ def supervised_contrastive(embedding, writer, source, temperature):
 
 
 class StyleSplineFlowStudent(SplineFlowStudent):
-    def __init__(self, z_dim=32, style_d_model=256, style_layers=4, style_dropout=0.1, temperature=0.1, **config):
+    def __init__(self, z_dim=32, style_d_model=256, style_layers=4, style_dropout=0.1, temperature=0.1,
+                 projection_dim=0, **config):
         super().__init__(**config)
         self.config.update(z_dim=z_dim, style_d_model=style_d_model, style_layers=style_layers,
-                           style_dropout=style_dropout, temperature=temperature)
+                           style_dropout=style_dropout, temperature=temperature, projection_dim=projection_dim)
         self.style_dropout = style_dropout
         self.temperature = temperature
+        self.projection = (nn.Sequential(nn.Linear(z_dim, 4 * projection_dim), nn.GELU(),
+                                         nn.Linear(4 * projection_dim, projection_dim))
+                           if projection_dim else nn.Identity())
         self.style_encoder = StyleEncoder(z_dim, style_d_model, style_layers)
         self.style_in = nn.Linear(z_dim, self.d_model)
         nn.init.zeros_(self.style_in.weight)
@@ -126,6 +133,11 @@ class StyleSplineFlowStudent(SplineFlowStudent):
         """The mean of z for each ink on its own (B, z_dim)."""
         return self.encode_style(offsets, ink_len, torch.arange(len(ink_len), device=offsets.device),
                                  len(ink_len))[0]
+
+    def identity(self, offsets, ink_len):
+        """Each ink's writer embedding (B, D), on its own: the space the
+        contrastive loss shapes, for telling writers apart."""
+        return self.projection(self.embed_lines(offsets, ink_len))
 
     def style_cond(self, z):
         """z (B, z_dim) -> what denoise() adds to the time embedding."""
@@ -190,9 +202,9 @@ class StyleSplineFlowStudent(SplineFlowStudent):
 
         labeled = batch["writer"] >= 0
         if labeled.sum() > 0:
-            anchor_mu = self.embed_lines(batch["anchor_offsets"], batch["anchor_len"])
+            anchor = self.identity(batch["anchor_offsets"], batch["anchor_len"])
             losses["contrastive"] = supervised_contrastive(
-                torch.cat([mu[labeled], anchor_mu]), batch["writer"][labeled].repeat(2),
+                torch.cat([self.projection(mu[labeled]), anchor]), batch["writer"][labeled].repeat(2),
                 batch["source"][labeled].repeat(2), self.temperature)
         else:
             losses["contrastive"] = mu.sum() * 0

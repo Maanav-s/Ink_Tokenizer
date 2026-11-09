@@ -290,7 +290,9 @@ optional extras: `render` (Hershey-Fonts, Pillow), `model` and `demo`
     writer, or a crop of the line itself when the writer is unknown), added
     to the time embedding of every block, with a KL held near `--kl-target`
     nats by an adaptive weight and a supervised contrastive loss on z's mean
-    (negatives from the same source only). [train_style_flow.py](scripts/train_style_flow.py) trains it,
+    (negatives from the same source only), through a projection head
+    (`--projection-dim`) so the head, not z, collapses each writer's lines;
+    `sample_style.py` compares style guidance scales on held-out writers. [train_style_flow.py](scripts/train_style_flow.py) trains it,
     optionally `--init-from` a plain spline flow checkpoint (it starts out
     writing exactly as that one). `val_style_gain` is the validation flow
     loss without a style minus with one, on writers unseen in training;

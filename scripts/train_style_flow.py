@@ -18,7 +18,8 @@ stays near 0); too high lets z copy the references' content.
 
 Each evaluation also reports:
 - val_id_acc: of held-out lines embedded on their own, how often the nearest
-  other line of the same source (cosine of z's means) is by the same writer,
+  other line of the same source (cosine of the projection head's output) is
+  by the same writer,
   and val_id_chance, what picking at random would score;
 - grad_flow, grad_kl, grad_contrastive: the norm of each weighted term's
   gradient on the style encoder, for one training batch, to see which term
@@ -143,7 +144,7 @@ def identification(model, corpus, references, device, limit=2000, batch=256):
     embedded = []
     for b in range(0, len(lines), batch):
         offsets, ink_len = pad([references.window(i, references.max_points, rng) for i in lines[b:b + batch]])
-        embedded.append(model.embed_lines(offsets.to(device), ink_len.to(device)))
+        embedded.append(model.identity(offsets.to(device), ink_len.to(device)))
     model.train()
     e = F.normalize(torch.cat(embedded), dim=-1)
     writers = [corpus.writers[i] for i in lines]
@@ -197,11 +198,12 @@ def evaluate(model, corpus, references, max_points, device, limit=200):
 
 
 @torch.no_grad()
-def style_samples(model, corpus, source, references, n, seed=0, guidances=(1.0,)):
+def style_samples(model, corpus, source, references, n, seed=0, guidances=(1.0,), prior=0):
     """Rows per held-out writer: the source corpus's ink for one of their
     lines, the student without a style, and with the style of their other
     lines at each style guidance in `guidances` (all with the same noise).
-    None if no line has a known writer."""
+    Then the first writer's line `prior` times, each with a z drawn from the
+    prior N(0, I): new styles. None if no line has a known writer."""
     first = {}
     for i, w in enumerate(corpus.writers):
         if w and len(references.lines[w]) > 1:
@@ -221,6 +223,13 @@ def style_samples(model, corpus, source, references, n, seed=0, guidances=(1.0,)
     plain = model.sample(text, text_len, 0.0, generator=torch.Generator(device=device).manual_seed(seed))
     styled = [model.sample(text, text_len, 0.0, generator=torch.Generator(device=device).manual_seed(seed),
                            cond=model.style_cond(mu), style_guidance=g) for g in guidances]
+    drawn = []
+    if prior:
+        z = torch.randn(prior, mu.shape[1], generator=torch.Generator(device=device).manual_seed(seed),
+                        device=device)
+        drawn = model.sample(text[:1].expand(prior, -1), text_len[:1].expand(prior),
+                             0.0, generator=torch.Generator(device=device).manual_seed(seed),
+                             cond=model.style_cond(z))
     model.train(was_training)
 
     mu_, std_ = np.array(source.meta["mu"]), np.array(source.meta["std"])
@@ -232,13 +241,15 @@ def style_samples(model, corpus, source, references, n, seed=0, guidances=(1.0,)
         rows += [to_line(text_i, off.numpy(), chars.numpy(), mu_, std_, scale)
                  for off, chars, _ in (plain[b], *(s[b] for s in styled))]
     real = [ink_extent(r) for r in rows[::2 + len(guidances)]]
+    rows += [to_line(texts[0], off.numpy(), chars.numpy(), mu_, std_, scale) for off, chars, _ in drawn]
     return render(rows, max_width=1.5 * max(e[0] for e in real),
                   max_height=1.5 * max(max(-e[1], e[2]) for e in real))
 
 
 def build_config(args, train):
     style = dict(z_dim=args.z_dim, style_d_model=args.style_d_model, style_layers=args.style_layers,
-                 style_dropout=args.style_dropout, temperature=args.temperature)
+                 style_dropout=args.style_dropout, temperature=args.temperature,
+                 projection_dim=args.projection_dim)
     if args.init_from:
         plain = torch.load(args.init_from, map_location="cpu", weights_only=False)
         if plain.get("architecture") != "spline_flow":
@@ -362,12 +373,13 @@ def main(args):
                     raise RuntimeError(f"diverged at step {step}: val flow {v['flow']:.3f}, best {best_val:.3f}; "
                                        f"checkpoint.pt is from the evaluation before")
             if step % args.sample_every == 0:
-                img = style_samples(model, val, source_val, val_refs, args.sample_lines)
+                img = style_samples(model, val, source_val, val_refs, args.sample_lines, prior=4)
                 if img is not None:
                     os.makedirs(os.path.join(args.run_dir, "samples"), exist_ok=True)
                     img.save(os.path.join(args.run_dir, "samples", f"step_{step:07d}.png"))
                     if run:
-                        run.log({"samples": wandb.Image(img, caption="per writer: real, no style, their style")},
+                        run.log({"samples": wandb.Image(img, caption="per writer: real, no style, their style; "
+                                                                     "last 4 rows: random styles")},
                                 step=step)
         if pos >= len(batches):
             epoch, pos = epoch + 1, 0
@@ -404,6 +416,8 @@ if __name__ == "__main__":
     ap.add_argument("--style-dropout", type=float, default=0.1,
                     help="fraction of lines trained with no style, which is how the student writes without one")
     ap.add_argument("--temperature", type=float, default=0.1, help="of the contrastive loss")
+    ap.add_argument("--projection-dim", type=int, default=64,
+                    help="size of the head the contrastive loss acts through; 0 puts it on z's mean directly")
     ap.add_argument("--refs", type=int, default=4, help="other lines by the same writer per line")
     ap.add_argument("--crop", type=float, default=0.3,
                     help="fraction of a line used as its own reference when its writer is unknown")

@@ -37,7 +37,7 @@ def embed(model, inks, device, batch=256):
     out = []
     for b in range(0, len(inks), batch):
         offsets, ink_len = pad(inks[b:b + batch])
-        out.append(F.normalize(model.embed_lines(offsets.to(device), ink_len.to(device)), dim=-1))
+        out.append(F.normalize(model.identity(offsets.to(device), ink_len.to(device)), dim=-1))
     return torch.cat(out)
 
 
