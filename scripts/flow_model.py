@@ -209,7 +209,7 @@ class FlowStudent(nn.Module):
         h = self.out_norm(h, time)
         return self.velocity(h).float(), self.char_head(h).float()
 
-    def loss(self, batch, generator=None, pair=None, cond=None):
+    def loss(self, batch, generator=None, pair=None, cond=None, t_mean=0.0):
         """A dict of losses, each a mean over real (unpadded) positions:
         flow (velocity error), smooth (error in the velocity's change between
         neighbouring points), length, char_ce and char_acc.
@@ -217,7 +217,8 @@ class FlowStudent(nn.Module):
         pair is (noise, ink), both (B, N, 3), to train on instead of the
         batch's ink and fresh noise. If the batch has true_len (its inks
         resampled to other lengths), the length head learns true_len. cond is
-        as in denoise()."""
+        as in denoise(). t_mean shifts the flow times towards the ink (t = 1)
+        if positive: t = sigmoid(N(t_mean, 1))."""
         text, text_len, offsets, chars, ink_len = (batch[k] for k in ("text", "text_len", "offsets", "chars", "ink_len"))
         B, N, _ = offsets.shape
         device = offsets.device
@@ -228,7 +229,7 @@ class FlowStudent(nn.Module):
         else:
             x0, x1 = pair
         # Logit-normal times: most steps train mid-path, where layout is decided.
-        t = torch.sigmoid(torch.randn(B, generator=generator, device=device))
+        t = torch.sigmoid(torch.randn(B, generator=generator, device=device) + t_mean)
         xt = (1 - t.view(B, 1, 1)) * x0 + t.view(B, 1, 1) * x1
         drop = torch.rand(B, generator=generator, device=device) < self.text_dropout
 

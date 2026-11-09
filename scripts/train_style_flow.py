@@ -334,7 +334,7 @@ def main(args):
                 rng = np.random.default_rng((args.seed, step, m))
                 batch = {**train.batch(idx), **train_refs(idx, rng)}
                 with torch.autocast("cuda", dtype=torch.bfloat16):
-                    batch_losses = model.loss(to_device(batch, device))
+                    batch_losses = model.loss(to_device(batch, device), t_mean=args.t_mean)
                 loss = style_total_loss(batch_losses, args, math.exp(log_beta))
                 if not torch.isfinite(loss):
                     raise RuntimeError(f"non-finite loss at step {step}")
@@ -405,6 +405,9 @@ if __name__ == "__main__":
     ap.add_argument("--smooth-weight", type=float, default=1.0)
     ap.add_argument("--length-weight", type=float, default=0.1)
     ap.add_argument("--char-weight", type=float, default=0.1)
+    ap.add_argument("--t-mean", type=float, default=0.0,
+                    help="training flow times are sigmoid(N(t_mean, 1)); positive trains nearer the finished ink. "
+                         "Validation always uses 0, so runs stay comparable")
     ap.add_argument("--kl-target", type=float, default=16.0, help="nats z should carry; beta adapts to hold it")
     ap.add_argument("--beta-init", type=float, default=1e-3, help="the KL weight at step 0")
     ap.add_argument("--beta-lr", type=float, default=1e-3,

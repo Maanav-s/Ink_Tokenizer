@@ -177,11 +177,12 @@ class StyleSplineFlowStudent(SplineFlowStudent):
             cond = self.null_style.expand(x.shape[0], -1)
         return super().denoise(x, t, ink_len, memory, memory_pad, cond)
 
-    def loss(self, batch, generator=None):
+    def loss(self, batch, generator=None, t_mean=0.0):
         """SplineFlowStudent's losses, plus kl (summed over z), contrastive and, when
         evaluating (generator given), flow_null: the flow loss with the same
         noise and times but null_style, so flow_null - flow is what the style
-        is worth. Evaluation uses z's mean and never drops the style."""
+        is worth. Evaluation uses z's mean and never drops the style. t_mean
+        is as in FlowStudent.loss()."""
         B, device = batch["text"].shape[0], batch["text"].device
         mu, logvar = self.encode_style(batch["ref_offsets"], batch["ref_len"], batch["ref_owner"], B)
         if self.training:
@@ -192,10 +193,11 @@ class StyleSplineFlowStudent(SplineFlowStudent):
             cond = self.style_cond(mu)
 
         state = generator.get_state() if generator is not None else None
-        losses = super().loss(batch, generator, cond=cond)
+        losses = super().loss(batch, generator, cond=cond, t_mean=t_mean)
         if generator is not None:
             generator.set_state(state)
-            losses["flow_null"] = super().loss(batch, generator, cond=self.null_style.expand(B, -1))["flow"]
+            losses["flow_null"] = super().loss(batch, generator, cond=self.null_style.expand(B, -1),
+                                               t_mean=t_mean)["flow"]
 
         kl = 0.5 * (mu.pow(2) + logvar.exp() - 1 - logvar)
         losses["kl"] = kl.sum(dim=1).mean()
